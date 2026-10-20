@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="robots" content="noindex" />
-  <title>Saath</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0c0b0d" />
+  <meta name="description" content="Saath — simple 18+ dating. Google se login, profile, like, match aur chat. Email dusre users ko nahi dikhta." />
+  <meta property="og:title" content="Saath — Dating" />
+  <meta property="og:description" content="Simple 18+ dating site. Google login, matches aur chat." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://pranab14220.github.io/Sath/" />
+  <title>Saath — Dating</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0b0d'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='36' font-family='Segoe UI,sans-serif' font-weight='700' fill='%23e25b6a'%3ES%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0b0d'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='36' font-family='Segoe UI,sans-serif' font-weight='700' fill='%23e25b6a'%3ES%3C/text%3E%3C/svg%3E" />
   <style>
     :root { --bg:#0c0b0d; --card:#17151a; --elev:#221f26; --line:#2e2a33; --text:#f6f1ea; --muted:#a39aa8; --accent:#e25b6a; --shadow:0 18px 40px rgba(0,0,0,.35); font-family:"Segoe UI","Noto Sans",sans-serif; }
     * { box-sizing:border-box; }
@@ -66,6 +74,11 @@
     .filter-chip { flex:none; font-size:.78rem; padding:8px 12px; border-radius:999px; background:var(--elev); border:1px solid var(--line); color:var(--muted); white-space:nowrap; }
     .filter-chip.on { background:#2a1c22; border-color:#6d3d48; color:var(--text); }
     .filter-chip.placeholder { border-style:dashed; opacity:.7; }
+    .site-footer { margin-top:22px; text-align:center; font-size:.78rem; color:var(--muted); line-height:1.7; }
+    .site-footer a { color:var(--muted); text-decoration:underline; text-underline-offset:3px; }
+    .legal h2 { margin-top:18px; font-size:1.05rem; }
+    .legal p, .legal li { color:var(--muted); font-size:.9rem; line-height:1.55; }
+    .legal ul { padding-left:18px; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -138,6 +151,58 @@ function escapeHtml(value) {
     '"': "\u0026quot;"
   })[ch]);
 }
+function siteFooterHtml() {
+  return '<div class="site-footer"><a href="#privacy" id="linkPrivacy">Privacy</a> · <a href="#terms" id="linkTerms">Terms</a> · <a href="#safety" id="linkSafety">Safety</a><br><span class="tiny">18+ only · Saath demo</span></div>';
+}
+function bindFooterLinks() {
+  const p = document.getElementById("linkPrivacy");
+  const t = document.getElementById("linkTerms");
+  const s = document.getElementById("linkSafety");
+  if (p) p.onclick = (e) => { e.preventDefault(); showLegal("privacy"); };
+  if (t) t.onclick = (e) => { e.preventDefault(); showLegal("terms"); };
+  if (s) s.onclick = (e) => { e.preventDefault(); showLegal("safety"); };
+}
+function showLegal(kind) {
+  stopChat();
+  const titles = { privacy: "Privacy Policy", terms: "Terms of Service", safety: "Safety Guidelines" };
+  let body = "";
+  if (kind === "privacy") {
+    body =
+      "<p>Saath ek simple dating demo hai. Hum ye data rakhte hain:</p>" +
+      "<ul><li><strong>Google login</strong> se Firebase Auth UID (email dusre users ko nahi dikhta)</li>" +
+      "<li><strong>Profile</strong>: naam, age, state, city, gender, looking-for, bio</li>" +
+      "<li><strong>Likes, matches, blocks</strong> aur chat messages</li></ul>" +
+      "<p>Data <strong>Google Firebase</strong> (Auth + Firestore) mein store hota hai. Hum is data ko ads / third parties ko nahi bechte.</p>" +
+      "<p><strong>Delete:</strong> Me → Delete profile se aapka profile, likes, blocks, matches aur messages hatane ki koshish hoti hai. Google account alag rehta hai.</p>" +
+      "<p><strong>Contact:</strong> is project ke owner se GitHub repo ke through contact kar sakte ho.</p>" +
+      "<p class='tiny'>Last updated: Oct 2026</p>";
+  } else if (kind === "terms") {
+    body =
+      "<p>Saath use karke aap agree karte ho:</p>" +
+      "<ul><li>Aap <strong>18+</strong> ho</li>" +
+      "<li>Galat / illegal / harassing content nahi daaloge</li>" +
+      "<li>Doosre users ko respect se treat karoge</li>" +
+      "<li>Ye personal / demo project hai — uptime ya data recovery guarantee nahi</li></ul>" +
+      "<p>Rules todne par account / access band kiya ja sakta hai. Service kabhi bhi change ya band ho sakti hai.</p>" +
+      "<p class='tiny'>Last updated: Oct 2026</p>";
+  } else {
+    body =
+      "<p>Safe rahein:</p>" +
+      "<ul><li>Personal address, OTP, bank details mat share karo</li>" +
+      "<li>Pareshan kare to <strong>Block</strong> use karo</li>" +
+      "<li>Offline milne se pehle public jagah choose karo</li>" +
+      "<li>Minors / sexual content involving under-18 bilkul mana hai</li></ul>" +
+      "<p>Suspicious behavior dikhe to block karo aur site use band kar do.</p>" +
+      "<p class='tiny'>Last updated: Oct 2026</p>";
+  }
+  screen.innerHTML = '<div class="card legal"><div class="topbar"><button class="icon-btn" id="legalBack" type="button">&larr;</button><strong>' + titles[kind] + '</strong></div>' + body + '</div>';
+  document.getElementById("legalBack").onclick = () => {
+    if (state.user && state.profile) renderApp();
+    else if (state.user) renderProfileForm();
+    else renderAuth();
+  };
+}
+
 function pairId(a, b) { return a < b ? a + "_" + b : b + "_" + a; }
 const PLACES = {
   "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Rajahmundry", "Kadapa", "Anantapur", "Eluru", "Ongole", "Chittoor"],
@@ -201,7 +266,8 @@ async function hasNewMessage(matchId) {
 
 function renderAuth() {
   stopChat();
-  screen.innerHTML = '<div class="card"><h1>Saath</h1><p class="muted">Google se login. 18+ . Email profile pe nahi dikhega.</p><button class="btn" id="googleBtn" type="button">Google se continue</button><p class="error" id="formError"></p></div>';
+  screen.innerHTML = '<div class="card"><h1>Saath</h1><p class="muted">Google se login. 18+ . Email profile pe nahi dikhega.</p><button class="btn" id="googleBtn" type="button">Google se continue</button><p class="error" id="formError"></p></div>' + siteFooterHtml();
+  bindFooterLinks();
   document.getElementById("googleBtn").onclick = async () => {
     const error = document.getElementById("formError");
     document.getElementById("googleBtn").disabled = true;
@@ -511,7 +577,8 @@ function openChat(matchId, name) {
 
 function renderMe() {
   const p = state.profile;
-  document.getElementById("panel").innerHTML = '<div class="card"><div class="dot" style="width:64px;height:64px;font-size:1.4rem">' + initial(p.displayName) + "</div><h2>" + escapeHtml(p.displayName) + ", " + p.age + '</h2><p class="muted">' + escapeHtml(p.city) + (p.state ? ", " + escapeHtml(p.state) : "") + " · " + escapeHtml(p.gender) + " · looking for " + escapeHtml(p.lookingFor) + "</p><p>" + escapeHtml(p.bio) + '</p><button class="btn" id="editBtn" type="button">Edit profile</button><button class="btn ghost" id="logoutBtn" type="button">Logout</button><button class="btn danger" id="deleteBtn" type="button">Delete profile</button><p class="tiny">Delete se naam, city aur bio hat jayega. Login Google pe rahega.</p></div>';
+  document.getElementById("panel").innerHTML = '<div class="card"><div class="dot" style="width:64px;height:64px;font-size:1.4rem">' + initial(p.displayName) + "</div><h2>" + escapeHtml(p.displayName) + ", " + p.age + '</h2><p class="muted">' + escapeHtml(p.city) + (p.state ? ", " + escapeHtml(p.state) : "") + " · " + escapeHtml(p.gender) + " · looking for " + escapeHtml(p.lookingFor) + "</p><p>" + escapeHtml(p.bio) + '</p><button class="btn" id="editBtn" type="button">Edit profile</button><button class="btn ghost" id="logoutBtn" type="button">Logout</button><button class="btn danger" id="deleteBtn" type="button">Delete profile</button><p class="tiny">Delete se naam, city aur bio hat jayega. Login Google pe rahega.</p></div>' + siteFooterHtml();
+  bindFooterLinks();
   document.getElementById("editBtn").onclick = () => renderProfileForm();
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
   document.getElementById("deleteBtn").onclick = deleteProfile;
