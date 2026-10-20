@@ -37,7 +37,13 @@
     .btn.danger { background:transparent; border:1px solid #6a3030; color:#ffb4b4; }
     .btn.pass { background:var(--elev); border:1px solid var(--line); }
     .btn.block { background:transparent; border:1px solid #6a3030; color:#ffb4b4; }
-    .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:8px 0 16px; }
+    .tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:8px 0 16px; }
+    .tab.star { font-size:1.05rem; }
+    .plan { border:1px solid var(--line); border-radius:16px; padding:14px; margin-top:10px; background:var(--elev); }
+    .plan h3 { margin:0 0 4px; font-size:1rem; }
+    .plan .price { color:var(--accent); font-weight:750; font-size:1.15rem; }
+    .plan .btn { margin-top:10px; }
+    .status-box { background:rgba(226,91,106,.12); border:1px solid #6d3d48; border-radius:14px; padding:12px; margin-bottom:12px; }
     .tab { background:var(--elev); border:1px solid var(--line); border-radius:14px; padding:10px 6px; color:var(--muted); }
     .tab.active { color:#fff; border-color:#6d3d48; background:#2a1c22; }
     .count { display:inline-block; min-width:16px; margin-left:5px; padding:1px 6px; border-radius:999px; background:rgba(246,241,234,.18); color:var(--text); font-size:.68rem; line-height:1.4; vertical-align:1px; }
@@ -344,7 +350,7 @@ async function renderApp() {
   }
   const count = (state.matches || []).length;
   const showCount = count > 0 && !countAlreadySeen();
-  screen.innerHTML = '<nav class="tabs"><button class="tab" data-tab="discover">Discover</button><button class="tab" data-tab="matches">Matches' + (showCount ? ' <span class="count">' + count + '</span>' : '') + '</button><button class="tab" data-tab="me">Me</button></nav><div id="panel"></div>';
+  screen.innerHTML = '<nav class="tabs"><button class="tab" data-tab="discover">Discover</button><button class="tab" data-tab="matches">Matches' + (showCount ? ' <span class="count">' + count + '</span>' : '') + '</button><button class="tab" data-tab="me">Me</button><button class="tab star" data-tab="premium">⭐</button></nav><div id="panel"></div>';
   screen.querySelectorAll(".tab").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.tab === state.tab);
     btn.onclick = () => { if (btn.dataset.tab !== "discover") state.showFilterForm = false; state.tab = btn.dataset.tab; renderApp(); };
@@ -352,6 +358,58 @@ async function renderApp() {
   if (state.tab === "discover") renderDiscover();
   if (state.tab === "matches") renderMatches();
   if (state.tab === "me") renderMe();
+  if (state.tab === "premium") renderPremium();
+}
+
+function hasActivePaid() {
+  const p = state.profile || {};
+  const credits = Number(p.swipeCredits || 0);
+  const until = p.unlimitedUntil ? (p.unlimitedUntil.toMillis ? p.unlimitedUntil.toMillis() : Number(p.unlimitedUntil)) : 0;
+  return credits > 0 || until > Date.now();
+}
+
+function formatUntil(ts) {
+  if (!ts) return "";
+  const ms = ts.toMillis ? ts.toMillis() : Number(ts);
+  if (!ms) return "";
+  return new Date(ms).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function renderPremium() {
+  const panel = document.getElementById("panel");
+  const p = state.profile || {};
+  const credits = Number(p.swipeCredits || 0);
+  const untilMs = p.unlimitedUntil ? (p.unlimitedUntil.toMillis ? p.unlimitedUntil.toMillis() : Number(p.unlimitedUntil)) : 0;
+  const unlimitedOn = untilMs > Date.now();
+  const paid = credits > 0 || unlimitedOn;
+
+  let statusHtml = "";
+  if (!paid) {
+    statusHtml = '<div class="status-box"><strong>Free plan</strong><p class="muted" style="margin:6px 0 0">Roz <strong>7 free swipes</strong>. Extra chahiye to neeche se plan lo.</p></div>';
+  } else {
+    statusHtml = '<div class="status-box"><strong>Aapka plan</strong>';
+    if (unlimitedOn) {
+      statusHtml += '<p class="muted" style="margin:6px 0 0">7-day boost active · Roz <strong>80 + 7 free</strong> swipes</p>';
+      statusHtml += '<p class="tiny" style="margin:4px 0 0">Valid till: ' + escapeHtml(formatUntil(p.unlimitedUntil)) + '</p>';
+    }
+    if (credits > 0) {
+      statusHtml += '<p class="muted" style="margin:6px 0 0">Extra credits: <strong>' + credits + '</strong> swipes</p>';
+    }
+    statusHtml += '<p class="tiny" style="margin:6px 0 0">Free 7 swipes har din alag se milte rahenge.</p></div>';
+  }
+
+  panel.innerHTML = '<div class="card"><h2>⭐ Swipe plans</h2><p class="muted">Free mein roz 7 swipes. Zyada explore karne ke liye boost lo.</p>' + statusHtml +
+    '<div class="plan"><h3>Free</h3><div class="price">₹0</div><p class="muted">Roz 7 swipes (har din reset)</p></div>' +
+    '<div class="plan"><h3>Quick +15</h3><div class="price">₹29</div><p class="muted">+15 extra swipes + roz ke 7 free</p><button class="btn" type="button" data-plan="29">Lo ₹29</button></div>' +
+    '<div class="plan"><h3>Extra +35</h3><div class="price">₹49</div><p class="muted">+35 extra swipes + roz ke 7 free</p><button class="btn" type="button" data-plan="49">Lo ₹49</button></div>' +
+    '<div class="plan"><h3>7-day boost</h3><div class="price">₹199</div><p class="muted">7 din · roz 80 swipes + 7 free</p><button class="btn" type="button" data-plan="199">Lo ₹199</button></div>' +
+    '<p class="tiny" style="margin-top:12px">Payment jaldi add hoga (UPI / Razorpay). Abhi buttons demo hain.</p></div>';
+
+  panel.querySelectorAll("[data-plan]").forEach((btn) => {
+    btn.onclick = () => {
+      alert("Payment setup next step hai.\n\nPlan: ₹" + btn.dataset.plan + "\nAbhi demo — paise nahi katenge.");
+    };
+  });
 }
 
 function renderDiscover() {
