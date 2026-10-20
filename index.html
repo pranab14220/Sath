@@ -364,8 +364,8 @@ async function renderApp() {
 function hasActivePaid() {
   const p = state.profile || {};
   const credits = Number(p.swipeCredits || 0);
-  const until = p.unlimitedUntil ? (p.unlimitedUntil.toMillis ? p.unlimitedUntil.toMillis() : Number(p.unlimitedUntil)) : 0;
-  return credits > 0 || until > Date.now();
+  const exp = p.creditsExpireAt ? (p.creditsExpireAt.toMillis ? p.creditsExpireAt.toMillis() : Number(p.creditsExpireAt)) : 0;
+  return credits > 0 && (!exp || exp > Date.now());
 }
 
 function formatUntil(ts) {
@@ -379,35 +379,35 @@ function renderPremium() {
   const panel = document.getElementById("panel");
   const p = state.profile || {};
   const credits = Number(p.swipeCredits || 0);
-  const untilMs = p.unlimitedUntil ? (p.unlimitedUntil.toMillis ? p.unlimitedUntil.toMillis() : Number(p.unlimitedUntil)) : 0;
-  const unlimitedOn = untilMs > Date.now();
-  const paid = credits > 0 || unlimitedOn;
+  const expMs = p.creditsExpireAt ? (p.creditsExpireAt.toMillis ? p.creditsExpireAt.toMillis() : Number(p.creditsExpireAt)) : 0;
+  const creditsLive = credits > 0 && (!expMs || expMs > Date.now());
 
   let statusHtml = "";
-  if (!paid) {
+  if (!creditsLive) {
     statusHtml = '<div class="status-box"><strong>Free plan</strong><p class="muted" style="margin:6px 0 0">Roz <strong>7 free swipes</strong>. Extra chahiye to neeche se plan lo.</p></div>';
   } else {
     statusHtml = '<div class="status-box"><strong>Aapka plan</strong>';
-    if (unlimitedOn) {
-      statusHtml += '<p class="muted" style="margin:6px 0 0">7-day boost active · Roz <strong>80 + 7 free</strong> swipes</p>';
-      statusHtml += '<p class="tiny" style="margin:4px 0 0">Valid till: ' + escapeHtml(formatUntil(p.unlimitedUntil)) + '</p>';
-    }
-    if (credits > 0) {
-      statusHtml += '<p class="muted" style="margin:6px 0 0">Extra credits: <strong>' + credits + '</strong> swipes</p>';
-    }
-    statusHtml += '<p class="tiny" style="margin:6px 0 0">Free 7 swipes har din alag se milte rahenge.</p></div>';
+    statusHtml += '<p class="muted" style="margin:6px 0 0">Extra credits baki: <strong>' + credits + '</strong></p>';
+    if (expMs) statusHtml += '<p class="tiny" style="margin:4px 0 0">Valid till: ' + escapeHtml(formatUntil(p.creditsExpireAt)) + '</p>';
+    statusHtml += '<p class="tiny" style="margin:6px 0 0">Iske sath roz ke <strong>7 free</strong> swipes bhi milte rahenge.</p></div>';
   }
 
-  panel.innerHTML = '<div class="card"><h2>⭐ Swipe plans</h2><p class="muted">Free mein roz 7 swipes. Zyada explore karne ke liye boost lo.</p>' + statusHtml +
+  const planInfo = {
+    "29": "₹29 · +10 extra · 1 din valid · + roz 7 free",
+    "49": "₹49 · +25 extra · 1 din valid · + roz 7 free",
+    "99": "₹99 · +35 extra · 3 din valid · + roz 7 free"
+  };
+
+  panel.innerHTML = '<div class="card"><h2>⭐ Swipe plans</h2><p class="muted">Free mein roz 7 swipes. Extra pack ke sath bhi free 7 milte rahenge.</p>' + statusHtml +
     '<div class="plan"><h3>Free</h3><div class="price">₹0</div><p class="muted">Roz 7 swipes (har din reset)</p></div>' +
-    '<div class="plan"><h3>Quick +15</h3><div class="price">₹29</div><p class="muted">+15 extra swipes + roz ke 7 free</p><button class="btn" type="button" data-plan="29">Lo ₹29</button></div>' +
-    '<div class="plan"><h3>Extra +35</h3><div class="price">₹49</div><p class="muted">+35 extra swipes + roz ke 7 free</p><button class="btn" type="button" data-plan="49">Lo ₹49</button></div>' +
-    '<div class="plan"><h3>7-day boost</h3><div class="price">₹199</div><p class="muted">7 din · roz 80 swipes + 7 free</p><button class="btn" type="button" data-plan="199">Lo ₹199</button></div>' +
+    '<div class="plan"><h3>Day pack</h3><div class="price">₹29</div><p class="muted">+10 extra swipes · 1 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="29">Lo ₹29</button></div>' +
+    '<div class="plan"><h3>Day pack+</h3><div class="price">₹49</div><p class="muted">+25 extra swipes · 1 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="49">Lo ₹49</button></div>' +
+    '<div class="plan"><h3>3-day pack</h3><div class="price">₹99</div><p class="muted">+35 extra swipes · 3 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="99">Lo ₹99</button></div>' +
     '<p class="tiny" style="margin-top:12px">Payment jaldi add hoga (UPI / Razorpay). Abhi buttons demo hain.</p></div>';
 
   panel.querySelectorAll("[data-plan]").forEach((btn) => {
     btn.onclick = () => {
-      alert("Payment setup next step hai.\n\nPlan: ₹" + btn.dataset.plan + "\nAbhi demo — paise nahi katenge.");
+      alert("Payment setup next step hai.\n\n" + planInfo[btn.dataset.plan] + "\n\nAbhi demo — paise nahi katenge.");
     };
   });
 }
