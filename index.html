@@ -97,7 +97,7 @@
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where, limit, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where, limit, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCyJm-IA8FwtVGLkavbv5HxHhwUAgVs5DU",
@@ -137,7 +137,10 @@ setPersistence(auth, browserLocalPersistence).finally(() => {
       const snap = await getDoc(doc(db, "users", user.uid));
       state.profile = snap.exists() ? snap.data() : null;
       if (!state.profile) renderProfileForm();
-      else renderApp();
+      else {
+        try { await ensureSwipeDay(); } catch (e) {}
+        renderApp();
+      }
     } catch (err) {
       screen.innerHTML = '<div class="card"><h2>Auth Error</h2><p class="error">' + escapeHtml(err.message || String(err)) + '</p></div>';
     }
@@ -361,53 +364,166 @@ async function renderApp() {
   if (state.tab === "premium") renderPremium();
 }
 
-function hasActivePaid() {
-  const p = state.profile || {};
+const FREE_DAILY = 7;
+const PLANS = {
+  "29": { price: 29, credits: 10, days: 1, title: "Day pack", desc: "+10 extra · 1 din valid · + roz 7 free" },
+  "49": { price: 49, credits: 25, days: 1, title: "Day pack+", desc: "+25 extra · 1 din valid · + roz 7 free" },
+  "99": { price: 99, credits: 35, days: 3, title: "3-day pack", desc: "+35 extra · 3 din valid · + roz 7 free" }
+};
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function tsToMs(ts) {
+  if (!ts) return 0;
+  if (typeof ts.toMillis === "function") return ts.toMillis();
+  return Number(ts) || 0;
+}
+
+function liveCredits(p) {
+  p = p || state.profile || {};
   const credits = Number(p.swipeCredits || 0);
-  const exp = p.creditsExpireAt ? (p.creditsExpireAt.toMillis ? p.creditsExpireAt.toMillis() : Number(p.creditsExpireAt)) : 0;
-  return credits > 0 && (!exp || exp > Date.now());
+  const exp = tsToMs(p.creditsExpireAt);
+  if (credits <= 0) return 0;
+  if (exp && exp <= Date.now()) return 0;
+  return credits;
+}
+
+function freeLeft(p) {
+  p = p || state.profile || {};
+  const day = p.swipeDate || "";
+  const used = day === todayKey() ? Number(p.swipesToday || 0) : 0;
+  return Math.max(0, FREE_DAILY - used);
+}
+
+function totalSwipesLeft(p) {
+  return freeLeft(p) + liveCredits(p);
+}
+
+function hasActivePaid() {
+  return liveCredits(state.profile) > 0;
 }
 
 function formatUntil(ts) {
-  if (!ts) return "";
-  const ms = ts.toMillis ? ts.toMillis() : Number(ts);
+  const ms = tsToMs(ts);
   if (!ms) return "";
   return new Date(ms).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+async function syncSwipeProfile(patch) {
+  if (!state.user) return;
+  await setDoc(doc(db, "users", state.user.uid), patch, { merge: true });
+  state.profile = { ...(state.profile || {}), ...patch };
+}
+
+async function ensureSwipeDay() {
+  const p = state.profile || {};
+  if ((p.swipeDate || "") === todayKey()) return;
+  await syncSwipeProfile({ swipeDate: todayKey(), swipesToday: 0 });
+}
+
+/** Returns true if swipe allowed and consumed. */
+async function consumeSwipe() {
+  await ensureSwipeDay();
+  let p = state.profile || {};
+  if (Number(p.swipeCredits || 0) > 0 && tsToMs(p.creditsExpireAt) && tsToMs(p.creditsExpireAt) <= Date.now()) {
+    await syncSwipeProfile({ swipeCredits: 0, creditsExpireAt: null });
+    p = state.profile;
+  }
+  const free = freeLeft(p);
+  const cred = liveCredits(p);
+  if (free + cred <= 0) return false;
+
+  if (free > 0) {
+    const used = (p.swipeDate === todayKey() ? Number(p.swipesToday || 0) : 0) + 1;
+    await syncSwipeProfile({ swipeDate: todayKey(), swipesToday: used });
+  } else {
+    await syncSwipeProfile({ swipeCredits: cred - 1 });
+  }
+  return true;
+}
+
+function showLimitReached() {
+  const panel = document.getElementById("panel");
+  if (!panel) {
+    alert("Aaj ki free swipe limit khatam. ⭐ se plan lo.");
+    state.tab = "premium";
+    renderApp();
+    return;
+  }
+  panel.innerHTML = '<div class="card"><h2>Swipe limit khatam</h2><p class="muted">Aaj ke <strong>7 free swipes</strong> use ho chuke hain' +
+    (liveCredits() ? "" : " aur koi extra credit nahi hai") +
+    '.</p><p class="muted">Extra swipes ke liye plan lo — free 7 kal phir milenge.</p>' +
+    '<button class="btn" id="goPremiumBtn" type="button">⭐ Plans dekho</button>' +
+    '<button class="btn ghost" id="limitBackBtn" type="button">Theek hai</button></div>';
+  document.getElementById("goPremiumBtn").onclick = () => { state.tab = "premium"; renderApp(); };
+  document.getElementById("limitBackBtn").onclick = () => { state.tab = "discover"; renderApp(); };
+}
+
+async function grantPlan(planId) {
+  const plan = PLANS[planId];
+  if (!plan || !state.user) return;
+  await ensureSwipeDay();
+  const p = state.profile || {};
+  let credits = liveCredits(p) + plan.credits;
+  const expMs = Date.now() + plan.days * 24 * 60 * 60 * 1000;
+  const oldExp = tsToMs(p.creditsExpireAt);
+  const finalExp = Math.max(expMs, oldExp || 0);
+  await syncSwipeProfile({
+    swipeCredits: credits,
+    creditsExpireAt: Timestamp.fromMillis(finalExp),
+    lastPlanId: planId,
+    lastPlanAt: serverTimestamp()
+  });
 }
 
 function renderPremium() {
   const panel = document.getElementById("panel");
   const p = state.profile || {};
-  const credits = Number(p.swipeCredits || 0);
-  const expMs = p.creditsExpireAt ? (p.creditsExpireAt.toMillis ? p.creditsExpireAt.toMillis() : Number(p.creditsExpireAt)) : 0;
-  const creditsLive = credits > 0 && (!expMs || expMs > Date.now());
+  const free = freeLeft(p);
+  const cred = liveCredits(p);
+  const expMs = tsToMs(p.creditsExpireAt);
 
-  let statusHtml = "";
-  if (!creditsLive) {
-    statusHtml = '<div class="status-box"><strong>Free plan</strong><p class="muted" style="margin:6px 0 0">Roz <strong>7 free swipes</strong>. Extra chahiye to neeche se plan lo.</p></div>';
+  let statusHtml = '<div class="status-box"><strong>Aaj ka status</strong>';
+  statusHtml += '<p class="muted" style="margin:6px 0 0">Free baki: <strong>' + free + '</strong> / ' + FREE_DAILY + '</p>';
+  if (cred > 0) {
+    statusHtml += '<p class="muted" style="margin:6px 0 0">Extra credits: <strong>' + cred + '</strong></p>';
+    if (expMs) statusHtml += '<p class="tiny" style="margin:4px 0 0">Credits valid till: ' + escapeHtml(formatUntil(p.creditsExpireAt)) + '</p>';
   } else {
-    statusHtml = '<div class="status-box"><strong>Aapka plan</strong>';
-    statusHtml += '<p class="muted" style="margin:6px 0 0">Extra credits baki: <strong>' + credits + '</strong></p>';
-    if (expMs) statusHtml += '<p class="tiny" style="margin:4px 0 0">Valid till: ' + escapeHtml(formatUntil(p.creditsExpireAt)) + '</p>';
-    statusHtml += '<p class="tiny" style="margin:6px 0 0">Iske sath roz ke <strong>7 free</strong> swipes bhi milte rahenge.</p></div>';
+    statusHtml += '<p class="muted" style="margin:6px 0 0">Koi active paid pack nahi</p>';
   }
+  statusHtml += '<p class="tiny" style="margin:6px 0 0">Total swipes abhi: <strong>' + (free + cred) + '</strong></p></div>';
 
-  const planInfo = {
-    "29": "₹29 · +10 extra · 1 din valid · + roz 7 free",
-    "49": "₹49 · +25 extra · 1 din valid · + roz 7 free",
-    "99": "₹99 · +35 extra · 3 din valid · + roz 7 free"
-  };
+  let plansHtml = "";
+  Object.keys(PLANS).forEach((id) => {
+    const pl = PLANS[id];
+    plansHtml += '<div class="plan"><h3>' + pl.title + '</h3><div class="price">₹' + pl.price + '</div><p class="muted">' + pl.desc + '</p>' +
+      '<button class="btn" type="button" data-plan="' + id + '">Lo ₹' + pl.price + '</button></div>';
+  });
 
-  panel.innerHTML = '<div class="card"><h2>⭐ Swipe plans</h2><p class="muted">Free mein roz 7 swipes. Extra pack ke sath bhi free 7 milte rahenge.</p>' + statusHtml +
+  panel.innerHTML = '<div class="card"><h2>⭐ Swipe plans</h2><p class="muted">Roz 7 free. Paid pack ke sath bhi free 7 milte rahenge.</p>' + statusHtml +
     '<div class="plan"><h3>Free</h3><div class="price">₹0</div><p class="muted">Roz 7 swipes (har din reset)</p></div>' +
-    '<div class="plan"><h3>Day pack</h3><div class="price">₹29</div><p class="muted">+10 extra swipes · 1 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="29">Lo ₹29</button></div>' +
-    '<div class="plan"><h3>Day pack+</h3><div class="price">₹49</div><p class="muted">+25 extra swipes · 1 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="49">Lo ₹49</button></div>' +
-    '<div class="plan"><h3>3-day pack</h3><div class="price">₹99</div><p class="muted">+35 extra swipes · 3 din valid · + roz 7 free</p><button class="btn" type="button" data-plan="99">Lo ₹99</button></div>' +
-    '<p class="tiny" style="margin-top:12px">Payment jaldi add hoga (UPI / Razorpay). Abhi buttons demo hain.</p></div>';
+    plansHtml +
+    '<p class="tiny" style="margin-top:12px">Abhi <strong>demo unlock</strong> hai — test ke liye credits mil jayenge. Real payment baad mein.</p></div>';
 
   panel.querySelectorAll("[data-plan]").forEach((btn) => {
-    btn.onclick = () => {
-      alert("Payment setup next step hai.\n\n" + planInfo[btn.dataset.plan] + "\n\nAbhi demo — paise nahi katenge.");
+    btn.onclick = async () => {
+      const id = btn.dataset.plan;
+      const pl = PLANS[id];
+      if (!confirm("Demo unlock: ₹" + pl.price + " plan?\\n\\n" + pl.desc + "\\n\\nPaise nahi katega (test mode).")) return;
+      btn.disabled = true;
+      btn.textContent = "Unlock ho raha hai...";
+      try {
+        await grantPlan(id);
+        alert("Plan active! Extra +" + pl.credits + " swipes mil gaye.");
+        renderPremium();
+      } catch (err) {
+        alert(err.message || String(err));
+        btn.disabled = false;
+        btn.textContent = "Lo ₹" + pl.price;
+      }
     };
   });
 }
@@ -479,8 +595,10 @@ function renderDiscover() {
     chipsHtml += '<span class="filter-chip placeholder">State / City</span>';
   }
 
-  const filterBtnIcon = active ? "✕" : "🔍"; // filter icon / cross
-  const filterBar = '<div class="filter-bar"><button class="filter-toggle' + (active ? " active" : "") + '" id="filterToggleBtn" type="button" title="' + (active ? "Clear filters" : "Open filters") + '">' + filterBtnIcon + '</button><div class="filter-scroll">' + chipsHtml + '</div></div>';
+  const filterBtnIcon = active ? "✕" : "🔍";
+  const left = totalSwipesLeft();
+  const swipeChip = '<span class="filter-chip on">Swipes ' + left + '</span>';
+  const filterBar = '<div class="filter-bar"><button class="filter-toggle' + (active ? " active" : "") + '" id="filterToggleBtn" type="button" title="' + (active ? "Clear filters" : "Open filters") + '">' + filterBtnIcon + '</button><div class="filter-scroll">' + swipeChip + chipsHtml + '</div></div>';
 
   const person = state.deck[0];
   if (!person) {
@@ -489,7 +607,12 @@ function renderDiscover() {
     panel.innerHTML = filterBar +
       '<article class="person"><div class="avatar">' + initial(person.displayName) + '</div><div class="meta"><h2>' + escapeHtml(person.displayName) + ", " + person.age + '</h2><p class="muted">' + escapeHtml(person.city) + (person.state ? ", " + escapeHtml(person.state) : "") + " · " + escapeHtml(person.gender) + "</p><p>" + escapeHtml(person.bio) + '</p></div></article>' +
       '<div class="actions"><button class="btn pass" id="passBtn" type="button">Pass</button><button class="btn block" id="blockBtn" type="button">Block</button><button class="btn" id="likeBtn" type="button">Like</button></div><p class="error" id="formError"></p>';
-    document.getElementById("passBtn").onclick = () => { state.deck.shift(); renderDiscover(); };
+    document.getElementById("passBtn").onclick = async () => {
+      const ok = await consumeSwipe();
+      if (!ok) { showLimitReached(); return; }
+      state.deck.shift();
+      renderDiscover();
+    };
     document.getElementById("blockBtn").onclick = () => blockPerson(person.uid, person.displayName, "discover");
     document.getElementById("likeBtn").onclick = () => likePerson(person);
   }
@@ -539,6 +662,8 @@ async function blockPerson(targetUid, targetName, fromScreen, matchId) {
 async function likePerson(person) {
   const error = document.getElementById("formError");
   try {
+    const ok = await consumeSwipe();
+    if (!ok) { showLimitReached(); return; }
     const likeRef = doc(db, "likes", state.user.uid + "_" + person.uid);
     const existing = await getDoc(likeRef);
     if (!existing.exists()) {
