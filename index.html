@@ -98,8 +98,7 @@
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-/* SET THESE TWO VALUES AFTER CREATING YOUR SUPABASE PROJECT.
-   Use Project URL and publishable key (or legacy anon key) only.
+/* Use Project URL and publishable key (or legacy anon key) only.
    NEVER put service_role/secret keys in this file. */
 const SUPABASE_URL = 'https://kaobteyfxgfxlzrmwsge.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IiPNP9mZ3s_8TZEhuLmvg_87ncVOcL';
@@ -110,6 +109,7 @@ const configured = SUPABASE_URL.startsWith('https://') &&
   SUPABASE_PUBLISHABLE_KEY && !SUPABASE_PUBLISHABLE_KEY.includes('YOUR_');
 let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], candidateIndex = 0;
 let activeMatch = null, activeChatChannel = null, matchesCache = [];
+let authRunId = 0;
 const navItems = [
   ['discover','⌕','Discover'],['matches','♡','Matches'],['me','☺','My profile'],['plans','✦','Swipe plans']
 ];
@@ -151,36 +151,110 @@ async function init() {
     return;
   }
   sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}
   });
+
   $('googleBtn').addEventListener('click', async()=>{
     $('googleBtn').disabled=true;
+    $('loginMessage').classList.add('hidden');
     try {
-      const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
+      // Use a clean, stable callback URL and explicitly ask Google to show account chooser.
+      const redirectTo = location.origin + location.pathname;
+      const {error}=await sb.auth.signInWithOAuth({
+        provider:'google',
+        options:{
+          redirectTo,
+          queryParams:{prompt:'select_account'}
+        }
+      });
       if(error) throw error;
-    } catch(e) { showMessage(niceError(e),true,'loginMessage'); $('loginMessage').classList.remove('hidden'); $('googleBtn').disabled=false; }
+    } catch(e) {
+      showMessage(niceError(e),true,'loginMessage');
+      $('loginMessage').classList.remove('hidden');
+      $('googleBtn').disabled=false;
+    }
   });
+
+  // Process auth events outside Supabase's auth callback to avoid deadlocks.
   sb.auth.onAuthStateChange((_event,session)=>{
     setTimeout(()=>handleSession(session),0);
   });
+
   const {data,error}=await sb.auth.getSession();
-  if(error) showMessage(niceError(error),true,'loginMessage');
+  if(error) {
+    showMessage(niceError(error),true,'loginMessage');
+    $('loginMessage').classList.remove('hidden');
+  }
   await handleSession(data?.session);
 }
 async function handleSession(session) {
-  currentUser=session?.user || null;
-  setSignedInUI(!!currentUser);
-  if (!currentUser) { myProfile=null; return; }
-  $('authBadge').textContent=currentUser.email || 'Signed in';
+  const runId = ++authRunId;
+  const nextUser = session?.user || null;
+
+  if (!nextUser) {
+    currentUser=null;
+    myProfile=null;
+    candidateProfiles=[];
+    candidateIndex=0;
+    activeMatch=null;
+    matchesCache=[];
+    if(activeChatChannel && sb) {
+      const oldChannel=activeChatChannel;
+      activeChatChannel=null;
+      await sb.removeChannel(oldChannel);
+    }
+    if(runId!==authRunId) return;
+    $('greeting').textContent='Welcome to Saath';
+    $('swipeCount').textContent='Loading swipes…';
+    $('discoverCard').innerHTML='<div class="empty">Login karke profiles discover karo.</div>';
+    $('matchesList').innerHTML='<div class="empty">Login karke matches dekho.</div>';
+    $('profileSummary').innerHTML='';
+    setSignedInUI(false);
+    $('googleBtn').disabled=false;
+    return;
+  }
+
+  if(currentUser?.id!==nextUser.id) {
+    myProfile=null;
+    candidateProfiles=[];
+    candidateIndex=0;
+    activeMatch=null;
+    matchesCache=[];
+    if(activeChatChannel && sb) {
+      const oldChannel=activeChatChannel;
+      activeChatChannel=null;
+      await sb.removeChannel(oldChannel);
+    }
+  }
+
+  currentUser=nextUser;
+  setSignedInUI(true);
+  $('authBadge').textContent=nextUser.email||'Signed in';
+  $('googleBtn').disabled=false;
+
   try {
-    await ensureWallet();
-    const {data,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+    const {data,error}=await sb.from('profiles').select('*').eq('id',nextUser.id).maybeSingle();
     if(error) throw error;
+    if(runId!==authRunId) return;
     myProfile=data;
-    if(!myProfile) { showView('me'); showMessage('Welcome! Apna 18+ profile complete karke Save profile dabao.'); }
-    else { $('greeting').textContent=`Hi, ${myProfile.display_name} 👋`; showView('discover'); }
+
+    await ensureWallet();
+    if(runId!==authRunId) return;
+
+    if(!myProfile) {
+      $('greeting').textContent='Welcome to Saath';
+      showView('me');
+      renderMyProfile();
+      showMessage('Welcome! Apna 18+ profile complete karke Save profile dabao.');
+    } else {
+      $('greeting').textContent=`Hi, ${myProfile.display_name} 👋`;
+      showView('discover');
+    }
     await refreshWallet();
-  } catch(e) { showMessage('Profile load error: '+niceError(e),true); }
+  } catch(e) {
+    if(runId!==authRunId) return;
+    showMessage('Login ho gaya, lekin profile/wallet load nahi hua: '+niceError(e),true);
+  }
 }
 async function ensureWallet() {
   const {error}=await sb.rpc('ensure_my_wallet');
@@ -366,7 +440,24 @@ document.querySelectorAll('.claimPlan').forEach(btn=>btn.addEventListener('click
   } catch(e) { showMessage(niceError(e),true); }
   finally { btn.disabled=false; }
 }));
-$('logoutBtn').onclick=async()=>{if(activeChatChannel) await sb.removeChannel(activeChatChannel);const {error}=await sb.auth.signOut();if(error)showMessage(niceError(error),true);};
+
+$('logoutBtn').onclick=async()=>{
+  $('logoutBtn').disabled=true;
+  try {
+    if(activeChatChannel) {
+      const oldChannel=activeChatChannel;
+      activeChatChannel=null;
+      await sb.removeChannel(oldChannel);
+    }
+    const {error}=await sb.auth.signOut({scope:'local'});
+    if(error) throw error;
+  } catch(e) {
+    showMessage('Sign out error: '+niceError(e),true);
+  } finally {
+    $('logoutBtn').disabled=false;
+  }
+};
+
 $('deleteProfileBtn').onclick=async()=>{
   if(!confirm('Confirm: tumhara profile, likes, blocks, matches, messages aur swipe data delete hoga. Google login identity Supabase Auth mein rahegi. Continue?')) return;
   try {
@@ -374,7 +465,8 @@ $('deleteProfileBtn').onclick=async()=>{
     if(error) throw error;
     myProfile=null; activeMatch=null; matchesCache=[];
     if(activeChatChannel) await sb.removeChannel(activeChatChannel);
-    await sb.auth.signOut();
+    activeChatChannel=null;
+    await sb.auth.signOut({scope:'local'});
     showMessage('Profile data deleted.');
   } catch(e) { showMessage(niceError(e),true); }
 };
