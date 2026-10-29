@@ -8,7 +8,7 @@
 <!-- Discover fix: 2026-10-29; removed unknown created_at field, clarified profile diagnostics. -->
 <style>
 :root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--text:#f5f7ff;--muted:#aab5ce;--line:#2a3652;--pink:#ff4d87;--purple:#8b5cf6;--green:#34d399;--red:#fb7185}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172341 0,#0b1020 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--pink),var(--purple))}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#25314d;border:1px solid #3a4868}.danger{background:#5c2038;border:1px solid #9f3459}.success{background:#145344}.hidden{display:none!important}.wrap{max-width:1080px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--pink)}.pill{border:1px solid var(--line);background:#111a2c;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}.layout{display:grid;grid-template-columns:220px 1fr;gap:18px}.sidebar,.panel,.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px}.sidebar{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;color:var(--muted);border:1px solid transparent}.nav.active{background:#24213e;color:#fff;border-color:#51406d}.main{min-width:0}.panel{padding:18px;margin-bottom:15px}.hero{padding:22px;background:linear-gradient(130deg,#251c3c,#142641);border:1px solid #49355f;border-radius:22px;margin-bottom:15px}.hero h1{font-size:clamp(24px,5vw,36px);margin:0 0 8px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1325;border:1px solid #34415f;border-radius:12px;padding:12px;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}.actions{display:flex;gap:8px;flex-wrap:wrap}.profile-card{padding:18px;display:flex;gap:14px;align-items:center}.avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-size:27px;font-weight:900;flex-shrink:0}.person h2{margin:0 0 5px}.tag{display:inline-block;background:#222e49;border:1px solid #34415f;padding:5px 9px;border-radius:999px;font-size:12px;color:#d8e1f8;margin:3px 3px 0 0}.person-card{background:linear-gradient(150deg,#18233b,#11182b);border:1px solid #35415e;border-radius:20px;padding:18px}.person-card .avatar{width:82px;height:82px;margin-bottom:13px}.person-card h2{margin:0 0 4px}.person-card .bio{min-height:48px;color:#d0d8ea;margin:12px 0}.swipe-actions{display:flex;gap:10px;margin-top:16px}.swipe-actions button{flex:1}.plan{border:1px solid #35415e;border-radius:16px;padding:15px;background:#111a2c}.plan h3{margin:0 0 5px}.plan .price{font-size:25px;font-weight:900;margin:8px 0}.list{display:flex;flex-direction:column;gap:10px}.list-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#111a2c;border-radius:14px}.list-item .grow{flex:1;min-width:0}.list-item p{margin:3px 0}.chat-box{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#0b1325;border:1px solid var(--line);border-radius:15px;padding:12px;margin:12px 0}.bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#24314d;align-self:flex-start;overflow-wrap:anywhere}.bubble.mine{background:#66305d;align-self:flex-end}.small{font-size:12px}.status{padding:10px 12px;border-radius:12px;background:#182b37;color:#b7f7dc;margin:10px 0}.error{background:#3a1b2a;color:#ffc0d0}.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;background:#020617c9;display:grid;place-items:center;padding:16px;z-index:10}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.inline{display:flex;gap:8px}.inline>*{min-width:0;flex:1}.empty{text-align:center;padding:30px 12px;color:var(--muted)}a{color:#f9a8d4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172341 0,#0b1020 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--pink),var(--purple))}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#25314d;border:1px solid #3a4868}.danger{background:#5c2038;border:1px solid #9f3459}.success{background:#145344}.hidden{display:none!important}.wrap{max-width:1080px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--pink)}.pill{border:1px solid var(--line);background:#111a2c;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}.layout{display:grid;grid-template-columns:220px 1fr;gap:18px}.sidebar,.panel,.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px}.sidebar{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;color:var(--muted);border:1px solid transparent}.nav.active{background:#24213e;color:#fff;border-color:#51406d}.main{min-width:0}.panel{padding:18px;margin-bottom:15px}.hero{padding:22px;background:linear-gradient(130deg,#251c3c,#142641);border:1px solid #49355f;border-radius:22px;margin-bottom:15px}.hero h1{font-size:clamp(24px,5vw,36px);margin:0 0 8px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1325;border:1px solid #34415f;border-radius:12px;padding:12px;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}.actions{display:flex;gap:8px;flex-wrap:wrap}.profile-card{padding:18px;display:flex;gap:14px;align-items:center}.avatar{overflow:hidden;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-size:27px;font-weight:900;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover;display:block}.person h2{margin:0 0 5px}.tag{display:inline-block;background:#222e49;border:1px solid #34415f;padding:5px 9px;border-radius:999px;font-size:12px;color:#d8e1f8;margin:3px 3px 0 0}.person-card{background:linear-gradient(150deg,#18233b,#11182b);border:1px solid #35415e;border-radius:20px;padding:18px}.person-card .avatar{width:110px;height:110px;margin:0 auto 13px}.profile-photo-tools{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:12px 0 18px}.profile-photo-preview{width:104px;height:104px;border-radius:50%;overflow:hidden;border:2px solid #51406d;background:#111a2c;display:grid;place-items:center;flex-shrink:0}.profile-photo-preview img{width:100%;height:100%;object-fit:cover}.profile-photo-actions{display:flex;gap:8px;flex-wrap:wrap}.person-card h2{margin:0 0 4px}.person-card .bio{min-height:48px;color:#d0d8ea;margin:12px 0}.swipe-actions{display:flex;gap:10px;margin-top:16px}.swipe-actions button{flex:1}.plan{border:1px solid #35415e;border-radius:16px;padding:15px;background:#111a2c}.plan h3{margin:0 0 5px}.plan .price{font-size:25px;font-weight:900;margin:8px 0}.list{display:flex;flex-direction:column;gap:10px}.list-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#111a2c;border-radius:14px}.list-item .grow{flex:1;min-width:0}.list-item p{margin:3px 0}.chat-box{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#0b1325;border:1px solid var(--line);border-radius:15px;padding:12px;margin:12px 0}.bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#24314d;align-self:flex-start;overflow-wrap:anywhere}.bubble.mine{background:#66305d;align-self:flex-end}.small{font-size:12px}.status{padding:10px 12px;border-radius:12px;background:#182b37;color:#b7f7dc;margin:10px 0}.error{background:#3a1b2a;color:#ffc0d0}.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;background:#020617c9;display:grid;place-items:center;padding:16px;z-index:10}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.inline{display:flex;gap:8px}.inline>*{min-width:0;flex:1}.empty{text-align:center;padding:30px 12px;color:var(--muted)}a{color:#f9a8d4}
 @media(max-width:740px){.wrap{padding:12px}.layout{display:block}.sidebar{display:none}.mobile-nav{display:flex;position:sticky;bottom:8px;z-index:5;gap:5px;padding:7px;background:#10182bdc;backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;margin-top:12px}.mobile-nav .nav{justify-content:center;text-align:center;padding:10px 4px;font-size:12px;margin:0}.grid{grid-template-columns:1fr}.panel{padding:14px}.hero{padding:18px}.top{align-items:flex-start}.brand{font-size:24px}.profile-card{align-items:flex-start}.inline{flex-direction:column}}
 
 /* Saath visual refresh */
@@ -134,6 +134,10 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
         <section id="view-me" class="view hidden">
           <div class="panel"><h2>Your profile</h2><div id="profileSummary"></div><hr style="border-color:var(--line);margin:18px 0">
             <h3>Edit profile</h3>
+            <div class="profile-photo-tools">
+              <div id="myPhotoPreview" class="profile-photo-preview"><span class="muted">Photo</span></div>
+              <div style="flex:1;min-width:180px"><div class="field"><label for="profilePhotoInput">Profile picture (JPG, PNG or WebP, max 5 MB)</label><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp"></div><div class="profile-photo-actions"><button type="button" id="uploadPhotoBtn">Upload photo</button><button type="button" id="removePhotoBtn" class="secondary">Remove photo</button></div><p class="muted small">Pehle basic profile save karo, phir photo upload karo. Photo Discover aur Matches mein bhi dikhegi.</p></div>
+            </div>
             <form id="profileForm">
               <div class="grid">
                 <div class="field"><label>Display name</label><input id="displayName" maxlength="60" required></div>
@@ -324,24 +328,72 @@ async function refreshWallet(){
   const bonus=data?.bonus_credits||0,used=data?.free_used||0;
   $('swipeCount').textContent=`Free today: ${Math.max(0,7-used)}/7 · Bonus: ${bonus}`;
 }
+function avatarMarkup(profile, extraClass=''){
+  const name=profile?.display_name||'Saath user';
+  const photo=profile?.photo_url;
+  return `<div class="avatar ${extraClass}">${photo?`<img src="${escapeHtml(photo)}" alt="${escapeHtml(name)} profile photo" loading="lazy" referrerpolicy="no-referrer">`:escapeHtml(initials(name))}</div>`;
+}
+function renderPhotoPreview(){
+  const box=$('myPhotoPreview');if(!box)return;
+  const photo=myProfile?.photo_url;
+  box.innerHTML=photo?`<img src="${escapeHtml(photo)}" alt="Your profile photo">`:`<span class="muted">${escapeHtml(initials(myProfile?.display_name||currentUser?.user_metadata?.name||'Me'))}</span>`;
+  $('removePhotoBtn').disabled=!photo;
+}
 function renderMyProfile(){
   if(!currentUser)return;
   const p=myProfile||{};
   $('displayName').value=p.display_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||'';
   $('age').value=p.age||'';$('gender').value=p.gender||'';$('lookingFor').value=p.looking_for||'';
   $('state').value=p.state||'';$('city').value=p.city||'';$('bio').value=p.bio||'';
-  $('profileSummary').innerHTML=p.id?`<div class="profile-card"><div class="avatar">${escapeHtml(initials(p.display_name))}</div><div class="person"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">${escapeHtml(p.city)}, ${escapeHtml(p.state)}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender)}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for)}</span></div></div>`:'<p class="muted">Profile abhi complete nahi hai.</p>';
+  $('profileSummary').innerHTML=p.id?`<div class="profile-card">${avatarMarkup(p)}<div class="person"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">${escapeHtml(p.city)}, ${escapeHtml(p.state)}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender)}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for)}</span></div></div>`:'<p class="muted">Profile abhi complete nahi hai.</p>';
+  renderPhotoPreview();
 }
 $('profileForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!currentUser)return;
   const age=Number($('age').value);
   if(age<18||age>100){showMessage('Saath par account banane ke liye age 18–100 honi chahiye.',true);return;}
-  const profile={id:currentUser.id,display_name:$('displayName').value.trim(),age,gender:$('gender').value,looking_for:$('lookingFor').value,state:$('state').value.trim(),city:$('city').value.trim(),bio:$('bio').value.trim(),updated_at:new Date().toISOString()};
+  const profile={id:currentUser.id,display_name:$('displayName').value.trim(),age,gender:$('gender').value,looking_for:$('lookingFor').value,state:$('state').value.trim(),city:$('city').value.trim(),bio:$('bio').value.trim(),photo_url:myProfile?.photo_url||null,photo_path:myProfile?.photo_path||null,updated_at:new Date().toISOString()};
   try{
     const {data,error}=await sb.from('profiles').upsert(profile,{onConflict:'id'}).select().single();
     if(error)throw error;myProfile=data;
     renderMyProfile();showMessage('Profile saved successfully.');showView('discover');
   }catch(e){showMessage('Profile save error: '+niceError(e),true);}
+});
+
+$('uploadPhotoBtn').addEventListener('click',async()=>{
+  if(!currentUser||!sb){showMessage('Pehle login karo.',true);return;}
+  if(!myProfile?.id){showMessage('Pehle apni basic profile Save profile button se save karo.',true);return;}
+  const file=$('profilePhotoInput').files?.[0];
+  if(!file){showMessage('Pehle Gallery se photo select karo.',true);return;}
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){showMessage('Sirf JPG, PNG ya WebP image upload karo.',true);return;}
+  if(file.size>5*1024*1024){showMessage('Photo 5 MB se chhoti honi chahiye.',true);return;}
+  const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' })[file.type];
+  const path=`${currentUser.id}/${Date.now()}.${ext}`;
+  const btn=$('uploadPhotoBtn');btn.disabled=true;btn.textContent='Uploading…';
+  try{
+    const {error:upErr}=await sb.storage.from('profile-photos').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
+    if(upErr)throw upErr;
+    const {data:pub}=sb.storage.from('profile-photos').getPublicUrl(path);
+    const {data,error}=await sb.from('profiles').update({photo_url:pub.publicUrl,photo_path:path,updated_at:new Date().toISOString()}).eq('id',currentUser.id).select().single();
+    if(error){await sb.storage.from('profile-photos').remove([path]);throw error;}
+    const oldPath=myProfile?.photo_path;myProfile=data;renderMyProfile();
+    if(oldPath&&oldPath!==path)await sb.storage.from('profile-photos').remove([oldPath]);
+    $('profilePhotoInput').value='';showMessage('Profile photo upload ho gayi!');
+  }catch(e){showMessage('Photo upload error: '+niceError(e)+' — Supabase mein profile-photos bucket aur policies check karo.',true);}
+  finally{btn.disabled=false;btn.textContent='Upload photo';}
+});
+$('removePhotoBtn').addEventListener('click',async()=>{
+  if(!currentUser||!myProfile?.photo_url)return;
+  if(!confirm('Apni profile photo remove karni hai?'))return;
+  const btn=$('removePhotoBtn');btn.disabled=true;
+  try{
+    const oldPath=myProfile.photo_path;
+    const {data,error}=await sb.from('profiles').update({photo_url:null,photo_path:null,updated_at:new Date().toISOString()}).eq('id',currentUser.id).select().single();
+    if(error)throw error;
+    myProfile=data;if(oldPath)await sb.storage.from('profile-photos').remove([oldPath]);
+    renderMyProfile();showMessage('Profile photo remove ho gayi.');
+  }catch(e){showMessage('Photo remove error: '+niceError(e),true);}
+  finally{btn.disabled=false;}
 });
 
 function getFilters(){
@@ -374,7 +426,7 @@ async function loadDiscover(reset=true){
     // Fetch profiles without age constraints, then filter in JavaScript.
     // This also handles databases where age values were stored as text.
     let q=sb.from('profiles')
-      .select('id,display_name,age,state,city,gender,looking_for,bio,updated_at')
+      .select('id,display_name,age,state,city,gender,looking_for,bio,photo_url,photo_path,updated_at')
       .neq('id',currentUser.id)
       .limit(500);
     const {data,error}=await q;
@@ -422,7 +474,7 @@ function renderCandidate(){
   const box=$('discoverCard');
   if(candidateIndex>=candidateProfiles.length){box.innerHTML='<div class="empty"><h3>Abhi aur profiles nahi hain</h3><p>Filters badal kar dobara try karo.</p><button id="reloadDiscover">Refresh profiles</button></div>';$('reloadDiscover')?.addEventListener('click',()=>loadDiscover(true));return;}
   const p=candidateProfiles[candidateIndex];
-  box.innerHTML=`<div class="avatar">${escapeHtml(initials(p.display_name))}</div><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', '))}</div><div><span class="tag">${escapeHtml(p.gender)}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button class="danger" id="passBtn">✕ &nbsp; Pass</button><button id="likeBtn">♥ &nbsp; Like</button></div><div class="actions" style="margin-top:10px;justify-content:center"><button class="secondary" id="blockBtn">⊘ Block profile</button></div>`;
+  box.innerHTML=`${avatarMarkup(p)}<h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', '))}</div><div><span class="tag">${escapeHtml(p.gender)}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button class="danger" id="passBtn">✕ &nbsp; Pass</button><button id="likeBtn">♥ &nbsp; Like</button></div><div class="actions" style="margin-top:10px;justify-content:center"><button class="secondary" id="blockBtn">⊘ Block profile</button></div>`;
   $('passBtn').onclick=()=>doSwipe(p.id,'pass');$('likeBtn').onclick=()=>doSwipe(p.id,'like');$('blockBtn').onclick=()=>blockUser(p.id);
 }
 async function doSwipe(targetId,action){
@@ -441,9 +493,9 @@ async function loadMatches(){
     const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});if(error)throw error;
     matchesCache=data||[];if(!matchesCache.length){box.innerHTML='<div class="empty">Abhi matches nahi hain. Discover mein profiles like karo.</div>';return;}
     const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
-    const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state').in('id',otherIds);if(pe)throw pe;
+    const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);if(pe)throw pe;
     const map=new Map((people||[]).map(p=>[p.id,p]));
-    box.innerHTML=matchesCache.map(m=>{const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);return `<div class="list-item"><div class="avatar" style="width:48px;height:48px;font-size:18px">${escapeHtml(initials(p?.display_name||'S'))}</div><div class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><p class="muted small">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', '))}</p></div><button data-open-match="${m.id}">Chat</button><button class="secondary" data-block-match="${id}">Block</button></div>`;}).join('');
+    box.innerHTML=matchesCache.map(m=>{const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);return `<div class="list-item">${p?.photo_url?`<div class="avatar" style="width:48px;height:48px;font-size:18px"><img src="${escapeHtml(p.photo_url)}" alt="Profile photo" loading="lazy"></div>`:`<div class="avatar" style="width:48px;height:48px;font-size:18px">${escapeHtml(initials(p?.display_name||'S'))}</div>`}<div class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><p class="muted small">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', '))}</p></div><button data-open-match="${m.id}">Chat</button><button class="secondary" data-block-match="${id}">Block</button></div>`;}).join('');
     box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
     box.querySelectorAll('[data-block-match]').forEach(b=>b.onclick=async()=>{if(confirm('Block this user?'))try{const {error}=await sb.rpc('block_user',{p_target_user_id:b.dataset.blockMatch});if(error)throw error;showMessage('User blocked.');await loadMatches();}catch(e){showMessage(niceError(e),true);}});
   }catch(e){box.innerHTML=`<div class="empty">Matches load error: ${escapeHtml(niceError(e))}</div>`;}
