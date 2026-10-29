@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
 <title>Saath — Find Your Connection</title>
+<!-- Discover fix: 2026-10-29; removed unknown created_at field, clarified profile diagnostics. -->
 <style>
 :root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--text:#f5f7ff;--muted:#aab5ce;--line:#2a3652;--pink:#ff4d87;--purple:#8b5cf6;--green:#34d399;--red:#fb7185}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172341 0,#0b1020 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--pink),var(--purple))}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#25314d;border:1px solid #3a4868}.danger{background:#5c2038;border:1px solid #9f3459}.success{background:#145344}.hidden{display:none!important}.wrap{max-width:1080px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--pink)}.pill{border:1px solid var(--line);background:#111a2c;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}.layout{display:grid;grid-template-columns:220px 1fr;gap:18px}.sidebar,.panel,.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px}.sidebar{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;color:var(--muted);border:1px solid transparent}.nav.active{background:#24213e;color:#fff;border-color:#51406d}.main{min-width:0}.panel{padding:18px;margin-bottom:15px}.hero{padding:22px;background:linear-gradient(130deg,#251c3c,#142641);border:1px solid #49355f;border-radius:22px;margin-bottom:15px}.hero h1{font-size:clamp(24px,5vw,36px);margin:0 0 8px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1325;border:1px solid #34415f;border-radius:12px;padding:12px;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}.actions{display:flex;gap:8px;flex-wrap:wrap}.profile-card{padding:18px;display:flex;gap:14px;align-items:center}.avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-size:27px;font-weight:900;flex-shrink:0}.person h2{margin:0 0 5px}.tag{display:inline-block;background:#222e49;border:1px solid #34415f;padding:5px 9px;border-radius:999px;font-size:12px;color:#d8e1f8;margin:3px 3px 0 0}.person-card{background:linear-gradient(150deg,#18233b,#11182b);border:1px solid #35415e;border-radius:20px;padding:18px}.person-card .avatar{width:82px;height:82px;margin-bottom:13px}.person-card h2{margin:0 0 4px}.person-card .bio{min-height:48px;color:#d0d8ea;margin:12px 0}.swipe-actions{display:flex;gap:10px;margin-top:16px}.swipe-actions button{flex:1}.plan{border:1px solid #35415e;border-radius:16px;padding:15px;background:#111a2c}.plan h3{margin:0 0 5px}.plan .price{font-size:25px;font-weight:900;margin:8px 0}.list{display:flex;flex-direction:column;gap:10px}.list-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#111a2c;border-radius:14px}.list-item .grow{flex:1;min-width:0}.list-item p{margin:3px 0}.chat-box{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#0b1325;border:1px solid var(--line);border-radius:15px;padding:12px;margin:12px 0}.bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#24314d;align-self:flex-start;overflow-wrap:anywhere}.bubble.mine{background:#66305d;align-self:flex-end}.small{font-size:12px}.status{padding:10px 12px;border-radius:12px;background:#182b37;color:#b7f7dc;margin:10px 0}.error{background:#3a1b2a;color:#ffc0d0}.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;background:#020617c9;display:grid;place-items:center;padding:16px;z-index:10}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.inline{display:flex;gap:8px}.inline>*{min-width:0;flex:1}.empty{text-align:center;padding:30px 12px;color:var(--muted)}a{color:#f9a8d4}
@@ -167,11 +168,11 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
 <div id="filterBackdrop" class="filter-backdrop"></div>
 <aside id="filterDrawer" class="filter-drawer" aria-label="Discover filters" aria-hidden="true">
   <div class="drawer-head"><h3>Refine your match</h3><button id="closeFilters" class="drawer-close" aria-label="Close filters">×</button></div>
-  <p class="muted small">Choose preferences to find profiles that fit you.</p>
+  <p class="muted small">By default, profiles of all genders and ages are shown. Set filters only when you want to narrow the list.</p>
   <div class="drawer-note">✨ Filters only change who appears in Discover. Like and Pass still use your swipe balance.</div>
-  <div class="field"><label for="filterMinAge">Minimum age</label><select id="filterMinAge"><option>18</option><option>21</option><option>25</option><option>30</option><option>35</option></select></div>
-  <div class="field"><label for="filterMaxAge">Maximum age</label><select id="filterMaxAge"><option>30</option><option>35</option><option>40</option><option>50</option><option value="70" selected>70</option><option value="100">100</option></select></div>
-  <div class="field"><label for="filterGender">Gender</label><select id="filterGender"><option value="">Any gender</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
+  <div class="field"><label for="filterMinAge">Minimum age (optional)</label><select id="filterMinAge"><option value="" selected>Any age</option><option value="18">18</option><option value="21">21</option><option value="25">25</option><option value="30">30</option><option value="35">35</option><option value="40">40</option><option value="50">50</option></select></div>
+  <div class="field"><label for="filterMaxAge">Maximum age (optional)</label><select id="filterMaxAge"><option value="" selected>Any age</option><option value="30">30</option><option value="35">35</option><option value="40">40</option><option value="50">50</option><option value="70">70</option><option value="100">100</option></select></div>
+  <div class="field"><label for="filterGender">Discover gender filter (independent)</label><select id="filterGender"><option value="">Any gender</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
   <div class="field"><label for="filterState">State</label><input id="filterState" placeholder="Any state"></div>
   <div class="field"><label for="filterCity">City</label><input id="filterCity" placeholder="Any city"></div>
   <div class="drawer-actions"><button id="clearFilters" class="secondary">Clear all</button><button id="applyFilters">Show matches</button></div>
@@ -344,9 +345,9 @@ $('profileForm').addEventListener('submit',async e=>{
 });
 
 function getFilters(){
-  let minAge=Number($('filterMinAge').value||18);
-  let maxAge=Number($('filterMaxAge').value||100);
-  if(minAge>maxAge){const temp=minAge;minAge=maxAge;maxAge=temp;$('filterMinAge').value=String(minAge);$('filterMaxAge').value=String(maxAge);}
+  let minAge=$('filterMinAge').value===''?null:Number($('filterMinAge').value);
+  let maxAge=$('filterMaxAge').value===''?null:Number($('filterMaxAge').value);
+  if(minAge!==null&&maxAge!==null&&minAge>maxAge){const temp=minAge;minAge=maxAge;maxAge=temp;$('filterMinAge').value=String(minAge);$('filterMaxAge').value=String(maxAge);}
   return {minAge,maxAge,gender:$('filterGender').value,state:$('filterState').value.trim(),city:$('filterCity').value.trim()};
 }
 const filterDrawer=$('filterDrawer'),filterBackdrop=$('filterBackdrop');
@@ -361,12 +362,9 @@ filterBackdrop.addEventListener('click',()=>setFiltersOpen(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')setFiltersOpen(false);});
 $('applyFilters').addEventListener('click',()=>{setFiltersOpen(false);loadDiscover(true);});
 $('clearFilters').addEventListener('click',()=>{
-  $('filterMinAge').value='18';$('filterMaxAge').value='70';$('filterGender').value='';
+  $('filterMinAge').value='';$('filterMaxAge').value='';$('filterGender').value='';
   $('filterState').value='';$('filterCity').value='';setFiltersOpen(false);loadDiscover(true);
 });
-function preferenceAllows(preference, gender){
-  return !preference || preference==='Everyone' || preference===gender;
-}
 async function loadDiscover(reset=true){
   if(!currentUser||!sb)return;
   if(!myProfile){$('discoverCard').innerHTML='<div class="empty">Pehle My profile mein apni profile save karo.</div>';return;}
@@ -374,7 +372,6 @@ async function loadDiscover(reset=true){
   try{
     const f=getFilters();
     // Fetch profiles without age constraints, then filter in JavaScript.
-    // Use only columns defined by this app's SQL schema; profiles has updated_at, not created_at.
     // This also handles databases where age values were stored as text.
     let q=sb.from('profiles')
       .select('id,display_name,age,state,city,gender,looking_for,bio,updated_at')
@@ -389,24 +386,30 @@ async function loadDiscover(reset=true){
     if(be)throw be;if(le)throw le;
     const blocked=new Set((blocks||[]).flatMap(b=>[b.blocker_id,b.blocked_id]));
     const liked=new Set((likes||[]).map(l=>l.to_user_id));
-    candidateProfiles=(data||[]).filter(p=>{
+    const allOtherProfiles=(data||[]).filter(p=>p.id!==currentUser.id);
+    candidateProfiles=allOtherProfiles.filter(p=>{
       const age=Number(p.age);
-      if(!Number.isFinite(age)||age<f.minAge||age>f.maxAge)return false;
+      // Dating discovery is restricted to adults (18+); optional age filters apply only when selected.
+      if(!Number.isFinite(age)||age<18)return false;
+      if(f.minAge!==null&&age<f.minAge)return false;
+      if(f.maxAge!==null&&(!Number.isFinite(age)||age>f.maxAge))return false;
       if(f.gender&&p.gender!==f.gender)return false;
       if(f.state&&!String(p.state||'').toLowerCase().includes(f.state.toLowerCase()))return false;
       if(f.city&&!String(p.city||'').toLowerCase().includes(f.city.toLowerCase()))return false;
       if(blocked.has(p.id)||liked.has(p.id))return false;
-      if(!preferenceAllows(p.looking_for,myProfile.gender))return false;
-      if(!preferenceAllows(myProfile.looking_for,p.gender))return false;
+      // Discover shows every gender regardless of either user's 'Looking for' setting.
+      // Only the explicit Discover filters (age, gender, state, city) narrow the list.
       return true;
     });
     candidateIndex=0;
     renderCandidate();
     if(!candidateProfiles.length){
-      const anyOther=(data||[]).some(p=>p.id!==currentUser.id);
-      const note=anyOther
-        ? `Database se ${data.length} doosri profile(s) mili, lekin filters/preferences ke baad koi eligible profile nahi bachi. Clear all karke try karo; dono accounts ki age, gender aur Looking for settings bhi check karo.`
-        : 'Supabase ne current account ke alawa koi profile return nahi ki. Doosre Google account se login karke My profile mein details save karo. Agar doosre account ki profile pehle se saved hai, Supabase Table Editor mein public.profiles aur RLS SELECT policy check karni hogi.';
+      let note='';
+      if(!allOtherProfiles.length){
+        note='Supabase se tumhare alawa koi profile return nahi hui. Doosre Google account mein My profile kholkar Save profile dabao. Agar profile pehle se saved hai, to profiles table ki SELECT RLS policy check karni hogi.';
+      }else{
+        note=`Database ne ${allOtherProfiles.length} doosri profile(s) di, lekin current filters, block ya pehle Like ki condition ke baad koi profile nahi bachi. Clear all dabao ya filters badlo.`;
+      }
       const empty=$('discoverCard').querySelector('.empty');
       if(empty){const p=document.createElement('p');p.textContent=note;empty.appendChild(p);}
     }
