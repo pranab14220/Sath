@@ -136,7 +136,7 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
             <h3>Edit profile</h3>
             <div class="profile-photo-tools">
               <div id="myPhotoPreview" class="profile-photo-preview"><span class="muted">Photo</span></div>
-              <div style="flex:1;min-width:180px"><div class="field"><label for="profilePhotoInput">Profile picture (JPG, PNG or WebP, max 5 MB)</label><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp"></div><div class="profile-photo-actions"><button type="button" id="uploadPhotoBtn">Upload photo</button><button type="button" id="removePhotoBtn" class="secondary">Remove photo</button></div><p class="muted small">Pehle basic profile save karo, phir photo upload karo. Photo Discover aur Matches mein bhi dikhegi.</p></div>
+              <div style="flex:1;min-width:180px"><div class="field"><label for="profilePhotoInput">Profile picture (JPG, PNG or WebP, max 500 KB)</label><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp"></div><div class="profile-photo-actions"><button type="button" id="uploadPhotoBtn">Upload photo</button><button type="button" id="removePhotoBtn" class="secondary">Remove photo</button></div><p class="muted small">Pehle basic profile save karo, phir photo upload karo. Photo Discover aur Matches mein bhi dikhegi.</p></div>
             </div>
             <form id="profileForm">
               <div class="grid">
@@ -360,13 +360,22 @@ $('profileForm').addEventListener('submit',async e=>{
   }catch(e){showMessage('Profile save error: '+niceError(e),true);}
 });
 
+$('profilePhotoInput').addEventListener('change',()=>{
+  const file=$('profilePhotoInput').files?.[0];
+  if(!file)return;
+  if(file.size>500*1024){
+    showMessage('Photo 500 KB ya usse chhoti honi chahiye. Is photo ka size '+(file.size/1024).toFixed(1)+' KB hai. Chhoti photo select karo.',true);
+    $('profilePhotoInput').value='';
+  }
+});
+
 $('uploadPhotoBtn').addEventListener('click',async()=>{
   if(!currentUser||!sb){showMessage('Pehle login karo.',true);return;}
   if(!myProfile?.id){showMessage('Pehle apni basic profile Save profile button se save karo.',true);return;}
   const file=$('profilePhotoInput').files?.[0];
   if(!file){showMessage('Pehle Gallery se photo select karo.',true);return;}
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)){showMessage('Sirf JPG, PNG ya WebP image upload karo.',true);return;}
-  if(file.size>5*1024*1024){showMessage('Photo 5 MB se chhoti honi chahiye.',true);return;}
+  if(file.size>500*1024){showMessage('Photo 500 KB ya usse chhoti honi chahiye. Is photo ka size '+(file.size/1024).toFixed(1)+' KB hai.',true);$('profilePhotoInput').value='';return;}
   const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' })[file.type];
   const path=`${currentUser.id}/${Date.now()}.${ext}`;
   const btn=$('uploadPhotoBtn');btn.disabled=true;btn.textContent='Uploading…';
