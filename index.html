@@ -75,6 +75,18 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
  .filter-drawer{width:min(390px,94vw);padding:20px 17px calc(22px + env(safe-area-inset-bottom))}
 }
 
+
+/* Minimal Discover toolbar: filters left, swipe balance right */
+.discover-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:0 2px}
+.filter-open{order:0;white-space:nowrap;padding:8px 12px;border-radius:11px;font-size:12px;line-height:1.2;box-shadow:none}
+.swipe-meter{order:1;display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:11px;font-size:11px;font-weight:750;white-space:nowrap;box-shadow:none}
+.swipe-meter .meter-dot{width:6px;height:6px;flex-shrink:0}
+@media(max-width:740px){
+ .discover-heading{margin:0 0 12px;padding:0;min-height:38px}
+ .filter-open{padding:8px 10px;font-size:12px}
+ .swipe-meter{padding:7px 9px;font-size:10px;gap:6px}
+}
+
 </style>
 </head>
 <body>
@@ -97,13 +109,12 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
     <div class="layout">
       <aside class="sidebar" id="desktopNav"></aside>
       <main class="main">
-        <div class="compact-topline"><span class="swipe-meter"><span class="meter-dot"></span><span id="swipeCount">Loading swipes…</span></span></div>
         <div id="globalMessage" class="status hidden"></div>
 
         <section id="view-discover" class="view">
           <div class="discover-heading">
-            <div><h2>Discover</h2><p class="muted">Find someone who feels like your kind of person.</p></div>
             <button id="openFilters" class="filter-open">☷ Filters</button>
+            <span class="swipe-meter"><span class="meter-dot"></span><span id="swipeCount">Loading swipes…</span></span>
           </div>
           <div class="discover-stage">
             <div id="discoverCard" class="person-card"><div class="empty">Discover profiles load honge…</div></div>
