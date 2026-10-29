@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>Saath — Find Your Connection</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--text:#f5f7ff;--muted:#aab5ce;--line:#2a3652;--pink:#ff4d87;--purple:#8b5cf6;--green:#34d399;--red:#fb7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172341 0,#0b1020 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--pink),var(--purple))}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#25314d;border:1px solid #3a4868}.danger{background:#5c2038;border:1px solid #9f3459}.success{background:#145344}.hidden{display:none!important}.wrap{max-width:1080px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--pink)}.pill{border:1px solid var(--line);background:#111a2c;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}.layout{display:grid;grid-template-columns:220px 1fr;gap:18px}.sidebar,.panel,.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px}.sidebar{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;color:var(--muted);border:1px solid transparent}.nav.active{background:#24213e;color:#fff;border-color:#51406d}.main{min-width:0}.panel{padding:18px;margin-bottom:15px}.hero{padding:22px;background:linear-gradient(130deg,#251c3c,#142641);border:1px solid #49355f;border-radius:22px;margin-bottom:15px}.hero h1{font-size:clamp(24px,5vw,36px);margin:0 0 8px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1325;border:1px solid #34415f;border-radius:12px;padding:12px;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}.actions{display:flex;gap:8px;flex-wrap:wrap}.profile-card{padding:18px;display:flex;gap:14px;align-items:center}.avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-size:27px;font-weight:900;flex-shrink:0}.person h2{margin:0 0 5px}.tag{display:inline-block;background:#222e49;border:1px solid #34415f;padding:5px 9px;border-radius:999px;font-size:12px;color:#d8e1f8;margin:3px 3px 0 0}.person-card{background:linear-gradient(150deg,#18233b,#11182b);border:1px solid #35415e;border-radius:20px;padding:18px}.person-card .avatar{width:82px;height:82px;margin-bottom:13px}.person-card h2{margin:0 0 4px}.person-card .bio{min-height:48px;color:#d0d8ea;margin:12px 0}.swipe-actions{display:flex;gap:10px;margin-top:16px}.swipe-actions button{flex:1}.plan{border:1px solid #35415e;border-radius:16px;padding:15px;background:#111a2c}.plan h3{margin:0 0 5px}.plan .price{font-size:25px;font-weight:900;margin:8px 0}.list{display:flex;flex-direction:column;gap:10px}.list-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#111a2c;border-radius:14px}.list-item .grow{flex:1;min-width:0}.list-item p{margin:3px 0}.chat-box{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#0b1325;border:1px solid var(--line);border-radius:15px;padding:12px;margin:12px 0}.bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#24314d;align-self:flex-start;overflow-wrap:anywhere}.bubble.mine{background:#66305d;align-self:flex-end}.small{font-size:12px}.status{padding:10px 12px;border-radius:12px;background:#182b37;color:#b7f7dc;margin:10px 0}.error{background:#3a1b2a;color:#ffc0d0}.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;background:#020617c9;display:grid;place-items:center;padding:16px;z-index:10}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.inline{display:flex;gap:8px}.inline>*{min-width:0;flex:1}.empty{text-align:center;padding:30px 12px;color:var(--muted)}a{color:#f9a8d4}
+@media(max-width:740px){.wrap{padding:12px}.layout{display:block}.sidebar{display:none}.mobile-nav{display:flex;position:sticky;bottom:8px;z-index:5;gap:5px;padding:7px;background:#10182bdc;backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;margin-top:12px}.mobile-nav .nav{justify-content:center;text-align:center;padding:10px 4px;font-size:12px;margin:0}.grid{grid-template-columns:1fr}.panel{padding:14px}.hero{padding:18px}.top{align-items:flex-start}.brand{font-size:24px}.profile-card{align-items:flex-start}.inline{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div><div class="brand">Saath<span>♥</span></div><div class="muted small">A little closer to someone real</div></div>
+    <div class="pill" id="authBadge">Not signed in</div>
+  </header>
+
+  <section id="loginScreen" class="panel">
+    <div class="hero"><h1>Har achhi kahani, ek mulaqat se shuru hoti hai.</h1><p class="muted">Apna profile banao, log discover karo aur genuine connection dhoondo.</p></div>
+    <h2>Welcome to Saath</h2>
+    <p class="muted">Sign in karne ke liye Google account use karo.</p>
+    <button id="googleBtn">Continue with Google</button>
+    <p class="small muted">Continue karke tum hamari community guidelines aur privacy terms se sahmat hote ho. Saath 18+ users ke liye hai.</p>
+    <div id="loginMessage" class="status hidden"></div>
+  </section>
+
+  <section id="appScreen" class="hidden">
+    <div class="layout">
+      <aside class="sidebar" id="desktopNav"></aside>
+      <main class="main">
+        <section class="hero"><h1 id="greeting">Welcome to Saath</h1><p class="muted">Connections that feel natural. Be respectful, stay safe.</p><div class="actions"><span class="pill" id="swipeCount">Loading swipes…</span><span class="pill">18+ community</span></div></section>
+        <div id="globalMessage" class="status hidden"></div>
+
+        <section id="view-discover" class="view">
+          <div class="panel">
+            <h2>Discover</h2><p class="muted">Apni preferences set karo. Like/pass dono swipe count karte hain.</p>
+            <div class="grid">
+              <div class="field"><label>Minimum age</label><select id="filterMinAge"><option>18</option><option>21</option><option>25</option><option>30</option><option>35</option></select></div>
+              <div class="field"><label>Maximum age</label><select id="filterMaxAge"><option>30</option><option>35</option><option>40</option><option>50</option><option>70</option></select></div>
+              <div class="field"><label>Gender</label><select id="filterGender"><option value="">Any gender</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
+              <div class="field"><label>State</label><input id="filterState" placeholder="Any state"></div>
+              <div class="field"><label>City</label><input id="filterCity" placeholder="Any city"></div>
+            </div>
+            <div class="actions"><button id="applyFilters">Apply filters</button><button class="secondary" id="clearFilters">Clear</button></div>
+          </div>
+          <div id="discoverCard" class="person-card"><div class="empty">Discover profiles load honge…</div></div>
+        </section>
+
+        <section id="view-matches" class="view hidden"><div class="panel"><h2>Your matches</h2><p class="muted">Mutual likes yahan dikhte hain.</p><div id="matchesList" class="list"><div class="empty">Loading matches…</div></div></div></section>
+
+        <section id="view-chat" class="view hidden">
+          <div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><div><h2 style="margin:0">Chat</h2><p id="chatSubtitle" class="muted">Match select karo</p></div><button class="secondary" id="backMatches">Matches</button></div>
+          <div id="chatMessages" class="chat-box"><div class="empty">Kisi match ko open karke chat shuru karo.</div></div>
+          <form id="chatForm" class="inline"><input id="chatInput" maxlength="2000" placeholder="Message likho…" autocomplete="off"><button id="sendBtn" type="submit">Send</button></form>
+          </div>
+        </section>
+
+        <section id="view-me" class="view hidden">
+          <div class="panel"><h2>Your profile</h2><div id="profileSummary"></div><hr style="border-color:var(--line);margin:18px 0">
+            <h3>Edit profile</h3>
+            <form id="profileForm">
+              <div class="grid">
+                <div class="field"><label>Display name</label><input id="displayName" maxlength="60" required></div>
+                <div class="field"><label>Age (18+)</label><input id="age" type="number" min="18" max="100" required></div>
+                <div class="field"><label>Gender</label><select id="gender" required><option value="">Choose</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
+                <div class="field"><label>Looking for</label><select id="lookingFor" required><option value="">Choose</option><option>Woman</option><option>Man</option><option>Everyone</option><option>Non-binary</option><option>Other</option></select></div>
+                <div class="field"><label>State</label><input id="state" maxlength="80" required></div>
+                <div class="field"><label>City</label><input id="city" maxlength="80" required></div>
+              </div>
+              <div class="field"><label>About you</label><textarea id="bio" maxlength="500" placeholder="A little about yourself…"></textarea></div>
+              <button type="submit">Save profile</button>
+            </form>
+          </div>
+          <div class="panel"><h3>Account</h3><p class="muted">Delete profile tumhara public profile, likes, blocks, matches, chats aur swipe wallet delete karega. Google authentication identity Supabase Auth mein rahegi.</p><div class="actions"><button class="secondary" id="logoutBtn">Sign out</button><button class="danger" id="deleteProfileBtn">Delete profile data</button></div></div>
+        </section>
+
+        <section id="view-plans" class="view hidden">
+          <div class="panel"><h2>Swipe plans</h2><p class="muted">DEMO MODE — koi payment nahi li jayegi. Har demo plan ek account par ek baar claim ho sakta hai. Production payment integrate karne se pehle payment verification backend zaroor chahiye.</p>
+            <div class="grid">
+              <div class="plan"><span class="tag">1 day</span><h3>Starter boost</h3><div class="price">₹29</div><p class="muted">+10 demo swipes</p><button data-plan="starter" class="claimPlan">Try demo plan</button></div>
+              <div class="plan"><span class="tag">1 day</span><h3>Plus boost</h3><div class="price">₹49</div><p class="muted">+25 demo swipes</p><button data-plan="plus" class="claimPlan">Try demo plan</button></div>
+              <div class="plan"><span class="tag">3 days</span><h3>Power boost</h3><div class="price">₹99</div><p class="muted">+35 demo swipes</p><button data-plan="power" class="claimPlan">Try demo plan</button></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <nav class="mobile-nav" id="mobileNav"></nav>
+  </section>
+  <footer class="foot">Saath • Respect, consent and safety first. Never share financial passwords or OTPs.</footer>
+</div>
+
+<div id="modalRoot"></div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* SET THESE TWO VALUES AFTER CREATING YOUR SUPABASE PROJECT.
+   Use Project URL and publishable key (or legacy anon key) only.
+   NEVER put service_role/secret keys in this file. */
+const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+const SUPABASE_PUBLISHABLE_KEY = 'YOUR_SUPABASE_PUBLISHABLE_KEY';
+
+const $ = id => document.getElementById(id);
+const configured = SUPABASE_URL.startsWith('https://') &&
+  !SUPABASE_URL.includes('YOUR_') &&
+  SUPABASE_PUBLISHABLE_KEY && !SUPABASE_PUBLISHABLE_KEY.includes('YOUR_');
+let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], candidateIndex = 0;
+let activeMatch = null, activeChatChannel = null, matchesCache = [];
+const navItems = [
+  ['discover','⌕','Discover'],['matches','♡','Matches'],['me','☺','My profile'],['plans','✦','Swipe plans']
+];
+
+function showMessage(message, error=false, target='globalMessage') {
+  const el = $(target); if (!el) return;
+  el.textContent = message; el.classList.remove('hidden','error');
+  if (error) el.classList.add('error');
+  if (target === 'globalMessage') setTimeout(()=>el.classList.add('hidden'),6000);
+}
+function escapeHtml(s='') { return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function initials(s='S') { return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase() || 'S'; }
+function niceError(e) { return e?.message || String(e || 'Unknown error'); }
+function navMarkup() { return navItems.map(([id,icon,label])=>`<button class="nav ${id==='discover'?'active':''}" data-view="${id}"><span>${icon}</span> ${label}</button>`).join(''); }
+$('desktopNav').innerHTML = navMarkup(); $('mobileNav').innerHTML = navMarkup();
+
+function showView(view) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
+  $('view-'+view)?.classList.remove('hidden');
+  document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  if (view==='discover') loadDiscover();
+  if (view==='matches') loadMatches();
+  if (view==='me') renderMyProfile();
+  if (view==='plans') refreshWallet();
+}
+document.addEventListener('click', e=>{
+  const nav=e.target.closest('[data-view]'); if(nav) showView(nav.dataset.view);
+});
+function setSignedInUI(on) {
+  $('loginScreen').classList.toggle('hidden',on);
+  $('appScreen').classList.toggle('hidden',!on);
+  $('authBadge').textContent = on ? (currentUser?.email || 'Signed in') : 'Not signed in';
+}
+async function init() {
+  if (!configured) {
+    $('loginMessage').textContent='Setup required: HTML ke top wale JavaScript mein SUPABASE_URL aur SUPABASE_PUBLISHABLE_KEY set karo. SQL setup file pehle Supabase SQL Editor mein run karna.';
+    $('loginMessage').classList.remove('hidden');
+    $('googleBtn').disabled=true;
+    return;
+  }
+  sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+  });
+  $('googleBtn').addEventListener('click', async()=>{
+    $('googleBtn').disabled=true;
+    try {
+      const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
+      if(error) throw error;
+    } catch(e) { showMessage(niceError(e),true,'loginMessage'); $('loginMessage').classList.remove('hidden'); $('googleBtn').disabled=false; }
+  });
+  sb.auth.onAuthStateChange((_event,session)=>{
+    setTimeout(()=>handleSession(session),0);
+  });
+  const {data,error}=await sb.auth.getSession();
+  if(error) showMessage(niceError(error),true,'loginMessage');
+  await handleSession(data?.session);
+}
+async function handleSession(session) {
+  currentUser=session?.user || null;
+  setSignedInUI(!!currentUser);
+  if (!currentUser) { myProfile=null; return; }
+  $('authBadge').textContent=currentUser.email || 'Signed in';
+  try {
+    await ensureWallet();
+    const {data,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+    if(error) throw error;
+    myProfile=data;
+    if(!myProfile) { showView('me'); showMessage('Welcome! Apna 18+ profile complete karke Save profile dabao.'); }
+    else { $('greeting').textContent=`Hi, ${myProfile.display_name} 👋`; showView('discover'); }
+    await refreshWallet();
+  } catch(e) { showMessage('Profile load error: '+niceError(e),true); }
+}
+async function ensureWallet() {
+  const {error}=await sb.rpc('ensure_my_wallet');
+  if(error) throw error;
+}
+async function refreshWallet() {
+  if(!currentUser || !sb) return;
+  const {data,error}=await sb.rpc('get_my_swipe_status');
+  if(error) { $('swipeCount').textContent='Swipe balance unavailable'; return; }
+  const bonus=data?.bonus_credits || 0, used=data?.free_used || 0;
+  $('swipeCount').textContent=`Free today: ${Math.max(0,7-used)}/7 · Bonus: ${bonus}`;
+}
+function renderMyProfile() {
+  if(!currentUser) return;
+  const p=myProfile || {};
+  $('displayName').value=p.display_name || currentUser.user_metadata?.full_name || '';
+  $('age').value=p.age || '';
+  $('gender').value=p.gender || '';
+  $('lookingFor').value=p.looking_for || '';
+  $('state').value=p.state || '';
+  $('city').value=p.city || '';
+  $('bio').value=p.bio || '';
+  $('profileSummary').innerHTML=p.id ? `<div class="profile-card"><div class="avatar">${escapeHtml(initials(p.display_name))}</div><div class="person"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">${escapeHtml(p.city)}, ${escapeHtml(p.state)}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender)}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for)}</span></div></div>` : '<p class="muted">Profile abhi complete nahi hai.</p>';
+}
+$('profileForm').addEventListener('submit',async e=>{
+  e.preventDefault(); if(!currentUser) return;
+  const age=Number($('age').value);
+  if(age<18 || age>100) { showMessage('Saath par account banane ke liye age 18–100 honi chahiye.',true); return; }
+  const profile={id:currentUser.id,display_name:$('displayName').value.trim(),age,
+    gender:$('gender').value,looking_for:$('lookingFor').value,
+    state:$('state').value.trim(),city:$('city').value.trim(),bio:$('bio').value.trim(),updated_at:new Date().toISOString()};
+  const {data,error}=await sb.from('profiles').upsert(profile).select().single();
+  if(error) { showMessage(niceError(error),true); return; }
+  myProfile=data; $('greeting').textContent=`Hi, ${myProfile.display_name} 👋`;
+  renderMyProfile(); showMessage('Profile saved successfully.');
+  showView('discover');
+});
+
+function getFilters() {
+  return {minAge:Number($('filterMinAge').value||18),maxAge:Number($('filterMaxAge').value||100),
+    gender:$('filterGender').value,state:$('filterState').value.trim(),city:$('filterCity').value.trim()};
+}
+$('applyFilters').addEventListener('click',()=>loadDiscover(true));
+$('clearFilters').addEventListener('click',()=>{
+  $('filterMinAge').value='18';$('filterMaxAge').value='30';$('filterGender').value='';
+  $('filterState').value='';$('filterCity').value='';loadDiscover(true);
+});
+async function loadDiscover(reset=true) {
+  if(!currentUser || !sb) return;
+  if(!myProfile) { $('discoverCard').innerHTML='<div class="empty">Pehle My profile mein apni profile save karo.</div>'; return; }
+  if(reset) { candidateIndex=0; $('discoverCard').innerHTML='<div class="empty">Profiles load ho rahe hain…</div>'; }
+  try {
+    const f=getFilters();
+    let q=sb.from('profiles').select('id,display_name,age,state,city,gender,looking_for,bio,created_at')
+      .neq('id',currentUser.id).gte('age',f.minAge).lte('age',Math.max(f.minAge,f.maxAge)).limit(200);
+    if(f.gender) q=q.eq('gender',f.gender);
+    if(f.state) q=q.ilike('state',`%${f.state}%`);
+    if(f.city) q=q.ilike('city',`%${f.city}%`);
+    const {data,error}=await q; if(error) throw error;
+    const [{data:blocks,error:be},{data:likes,error:le}] = await Promise.all([
+      sb.from('blocks').select('blocker_id,blocked_id').or(`blocker_id.eq.${currentUser.id},blocked_id.eq.${currentUser.id}`),
+      sb.from('likes').select('to_user_id').eq('from_user_id',currentUser.id)
+    ]);
+    if(be) throw be; if(le) throw le;
+    const blocked=new Set((blocks||[]).flatMap(b=>[b.blocker_id,b.blocked_id]));
+    const liked=new Set((likes||[]).map(l=>l.to_user_id));
+    candidateProfiles=(data||[]).filter(p=>!blocked.has(p.id)&&!liked.has(p.id)&&
+      (p.looking_for==='Everyone'||p.looking_for===myProfile.gender||p.looking_for==='Other'||!p.looking_for) &&
+      (myProfile.looking_for==='Everyone'||myProfile.looking_for===p.gender||myProfile.looking_for==='Other'));
+    candidateIndex=0; renderCandidate();
+  } catch(e) { $('discoverCard').innerHTML=`<div class="empty">Profiles load nahi hue: ${escapeHtml(niceError(e))}</div>`; }
+}
+function renderCandidate() {
+  const box=$('discoverCard');
+  if(candidateIndex>=candidateProfiles.length) {
+    box.innerHTML='<div class="empty"><h3>Abhi aur profiles nahi hain</h3><p>Filters badal kar dobara try karo.</p><button id="reloadDiscover">Refresh profiles</button></div>';
+    $('reloadDiscover')?.addEventListener('click',()=>loadDiscover(true)); return;
+  }
+  const p=candidateProfiles[candidateIndex];
+  box.innerHTML=`<div class="avatar">${escapeHtml(initials(p.display_name))}</div>
+    <h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">${escapeHtml(p.city)}, ${escapeHtml(p.state)}</div>
+    <div><span class="tag">${escapeHtml(p.gender)}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div>
+    <div class="swipe-actions"><button class="danger" id="passBtn">✕ Pass</button><button id="likeBtn">♥ Like</button></div>
+    <div class="actions" style="margin-top:10px"><button class="secondary" id="blockBtn">Block profile</button></div>`;
+  $('passBtn').onclick=()=>doSwipe(p.id,'pass');
+  $('likeBtn').onclick=()=>doSwipe(p.id,'like');
+  $('blockBtn').onclick=()=>blockUser(p.id);
+}
+async function doSwipe(targetId,action) {
+  const buttons=[$('passBtn'),$('likeBtn'),$('blockBtn')]; buttons.forEach(b=>{if(b)b.disabled=true;});
+  try {
+    const {data,error}=await sb.rpc('perform_swipe',{p_target_user_id:targetId,p_action:action});
+    if(error) throw error;
+    if(!data?.ok) throw new Error(data?.message||'Swipe failed');
+    if(data.matched) showMessage('It’s a match! 💖 Ab Matches tab mein chat kar sakte ho.');
+    await refreshWallet(); candidateIndex++; renderCandidate();
+  } catch(e) {
+    showMessage(niceError(e),true);
+    if(/swipe|credit|daily/i.test(niceError(e))) showView('plans');
+    buttons.forEach(b=>{if(b)b.disabled=false;});
+  }
+}
+async function blockUser(targetId) {
+  if(!confirm('Is profile ko block karna hai? Aap dono ek dusre ko discover nahi kar paoge.')) return;
+  try {
+    const {error}=await sb.rpc('block_user',{p_target_user_id:targetId});
+    if(error) throw error;
+    showMessage('Profile blocked.'); candidateIndex++; renderCandidate();
+  } catch(e) { showMessage(niceError(e),true); }
+}
+
+async function loadMatches() {
+  if(!currentUser) return;
+  const box=$('matchesList'); box.innerHTML='<div class="empty">Matches load ho rahe hain…</div>';
+  try {
+    const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});
+    if(error) throw error;
+    matchesCache=data||[];
+    if(!matchesCache.length) { box.innerHTML='<div class="empty">Abhi matches nahi hain. Discover mein profiles like karo.</div>'; return; }
+    const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
+    const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state').in('id',otherIds);
+    if(pe) throw pe;
+    const map=new Map((people||[]).map(p=>[p.id,p]));
+    box.innerHTML=matchesCache.map(m=>{
+      const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);
+      return `<div class="list-item"><div class="avatar" style="width:48px;height:48px;font-size:18px">${escapeHtml(initials(p?.display_name||'S'))}</div><div class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><p class="muted small">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', '))}</p></div><button data-open-match="${m.id}">Chat</button><button class="secondary" data-block-match="${id}">Block</button></div>`;
+    }).join('');
+    box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
+    box.querySelectorAll('[data-block-match]').forEach(b=>b.onclick=async()=>{if(confirm('Block this user?')){try{const {error}=await sb.rpc('block_user',{p_target_user_id:b.dataset.blockMatch});if(error)throw error;showMessage('User blocked.');await loadMatches();}catch(e){showMessage(niceError(e),true);}}});
+  } catch(e) { box.innerHTML=`<div class="empty">Matches load error: ${escapeHtml(niceError(e))}</div>`; }
+}
+async function openChat(matchId) {
+  activeMatch=matchesCache.find(m=>m.id===matchId) || null;
+  if(!activeMatch) { await loadMatches(); activeMatch=matchesCache.find(m=>m.id===matchId)||null; }
+  if(!activeMatch) { showMessage('Match not found.',true); return; }
+  showView('chat');
+  const otherId=activeMatch.user_a===currentUser.id?activeMatch.user_b:activeMatch.user_a;
+  const {data:p}=await sb.from('profiles').select('display_name').eq('id',otherId).maybeSingle();
+  $('chatSubtitle').textContent=`Chat with ${p?.display_name||'your match'}`;
+  await loadMessages();
+  if(activeChatChannel) await sb.removeChannel(activeChatChannel);
+  activeChatChannel=sb.channel('messages-'+matchId)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`match_id=eq.${matchId}`},payload=>{
+      const msg=payload.new;
+      if(msg.sender_id!==currentUser.id) appendMessage(msg);
+    }).subscribe();
+}
+async function loadMessages() {
+  if(!activeMatch) return;
+  const {data,error}=await sb.from('messages').select('id,match_id,sender_id,body,created_at').eq('match_id',activeMatch.id).order('created_at',{ascending:true}).limit(300);
+  if(error) { showMessage(niceError(error),true); return; }
+  $('chatMessages').innerHTML='';
+  (data||[]).forEach(appendMessage);
+  $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
+}
+function appendMessage(m) {
+  const box=$('chatMessages'); if(box.querySelector(`[data-message-id="${CSS.escape(m.id)}"]`)) return;
+  const div=document.createElement('div'); div.className='bubble'+(m.sender_id===currentUser.id?' mine':'');
+  div.dataset.messageId=m.id; div.textContent=m.body; box.appendChild(div); box.scrollTop=box.scrollHeight;
+}
+$('chatForm').addEventListener('submit',async e=>{
+  e.preventDefault(); if(!activeMatch) { showMessage('Pehle Matches se chat open karo.',true); return; }
+  const body=$('chatInput').value.trim(); if(!body) return;
+  $('sendBtn').disabled=true;
+  try {
+    const {error}=await sb.from('messages').insert({match_id:activeMatch.id,sender_id:currentUser.id,body});
+    if(error) throw error;
+    $('chatInput').value='';
+    await loadMessages();
+  } catch(e) { showMessage(niceError(e),true); }
+  finally { $('sendBtn').disabled=false; }
+});
+$('backMatches').onclick=()=>showView('matches');
+
+document.querySelectorAll('.claimPlan').forEach(btn=>btn.addEventListener('click',async()=>{
+  btn.disabled=true;
+  try {
+    const {data,error}=await sb.rpc('claim_demo_plan',{p_plan_code:btn.dataset.plan});
+    if(error) throw error;
+    if(!data?.ok) throw new Error(data?.message||'Plan could not be claimed');
+    showMessage(data.message||'Demo credits added.');
+    await refreshWallet();
+  } catch(e) { showMessage(niceError(e),true); }
+  finally { btn.disabled=false; }
+}));
+$('logoutBtn').onclick=async()=>{if(activeChatChannel) await sb.removeChannel(activeChatChannel);const {error}=await sb.auth.signOut();if(error)showMessage(niceError(error),true);};
+$('deleteProfileBtn').onclick=async()=>{
+  if(!confirm('Confirm: tumhara profile, likes, blocks, matches, messages aur swipe data delete hoga. Google login identity Supabase Auth mein rahegi. Continue?')) return;
+  try {
+    const {data,error}=await sb.rpc('delete_my_profile_data');
+    if(error) throw error;
+    myProfile=null; activeMatch=null; matchesCache=[];
+    if(activeChatChannel) await sb.removeChannel(activeChatChannel);
+    await sb.auth.signOut();
+    showMessage('Profile data deleted.');
+  } catch(e) { showMessage(niceError(e),true); }
+};
+
+init();
+</script>
+</body>
+</html>
