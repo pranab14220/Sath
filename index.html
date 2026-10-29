@@ -374,9 +374,10 @@ async function loadDiscover(reset=true){
   try{
     const f=getFilters();
     // Fetch profiles without age constraints, then filter in JavaScript.
+    // Use only columns defined by this app's SQL schema; profiles has updated_at, not created_at.
     // This also handles databases where age values were stored as text.
     let q=sb.from('profiles')
-      .select('id,display_name,age,state,city,gender,looking_for,bio,created_at')
+      .select('id,display_name,age,state,city,gender,looking_for,bio,updated_at')
       .neq('id',currentUser.id)
       .limit(500);
     const {data,error}=await q;
@@ -404,8 +405,8 @@ async function loadDiscover(reset=true){
     if(!candidateProfiles.length){
       const anyOther=(data||[]).some(p=>p.id!==currentUser.id);
       const note=anyOther
-        ? 'Koi profile current filters ya preferences se match nahi hui. Filters clear karke dobara try karo.'
-        : 'Abhi database mein doosri saved profiles nahi hain. Doosre account se profile complete karke save karo.';
+        ? `Database se ${data.length} doosri profile(s) mili, lekin filters/preferences ke baad koi eligible profile nahi bachi. Clear all karke try karo; dono accounts ki age, gender aur Looking for settings bhi check karo.`
+        : 'Supabase ne current account ke alawa koi profile return nahi ki. Doosre Google account se login karke My profile mein details save karo. Agar doosre account ki profile pehle se saved hai, Supabase Table Editor mein public.profiles aur RLS SELECT policy check karni hogi.';
       const empty=$('discoverCard').querySelector('.empty');
       if(empty){const p=document.createElement('p');p.textContent=note;empty.appendChild(p);}
     }
