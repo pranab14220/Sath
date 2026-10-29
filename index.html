@@ -170,7 +170,7 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
   <p class="muted small">Choose preferences to find profiles that fit you.</p>
   <div class="drawer-note">✨ Filters only change who appears in Discover. Like and Pass still use your swipe balance.</div>
   <div class="field"><label for="filterMinAge">Minimum age</label><select id="filterMinAge"><option>18</option><option>21</option><option>25</option><option>30</option><option>35</option></select></div>
-  <div class="field"><label for="filterMaxAge">Maximum age</label><select id="filterMaxAge"><option>30</option><option>35</option><option>40</option><option>50</option><option>70</option></select></div>
+  <div class="field"><label for="filterMaxAge">Maximum age</label><select id="filterMaxAge"><option>30</option><option>35</option><option>40</option><option>50</option><option value="70" selected>70</option><option value="100">100</option></select></div>
   <div class="field"><label for="filterGender">Gender</label><select id="filterGender"><option value="">Any gender</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
   <div class="field"><label for="filterState">State</label><input id="filterState" placeholder="Any state"></div>
   <div class="field"><label for="filterCity">City</label><input id="filterCity" placeholder="Any city"></div>
@@ -343,7 +343,12 @@ $('profileForm').addEventListener('submit',async e=>{
   }catch(e){showMessage('Profile save error: '+niceError(e),true);}
 });
 
-function getFilters(){return{minAge:Number($('filterMinAge').value||18),maxAge:Number($('filterMaxAge').value||100),gender:$('filterGender').value,state:$('filterState').value.trim(),city:$('filterCity').value.trim()};}
+function getFilters(){
+  let minAge=Number($('filterMinAge').value||18);
+  let maxAge=Number($('filterMaxAge').value||100);
+  if(minAge>maxAge){const temp=minAge;minAge=maxAge;maxAge=temp;$('filterMinAge').value=String(minAge);$('filterMaxAge').value=String(maxAge);}
+  return {minAge,maxAge,gender:$('filterGender').value,state:$('filterState').value.trim(),city:$('filterCity').value.trim()};
+}
 const filterDrawer=$('filterDrawer'),filterBackdrop=$('filterBackdrop');
 function setFiltersOpen(open){
   filterDrawer.classList.toggle('open',open);filterBackdrop.classList.toggle('open',open);
@@ -355,15 +360,27 @@ $('closeFilters').addEventListener('click',()=>setFiltersOpen(false));
 filterBackdrop.addEventListener('click',()=>setFiltersOpen(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')setFiltersOpen(false);});
 $('applyFilters').addEventListener('click',()=>{setFiltersOpen(false);loadDiscover(true);});
-$('clearFilters').addEventListener('click',()=>{$('filterMinAge').value='18';$('filterMaxAge').value='30';$('filterGender').value='';$('filterState').value='';$('filterCity').value='';setFiltersOpen(false);loadDiscover(true);});
+$('clearFilters').addEventListener('click',()=>{
+  $('filterMinAge').value='18';$('filterMaxAge').value='70';$('filterGender').value='';
+  $('filterState').value='';$('filterCity').value='';setFiltersOpen(false);loadDiscover(true);
+});
+function preferenceAllows(preference, gender){
+  return !preference || preference==='Everyone' || preference===gender;
+}
 async function loadDiscover(reset=true){
   if(!currentUser||!sb)return;
   if(!myProfile){$('discoverCard').innerHTML='<div class="empty">Pehle My profile mein apni profile save karo.</div>';return;}
   if(reset)$('discoverCard').innerHTML='<div class="empty">Profiles load ho rahe hain…</div>';
   try{
-    const f=getFilters();let q=sb.from('profiles').select('id,display_name,age,state,city,gender,looking_for,bio,created_at').neq('id',currentUser.id).gte('age',f.minAge).lte('age',Math.max(f.minAge,f.maxAge)).limit(200);
-    if(f.gender)q=q.eq('gender',f.gender);if(f.state)q=q.ilike('state',`%${f.state}%`);if(f.city)q=q.ilike('city',`%${f.city}%`);
-    const {data,error}=await q;if(error)throw error;
+    const f=getFilters();
+    // Fetch profiles without age constraints, then filter in JavaScript.
+    // This also handles databases where age values were stored as text.
+    let q=sb.from('profiles')
+      .select('id,display_name,age,state,city,gender,looking_for,bio,created_at')
+      .neq('id',currentUser.id)
+      .limit(500);
+    const {data,error}=await q;
+    if(error)throw error;
     const [{data:blocks,error:be},{data:likes,error:le}]=await Promise.all([
       sb.from('blocks').select('blocker_id,blocked_id').or(`blocker_id.eq.${currentUser.id},blocked_id.eq.${currentUser.id}`),
       sb.from('likes').select('to_user_id').eq('from_user_id',currentUser.id)
@@ -371,11 +388,31 @@ async function loadDiscover(reset=true){
     if(be)throw be;if(le)throw le;
     const blocked=new Set((blocks||[]).flatMap(b=>[b.blocker_id,b.blocked_id]));
     const liked=new Set((likes||[]).map(l=>l.to_user_id));
-    candidateProfiles=(data||[]).filter(p=>!blocked.has(p.id)&&!liked.has(p.id)&&
-      (p.looking_for==='Everyone'||p.looking_for===myProfile.gender||p.looking_for==='Other'||!p.looking_for)&&
-      (myProfile.looking_for==='Everyone'||myProfile.looking_for===p.gender||myProfile.looking_for==='Other'));
-    candidateIndex=0;renderCandidate();
-  }catch(e){$('discoverCard').innerHTML=`<div class="empty">Profiles load nahi hue: ${escapeHtml(niceError(e))}</div>`;}
+    candidateProfiles=(data||[]).filter(p=>{
+      const age=Number(p.age);
+      if(!Number.isFinite(age)||age<f.minAge||age>f.maxAge)return false;
+      if(f.gender&&p.gender!==f.gender)return false;
+      if(f.state&&!String(p.state||'').toLowerCase().includes(f.state.toLowerCase()))return false;
+      if(f.city&&!String(p.city||'').toLowerCase().includes(f.city.toLowerCase()))return false;
+      if(blocked.has(p.id)||liked.has(p.id))return false;
+      if(!preferenceAllows(p.looking_for,myProfile.gender))return false;
+      if(!preferenceAllows(myProfile.looking_for,p.gender))return false;
+      return true;
+    });
+    candidateIndex=0;
+    renderCandidate();
+    if(!candidateProfiles.length){
+      const anyOther=(data||[]).some(p=>p.id!==currentUser.id);
+      const note=anyOther
+        ? 'Koi profile current filters ya preferences se match nahi hui. Filters clear karke dobara try karo.'
+        : 'Abhi database mein doosri saved profiles nahi hain. Doosre account se profile complete karke save karo.';
+      const empty=$('discoverCard').querySelector('.empty');
+      if(empty){const p=document.createElement('p');p.textContent=note;empty.appendChild(p);}
+    }
+  }catch(e){
+    $('discoverCard').innerHTML=`<div class="empty"><h3>Profiles load nahi ho paaye</h3><p>${escapeHtml(niceError(e))}</p><p>Yeh age filter ke bajay database permission ya query issue bhi ho sakta hai.</p><button id="retryDiscover">Try again</button></div>`;
+    $('retryDiscover')?.addEventListener('click',()=>loadDiscover(true));
+  }
 }
 function renderCandidate(){
   const box=$('discoverCard');
