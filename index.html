@@ -88,6 +88,33 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
  .swipe-meter{padding:7px 9px;font-size:10px;gap:6px}
 }
 
+
+/* Discover card: large natural-fit photo, tidy details, compact single-row actions */
+.person-card{padding:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left;min-height:0;overflow:hidden;border-radius:22px}
+.person-card:before{z-index:2;pointer-events:none}
+.person-card>.avatar{display:flex;align-items:center;justify-content:center;align-self:stretch;flex:0 0 auto;width:100%;height:clamp(220px,42vh,330px);margin:0 0 0;border:0;border-radius:21px 21px 0 0;box-shadow:none;font-size:52px;overflow:hidden;background:linear-gradient(135deg,#39274e,#182c48)}
+.person-card>.avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:0}
+.person-details{padding:15px 18px 17px;display:flex;flex-direction:column;align-items:stretch;gap:0}
+.person-details h2{font-size:clamp(22px,3vw,28px);line-height:1.2;letter-spacing:-.4px;margin:0 0 5px;text-align:left;overflow-wrap:anywhere}
+.person-details .person-location{font-size:13px;line-height:1.4;margin:0 0 6px;text-align:left}
+.person-details .person-meta{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 4px}
+.person-details .tag{margin:0;padding:4px 8px;font-size:11px;line-height:1.3}
+.person-details .bio{font-size:13px;line-height:1.45;margin:8px 0 12px;max-width:none;min-height:0;text-align:left;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.person-details .swipe-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;width:100%;margin:0}
+.person-details .swipe-actions button{min-width:0;min-height:38px;height:38px;padding:7px 5px;font-size:12px;line-height:1.1;border-radius:11px;white-space:nowrap;box-shadow:none}
+.person-details #passBtn{background:#26334d;border:1px solid #455473}
+.person-details #likeBtn{background:linear-gradient(120deg,#ff4d87,#c026d3)}
+.person-details #blockBtn{background:#30243d;border:1px solid #654264;opacity:1}
+@media(max-width:740px){
+ .person-card{border-radius:20px}
+ .person-card>.avatar{height:clamp(215px,40vh,300px);border-radius:19px 19px 0 0}
+ .person-details{padding:13px 14px 15px}
+ .person-details h2{font-size:23px}
+ .person-details .bio{font-size:12px;line-height:1.4;margin:7px 0 10px;-webkit-line-clamp:3}
+ .person-details .swipe-actions{gap:6px}
+ .person-details .swipe-actions button{font-size:11px;padding:7px 3px;height:36px;min-height:36px;border-radius:10px}
+}
+
 </style>
 </head>
 <body>
@@ -483,7 +510,7 @@ function renderCandidate(){
   const box=$('discoverCard');
   if(candidateIndex>=candidateProfiles.length){box.innerHTML='<div class="empty"><h3>Abhi aur profiles nahi hain</h3><p>Filters badal kar dobara try karo.</p><button id="reloadDiscover">Refresh profiles</button></div>';$('reloadDiscover')?.addEventListener('click',()=>loadDiscover(true));return;}
   const p=candidateProfiles[candidateIndex];
-  box.innerHTML=`${avatarMarkup(p)}<h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', '))}</div><div><span class="tag">${escapeHtml(p.gender)}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button class="danger" id="passBtn">✕ &nbsp; Pass</button><button id="likeBtn">♥ &nbsp; Like</button></div><div class="actions" style="margin-top:10px;justify-content:center"><button class="secondary" id="blockBtn">⊘ Block profile</button></div>`;
+  box.innerHTML=`${avatarMarkup(p)}<div class="person-details"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted person-location">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div><div class="person-meta"><span class="tag">${escapeHtml(p.gender||'Not specified')}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button id="passBtn" type="button">✕ Pass</button><button id="blockBtn" type="button">⊘ Block</button><button id="likeBtn" type="button">♥ Like</button></div></div>`;
   $('passBtn').onclick=()=>doSwipe(p.id,'pass');$('likeBtn').onclick=()=>doSwipe(p.id,'like');$('blockBtn').onclick=()=>blockUser(p.id);
 }
 async function doSwipe(targetId,action){
