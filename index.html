@@ -192,7 +192,7 @@ html.dark-mode .match-row:first-child,body.dark-mode .match-row:first-child{back
 .list{display:flex;flex-direction:column;gap:10px}
 .match-row{width:100%;display:flex;align-items:center;gap:12px;padding:10px 12px;min-height:74px;text-align:left;background:var(--card);border:1px solid #f6e7ef;border-radius:20px;box-shadow:0 8px 18px rgba(160,80,120,.05)}
 html.dark-mode .match-row,body.dark-mode .match-row{border-color:var(--line)}
-.match-row .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.official-match-row{position:sticky;top:0;z-index:5;border:2px solid #c084fc!important;background:linear-gradient(100deg,#fff0f7,#f4eaff)!important;box-shadow:0 8px 22px rgba(168,85,247,.16)!important}.official-pin{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#a855f7;color:#fff;font-size:9px;letter-spacing:.06em;vertical-align:middle}.official-match-row .muted{color:#8b4c9e!important}html.dark-mode .official-match-row,body.dark-mode .official-match-row{background:linear-gradient(100deg,#382238,#30213f)!important}.match-row .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .match-row strong{font-size:15px;font-weight:800}
 .match-row .muted{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chev{color:#c8bdd0}
@@ -535,7 +535,7 @@ const configured = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_K
   !SUPABASE_URL.includes('YOUR_') && !SUPABASE_PUBLISHABLE_KEY.includes('YOUR_');
 
 let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], candidateIndex = 0;
-let activeMatch = null, activeChatChannel = null, matchesCache = [];
+let activeMatch = null, activeChatChannel = null, matchesCache = [], officialChatMode = false;
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
 
 const navItems = [['discover','heart','Discover'],['matches','heart','Matches'],['me','user','Profile']];
@@ -1000,20 +1000,54 @@ async function loadMatches(){
     const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});
     if(error)throw error;
     matchesCache=data||[];
-    if(!matchesCache.length){box.innerHTML='<div class="empty-state"><div class="bubble-icon">'+ico('i-heart')+'</div><h3>No matches yet</h3><p>Like someone in Discover.</p></div>';return;}
+    // Official SATHI.ADMIN thread is always pinned above member matches.
+    const {data:officialRows,error:officialError}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(1);
+    if(officialError)throw officialError;
+    const latestOfficial=officialRows?.[0]||null;
+    const officialPreview=latestOfficial?.body||'Official updates and notices from Saath';
+    const officialTime=latestOfficial?.created_at?formatTime(latestOfficial.created_at):'';
+    const officialRow=`<button type="button" class="match-row official-match-row" data-open-official="1"><span class="avatar" style="background:linear-gradient(135deg,#ff5d99,#a855f7);color:#fff;font-weight:900">♥</span><span class="grow"><strong>SATHI.ADMIN <span class="official-pin">PINNED</span></strong><span class="muted">${escapeHtml(officialPreview)}</span></span><span class="chev" aria-hidden="true">${ico('i-chevron')}</span></button>`;
+    if(!matchesCache.length){box.innerHTML=officialRow+'<div class="empty-state"><div class="bubble-icon">'+ico('i-heart')+'</div><h3>No matches yet</h3><p>Like someone in Discover.</p></div>';box.querySelector('[data-open-official]').onclick=openOfficialChat;return;}
     const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
     const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);
     if(pe)throw pe;
     const map=new Map((people||[]).map(p=>[p.id,p]));
-    box.innerHTML=matchesCache.map(m=>{
+    box.innerHTML=officialRow+matchesCache.map(m=>{
       const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);
       const loc=[p?.city,p?.state].filter(Boolean).join(', ');
       return `<button type="button" class="match-row" data-open-match="${m.id}">${avatarMarkup(p||{display_name:'S'})}<span class="grow"><strong>${escapeHtml(p?.display_name||'Saath member')}${p?.age?`, ${p.age}`:''}</strong><span class="muted">${escapeHtml(loc)}</span></span><span class="chev" aria-hidden="true">${ico('i-chevron')}</span></button>`;
     }).join('');
+    box.querySelector('[data-open-official]').onclick=openOfficialChat;
     box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
   }catch(err){box.innerHTML=`<div class="empty-state">Could not load matches. ${escapeHtml(niceError(err))}</div>`;}
 }
+async function openOfficialChat(){
+  officialChatMode=true;activeMatch=null;
+  if(activeChatChannel){await sb.removeChannel(activeChatChannel);activeChatChannel=null;}
+  showView('chat');
+  $('chatSubtitle').textContent='SATHI.ADMIN';$('chatMeta').textContent='Official Saath announcements';
+  $('chatAvatar').innerHTML='♥';$('chatMenuPop').classList.add('hidden');$('chatMenuBtn').classList.add('hidden');
+  $('chatForm').classList.add('hidden');
+  await loadOfficialMessages();
+  activeChatChannel=sb.channel('official-messages-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages',filter:`recipient_id=eq.${currentUser.id}`},()=>loadOfficialMessages()).subscribe();
+}
+async function loadOfficialMessages(){
+  const {data,error}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:true}).limit(300);
+  if(error){showMessage(niceError(error),true);return;}
+  const box=$('chatMessages');box.innerHTML='';
+  (data||[]).forEach(m=>{
+    const div=document.createElement('div');div.className='bubble';div.dataset.messageId=m.id;
+    const sender=document.createElement('strong');sender.textContent='SATHI.ADMIN';sender.style.display='block';sender.style.fontSize='12px';
+    const p=document.createElement('p');p.textContent=m.body;
+    const time=document.createElement('time');time.textContent=formatTime(m.created_at);
+    div.append(sender,p,time);box.appendChild(div);
+  });
+  box.scrollTop=box.scrollHeight;
+  const unread=(data||[]).filter(m=>!m.read_at).map(m=>m.id);
+  if(unread.length)await sb.from('admin_messages').update({read_at:new Date().toISOString()}).in('id',unread);
+}
 async function openChat(matchId){
+  officialChatMode=false;$('chatMenuBtn').classList.remove('hidden');$('chatForm').classList.remove('hidden');
   activeMatch=matchesCache.find(m=>m.id===matchId)||null;
   if(!activeMatch){await loadMatches();activeMatch=matchesCache.find(m=>m.id===matchId)||null;}
   if(!activeMatch){showMessage('Match not found.',true);return;}
@@ -1030,6 +1064,7 @@ async function openChat(matchId){
   activeChatChannel=sb.channel('messages-'+matchId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`match_id=eq.${matchId}`},payload=>{if(payload.new.sender_id!==currentUser.id)appendMessage(payload.new);}).subscribe();
 }
 async function loadMessages(){
+  if(officialChatMode){await loadOfficialMessages();return;}
   if(!activeMatch)return;
   const {data,error}=await sb.from('messages').select('id,match_id,sender_id,body,created_at').eq('match_id',activeMatch.id).order('created_at',{ascending:true}).limit(300);
   if(error){showMessage(niceError(error),true);return;}
@@ -1053,6 +1088,7 @@ function appendMessage(m){
 }
 $('chatForm').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(officialChatMode){showMessage('This is an official announcement channel. Replies are not enabled.',true);return;}
   if(!activeMatch){showMessage('Open a match to start chatting.',true);return;}
   const body=$('chatInput').value.trim();if(!body)return;
   $('sendBtn').disabled=true;
@@ -1064,7 +1100,7 @@ $('chatForm').addEventListener('submit',async e=>{
   }catch(err){showMessage(niceError(err),true);}
   finally{$('sendBtn').disabled=false;}
 });
-$('backMatches').onclick=()=>showView('matches');
+$('backMatches').onclick=()=>{officialChatMode=false;$('chatMenuBtn').classList.remove('hidden');$('chatForm').classList.remove('hidden');showView('matches');};
 $('chatMenuBtn').onclick=()=>$('chatMenuPop').classList.toggle('hidden');
 $('chatBlockBtn').onclick=async()=>{
   const id=$('chatBlockBtn').dataset.userId;
