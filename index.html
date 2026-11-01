@@ -630,7 +630,7 @@ function showMessage(message,error=false,target='globalMessage'){
 function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));}
 function initials(s='S'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'S';}
 function niceError(e){return e?.message||String(e||'Unknown error');}
-function formatRemaining(until){if(!until)return 'Unknown';const ms=new Date(until).getTime()-Date.now();if(!Number.isFinite(ms)||ms<=0)return 'Expired';const days=Math.ceil(ms/86400000),months=Math.floor(days/30),rest=days%30;return months?`${months} month${months===1?'':'s'}${rest?` and ${rest} day${rest===1?'':'s'}`:''} remaining`:`${days} day${days===1?'':'s'} remaining`;}
+function formatRemaining(until){if(!until)return 'Unknown';const end=new Date(until),now=new Date();if(!Number.isFinite(end.getTime()))return 'Unknown';if(end<=now)return 'Expired';const addMonths=(date,count)=>{const d=new Date(date),day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+count);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return d;};let months=Math.max(0,(end.getFullYear()-now.getFullYear())*12+end.getMonth()-now.getMonth());while(months>0&&addMonths(now,months)>end)months--;while(addMonths(now,months+1)<=end)months++;const afterMonths=addMonths(now,months),days=Math.max(0,Math.ceil((end-afterMonths)/86400000));const parts=[];if(months)parts.push(`${months} month${months===1?'':'s'}`);if(days)parts.push(`${days} day${days===1?'':'s'}`);return `${parts.join(' and ')||'Less than a day'} remaining`;}
 function formatTime(iso){
   if(!iso)return '';
   const d=new Date(iso);
