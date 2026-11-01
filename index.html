@@ -110,15 +110,8 @@ body.overlay-open .theme-toggle,body[data-view="chat"] .theme-toggle{opacity:0;p
 .btn-pink{
   width:100%;height:52px;border-radius:999px;color:#fff;font-weight:800;font-size:16px;
   background:#ff4d8d;box-shadow:0 10px 20px rgba(255,77,141,.28);
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-soft{
-  width:100%;height:52px;border-radius:999px;background:#ffe4f1;color:#e7468d;font-weight:800;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-}
-html.dark-mode .btn-soft,body.dark-mode .btn-soft{background:#3a2434;color:#ff8ab5}
-.btn-google{
-  width:100%;height:52px;border-radius:999px;background:var(--card);border:1px solid var(--line);
+
+   width:100%;height:52px;border-radius:999px;background:var(--card);border:1px solid var(--line);
   font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;
 }
 .slim{height:44px;font-size:14px}
@@ -248,6 +241,14 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
 .photo-actions{display:flex;flex-direction:column;gap:8px;flex:1}
 .file{font-size:12px;font-weight:700}
 .file input{width:100%}
+
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-soft{
+  width:100%;height:52px;border-radius:999px;background:#ffe4f1;color:#e7468d;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+html.dark-mode .btn-soft,body.dark-mode .btn-soft{background:#3a2434;color:#ff8ab5}
 .hint{margin:0 0 8px;color:var(--muted);font-size:12px;font-weight:700}
 .center-link{display:block;margin:10px auto 0;text-align:center}
 
@@ -389,6 +390,7 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
           <p id="barSub" class="hidden"></p>
         </div>
         <div class="appbar-tools">
+
           <span class="swipe-pill" id="swipeCount">…</span>
           <button id="openFilters" class="icon-btn" type="button" aria-label="Filters"><svg class="ico sm" viewBox="0 0 24 24"><use href="#i-sliders"></use></svg></button>
         </div>
@@ -415,6 +417,7 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
             <button type="button" id="chatMenuBtn" class="icon-btn" aria-label="More"><svg class="ico" viewBox="0 0 24 24"><use href="#i-dots"></use></svg></button>
           </header>
           <div id="chatMenuPop" class="pop hidden">
+            <button type="button" id="chatReportBtn"><svg class="ico sm" viewBox="0 0 24 24"><use href="#i-info"></use></svg> Report</button>
             <button type="button" id="chatBlockBtn"><svg class="ico sm" viewBox="0 0 24 24"><use href="#i-ban"></use></svg> Block</button>
           </div>
           <div id="chatMessages" class="chat-box"></div>
@@ -528,7 +531,7 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const SUPABASE_URL = 'https://kaobteyfxgfxlzrmwsge.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IiPNP9mZ3s_8TZEhuLmvg_87ncVOcL';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IiPN9mZ3s_8TZEhuLmvg_87ncVOcL';
 const APP_REDIRECT_URL = 'https://pranab14220.github.io/Sath/';
 const $ = id => document.getElementById(id);
 const configured = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY &&
@@ -548,6 +551,7 @@ function showMessage(message,error=false,target='globalMessage'){
 function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));}
 function initials(s='S'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'S';}
 function niceError(e){return e?.message||String(e||'Unknown error');}
+function formatRemaining(until){if(!until)return 'Unknown';const ms=new Date(until).getTime()-Date.now();if(!Number.isFinite(ms)||ms<=0)return 'Expired';const days=Math.ceil(ms/86400000),months=Math.floor(days/30),rest=days%30;return months?`${months} month${months===1?'':'s'}${rest?` and ${rest} day${rest===1?'':'s'}`:''} remaining`:`${days} day${days===1?'':'s'} remaining`;}
 function formatTime(iso){
   if(!iso)return '';
   const d=new Date(iso);
@@ -636,6 +640,15 @@ async function handleSession(session){
     try{
       $('authBadge').textContent=user.email||'Signed in';
       showMessage('Loading your account…');
+      const {data:accountStatus,error:statusError}=await sb.rpc('get_my_account_status');
+      if(statusError)throw statusError;
+      if(accountStatus?.suspended){
+        const remaining=accountStatus.suspended_until==='infinity'?'Permanent':formatRemaining(accountStatus.suspended_until);
+        const reason=accountStatus.suspension_reason||'No reason provided.';
+        await sb.auth.signOut({scope:'local'});
+        $('loginMessage').textContent=`Your account has been suspended by the SATHI.ADMIN team. Duration: ${remaining}. Reason: ${reason}`;
+        $('loginMessage').classList.remove('hidden');setGoogleBusy(false);return;
+      }
       await ensureWallet();
       const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
       if(error)throw error;
@@ -746,8 +759,7 @@ function renderPhotoPreview(){
   $('removePhotoBtn').disabled=!photo;
 }
 function renderMyProfile(){
-  if(!currentUser)return;
-  const p=myProfile||{};
+  if(!currentUser)return;   const p=myProfile||{};
   $('displayName').value=p.display_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||'';
   $('age').value=p.age||'';$('gender').value=p.gender||'';$('lookingFor').value=p.looking_for||'';
   $('state').value=p.state||'';$('city').value=p.city||'';$('bio').value=p.bio||'';
@@ -992,6 +1004,7 @@ async function blockUser(targetId){
     candidateIndex++;renderCandidate();
   }catch(err){showMessage(niceError(err),true);}
 }
+
 async function loadMatches(){
   if(!currentUser)return;
   const box=$('matchesList');
@@ -1003,116 +1016,114 @@ async function loadMatches(){
     // Official SATHI.ADMIN thread is always pinned above member matches.
     const {data:officialRows,error:officialError}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(1);
     if(officialError)throw officialError;
-    const latestOfficial=officialRows?.[0]||null;
-    const officialPreview=latestOfficial?.body||'Official updates and notices from Saath';
-    const officialTime=latestOfficial?.created_at?formatTime(latestOfficial.created_at):'';
-    const officialRow=`<button type="button" class="match-row official-match-row" data-open-official="1"><span class="avatar" style="background:linear-gradient(135deg,#ff5d99,#a855f7);color:#fff;font-weight:900">♥</span><span class="grow"><strong>SATHI.ADMIN <span class="official-pin">PINNED</span></strong><span class="muted">${escapeHtml(officialPreview)}</span></span><span class="chev" aria-hidden="true">${ico('i-chevron')}</span></button>`;
-    if(!matchesCache.length){box.innerHTML=officialRow+'<div class="empty-state"><div class="bubble-icon">'+ico('i-heart')+'</div><h3>No matches yet</h3><p>Like someone in Discover.</p></div>';box.querySelector('[data-open-official]').onclick=openOfficialChat;return;}
-    const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
-    const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);
-    if(pe)throw pe;
-    const map=new Map((people||[]).map(p=>[p.id,p]));
-    box.innerHTML=officialRow+matchesCache.map(m=>{
-      const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);
-      const loc=[p?.city,p?.state].filter(Boolean).join(', ');
-      return `<button type="button" class="match-row" data-open-match="${m.id}">${avatarMarkup(p||{display_name:'S'})}<span class="grow"><strong>${escapeHtml(p?.display_name||'Saath member')}${p?.age?`, ${p.age}`:''}</strong><span class="muted">${escapeHtml(loc)}</span></span><span class="chev" aria-hidden="true">${ico('i-chevron')}</span></button>`;
-    }).join('');
-    box.querySelector('[data-open-official]').onclick=openOfficialChat;
-    box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
-  }catch(err){box.innerHTML=`<div class="empty-state">Could not load matches. ${escapeHtml(niceError(err))}</div>`;}
+    const official=officialRows?.[0]||null;
+    let html='';
+    if(official){
+      html+=`<button class="match-row admin-thread" type="button" id="openAdminThread"><div class="avatar">${ico('i-shield')}</div><div class="match-copy"><strong>SATHI.ADMIN</strong><span>${escapeHtml(official.body||'Official message')}</span></div><span class="match-time">${formatTime(official.created_at)}</span></button>`;
+    }
+    if(!matchesCache.length&&!official){
+      box.innerHTML='<div class="empty-state"><h3>No matches yet</h3><p>Your matches and official messages will appear here.</p></div>';
+      return;
+    }
+    for(const m of matchesCache){
+      const otherId=m.user_a===currentUser.id?m.user_b:m.user_a;
+      const {data:p}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',otherId).maybeSingle();
+      if(!p)continue;
+      html+=`<button class="match-row" type="button" data-user-id="${p.id}"><div class="avatar">${p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'))}</div><div class="match-copy"><strong>${escapeHtml(p.display_name||'Member')}${p.age?`, ${escapeHtml(String(p.age))}`:''}</strong><span>Open conversation</span></div><span class="match-time">${formatTime(m.created_at)}</span></button>`;
+    }
+    box.innerHTML=html;
+    $('openAdminThread')?.addEventListener('click',()=>openAdminChat());
+    box.querySelectorAll('[data-user-id]').forEach(b=>b.addEventListener('click',()=>openChat(b.dataset.userId)));
+  }catch(err){
+    box.innerHTML=`<div class="empty-state"><p>${escapeHtml(niceError(err))}</p><button class="btn-pink" id="retryMatches" type="button">Try again</button></div>`;
+    $('retryMatches')?.addEventListener('click',loadMatches);
+  }
 }
-async function openOfficialChat(){
-  officialChatMode=true;activeMatch=null;
-  if(activeChatChannel){await sb.removeChannel(activeChatChannel);activeChatChannel=null;}
+async function openAdminChat(){
+  activeChatUserId='ADMIN';
+  activeChatProfile={id:'ADMIN',display_name:'SATHI.ADMIN'};
+  $('chatTitle').textContent='SATHI.ADMIN';
+  $('chatSubtitle').textContent='Official support';
+  $('chatMenuBtn').classList.add('hidden');
+  $('chatMessages').innerHTML='<div class="empty-state">Loading messages…</div>';
   showView('chat');
-  $('chatSubtitle').textContent='SATHI.ADMIN';$('chatMeta').textContent='Official Saath announcements';
-  $('chatAvatar').innerHTML='♥';$('chatMenuPop').classList.add('hidden');$('chatMenuBtn').classList.add('hidden');
-  $('chatForm').classList.add('hidden');
-  await loadOfficialMessages();
-  activeChatChannel=sb.channel('official-messages-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages',filter:`recipient_id=eq.${currentUser.id}`},()=>loadOfficialMessages()).subscribe();
-}
-async function loadOfficialMessages(){
-  const {data,error}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:true}).limit(300);
-  if(error){showMessage(niceError(error),true);return;}
-  const box=$('chatMessages');box.innerHTML='';
-  (data||[]).forEach(m=>{
-    const div=document.createElement('div');div.className='bubble';div.dataset.messageId=m.id;
-    const sender=document.createElement('strong');sender.textContent='SATHI.ADMIN';sender.style.display='block';sender.style.fontSize='12px';
-    const p=document.createElement('p');p.textContent=m.body;
-    const time=document.createElement('time');time.textContent=formatTime(m.created_at);
-    div.append(sender,p,time);box.appendChild(div);
-  });
-  box.scrollTop=box.scrollHeight;
-  const unread=(data||[]).filter(m=>!m.read_at).map(m=>m.id);
-  if(unread.length)await sb.from('admin_messages').update({read_at:new Date().toISOString()}).in('id',unread);
-}
-async function openChat(matchId){
-  officialChatMode=false;$('chatMenuBtn').classList.remove('hidden');$('chatForm').classList.remove('hidden');
-  activeMatch=matchesCache.find(m=>m.id===matchId)||null;
-  if(!activeMatch){await loadMatches();activeMatch=matchesCache.find(m=>m.id===matchId)||null;}
-  if(!activeMatch){showMessage('Match not found.',true);return;}
-  showView('chat');
-  const otherId=activeMatch.user_a===currentUser.id?activeMatch.user_b:activeMatch.user_a;
-  const {data:p}=await sb.from('profiles').select('display_name,age,city,state,photo_url').eq('id',otherId).maybeSingle();
-  $('chatSubtitle').textContent=p?.display_name||'Match';
-  $('chatMeta').textContent=[p?.city,p?.state].filter(Boolean).join(', ');
-  $('chatAvatar').innerHTML=p?.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="" referrerpolicy="no-referrer">`:escapeHtml(initials(p?.display_name||'S'));
-  $('chatBlockBtn').dataset.userId=otherId;
-  $('chatMenuPop').classList.add('hidden');
-  await loadMessages();
-  if(activeChatChannel)await sb.removeChannel(activeChatChannel);
-  activeChatChannel=sb.channel('messages-'+matchId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`match_id=eq.${matchId}`},payload=>{if(payload.new.sender_id!==currentUser.id)appendMessage(payload.new);}).subscribe();
-}
-async function loadMessages(){
-  if(officialChatMode){await loadOfficialMessages();return;}
-  if(!activeMatch)return;
-  const {data,error}=await sb.from('messages').select('id,match_id,sender_id,body,created_at').eq('match_id',activeMatch.id).order('created_at',{ascending:true}).limit(300);
-  if(error){showMessage(niceError(error),true);return;}
-  $('chatMessages').innerHTML='';
-  (data||[]).forEach(appendMessage);
-  $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
-}
-function appendMessage(m){
-  const box=$('chatMessages');
-  if(box.querySelector(`[data-message-id="${CSS.escape(String(m.id))}"]`))return;
-  const div=document.createElement('div');
-  div.className='bubble'+(m.sender_id===currentUser.id?' mine':'');
-  div.dataset.messageId=m.id;
-  const p=document.createElement('p');p.textContent=m.body;
-  const time=document.createElement('time');
-  if(m.created_at)time.dateTime=m.created_at;
-  time.textContent=formatTime(m.created_at);
-  div.append(p,time);
-  box.appendChild(div);
-  box.scrollTop=box.scrollHeight;
-}
-$('chatForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(officialChatMode){showMessage('This is an official announcement channel. Replies are not enabled.',true);return;}
-  if(!activeMatch){showMessage('Open a match to start chatting.',true);return;}
-  const body=$('chatInput').value.trim();if(!body)return;
-  $('sendBtn').disabled=true;
   try{
-    const {error}=await sb.from('messages').insert({match_id:activeMatch.id,sender_id:currentUser.id,body});
+    const {data,error}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:true});
     if(error)throw error;
-    $('chatInput').value='';
-    await loadMessages();
+    $('chatMessages').innerHTML=(data||[]).map(m=>`<div class="message received"><div class="message-bubble">${escapeHtml(m.body||'')}</div><div class="message-time">${formatTime(m.created_at)}</div></div>`).join('')||'<div class="empty-state">No messages yet.</div>';
+    $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
+    const unread=(data||[]).filter(m=>!m.read_at).map(m=>m.id);
+    if(unread.length)await sb.from('admin_messages').update({read_at:new Date().toISOString()}).in('id',unread);
   }catch(err){showMessage(niceError(err),true);}
-  finally{$('sendBtn').disabled=false;}
+}
+async function openChat(userId){
+  if(!currentUser)return;
+  try{
+    const {data:p,error}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',userId).maybeSingle();
+    if(error)throw error;
+    if(!p)throw new Error('User not found');
+    activeChatUserId=userId;
+    activeChatProfile=p;
+    $('chatTitle').textContent=p.display_name||'Chat';
+    $('chatSubtitle').textContent=p.age?`Age ${p.age}`:'';
+    $('chatMenuBtn').classList.remove('hidden');
+    $('chatMenuBtn').dataset.otherId=userId;
+    $('chatMessages').innerHTML='<div class="empty-state">Loading messages…</div>';
+    showView('chat');
+    await loadChatMessages();
+  }catch(err){showMessage(niceError(err),true);}
+}
+async function loadChatMessages(){
+  if(!currentUser||!activeChatUserId||activeChatUserId==='ADMIN')return;
+  try{
+    const {data,error}=await sb.from('messages').select('id,sender_id,receiver_id,body,created_at').or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatUserId}),and(sender_id.eq.${activeChatUserId},receiver_id.eq.${currentUser.id})`).order('created_at',{ascending:true});
+    if(error)throw error;
+    $('chatMessages').innerHTML=(data||[]).map(m=>{
+      const own=m.sender_id===currentUser.id;
+      return `<div class="message ${own?'sent':'received'}"><div class="message-bubble">${escapeHtml(m.body||'')}</div><div class="message-time">${formatTime(m.created_at)}</div></div>`;
+    }).join('')||'<div class="empty-state">Say hello 👋</div>';
+    $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
+  }catch(err){showMessage(niceError(err),true);}
+}
+
+$('chatMenuBtn').addEventListener('click',()=>{
+  $('chatMenuPop').classList.toggle('hidden');
 });
-$('backMatches').onclick=()=>{officialChatMode=false;$('chatMenuBtn').classList.remove('hidden');$('chatForm').classList.remove('hidden');showView('matches');};
-$('chatMenuBtn').onclick=()=>$('chatMenuPop').classList.toggle('hidden');
-$('chatBlockBtn').onclick=async()=>{
-  const id=$('chatBlockBtn').dataset.userId;
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#chatMenuBtn')&&!e.target.closest('#chatMenuPop')){
+    $('chatMenuPop').classList.add('hidden');
+  }
+});
+$('chatBlockBtn').addEventListener('click',async()=>{
+  const id=$('chatMenuBtn').dataset.otherId;
   $('chatMenuPop').classList.add('hidden');
-  if(!id)return;
-  if(!confirm('Block this person? You will not see each other in Discover.'))return;
+  if(!id||!currentUser)return;
+  if(!confirm('Block this person?'))return;
   try{
     const {error}=await sb.rpc('block_user',{p_target_user_id:id});
     if(error)throw error;
-    showMessage('Blocked.');
+    showMessage('User blocked.');
     showView('matches');
+    await loadMatches();
   }catch(err){showMessage(niceError(err),true);}
+});
+$('chatReportBtn').onclick=async()=>{
+  const id=$('chatReportBtn').dataset.userId;
+  $('chatMenuPop').classList.add('hidden');
+  if(!id||!currentUser)return;
+  const reason=prompt('Why are you reporting this person?\n\n1. Fake profile / impersonation\n2. Harassment or abusive messages\n3. Inappropriate photos or content\n4. Scam / asking for money\n5. Other\n\nEnter a reason:');
+  if(!reason||!reason.trim())return;
+  const details=prompt('Add details (optional):')||'';
+  try{
+    const {error}=await sb.from('reports').insert({
+      reporter_id:currentUser.id,
+      reported_user_id:id,
+      reason:reason.trim().slice(0,200),
+      details:details.trim().slice(0,2000)
+    });
+    if(error)throw error;
+    showMessage('Report submitted. The SATHI.ADMIN team will review it.');
+  }catch(err){showMessage('Could not submit report: '+niceError(err),true);}
 };
 document.querySelectorAll('.claimPlan').forEach(btn=>btn.addEventListener('click',async()=>{
   btn.disabled=true;
@@ -1154,6 +1165,21 @@ $('deleteProfileBtn').onclick=async()=>{
     $('loginMessage').textContent='Profile deleted.';
   }catch(err){showMessage(niceError(err),true);}
 };
+setInterval(async()=>{
+  if(!sb||!currentUser)return;
+  try{
+    const {data,error}=await sb.rpc('get_my_account_status');
+    if(error)throw error;
+    if(data?.suspended){
+      const remaining=data.suspended_until==='infinity'?'Permanent':formatRemaining(data.suspended_until);
+      const reason=data.suspension_reason||'No reason provided.';
+      await sb.auth.signOut({scope:'local'});
+      $('loginMessage').textContent=`Your account has been suspended by the SATHI.ADMIN team. Duration: ${remaining}. Reason: ${reason}`;
+      $('loginMessage').classList.remove('hidden');
+      setGoogleBusy(false);
+    }
+  }catch(e){console.warn('Account status check failed',e);}
+},60000);
 init();
 </script>
 <script>
@@ -1164,16 +1190,21 @@ init();
     document.documentElement.classList.toggle('dark-mode',dark);
     document.body.classList.toggle('dark-mode',dark);
     const btn=document.getElementById('themeToggle');
-    if(btn){btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');btn.title=dark?'Light mode':'Dark mode';}
+    if(btn){
+      btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+      btn.title=dark?'Light mode':'Dark mode';
+    }
     const meta=document.querySelector('meta[name="theme-color"]');
     if(meta)meta.content=dark?'#14121c':'#fff5f8';
   };
-  let saved='light';try{saved=localStorage.getItem(key)||'light';}catch(e){}
+  let saved='light';
+  try{saved=localStorage.getItem(key)||'light';}catch(e){}
   apply(saved);
   const btn=document.getElementById('themeToggle');
   if(btn)btn.addEventListener('click',()=>{
     const next=document.body.classList.contains('dark-mode')?'light':'dark';
-    apply(next);try{localStorage.setItem(key,next);}catch(e){}
+    apply(next);
+    try{localStorage.setItem(key,next);}catch(e){}
   });
 })();
 </script>
