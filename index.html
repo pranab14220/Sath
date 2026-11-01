@@ -539,6 +539,7 @@ const configured = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_K
 
 let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], candidateIndex = 0;
 let activeMatch = null, activeChatChannel = null, matchesCache = [], officialChatMode = false;
+let activeChatUserId = null, activeChatProfile = null;
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
 
 const navItems = [['discover','heart','Discover'],['matches','heart','Matches'],['me','user','Profile']];
@@ -1042,8 +1043,9 @@ async function loadMatches(){
 async function openAdminChat(){
   activeChatUserId='ADMIN';
   activeChatProfile={id:'ADMIN',display_name:'SATHI.ADMIN'};
-  $('chatTitle').textContent='SATHI.ADMIN';
-  $('chatSubtitle').textContent='Official support';
+  $('chatSubtitle').textContent='SATHI.ADMIN';
+  $('chatMeta').textContent='Official support';
+  $('chatAvatar').innerHTML=ico('i-shield');
   $('chatMenuBtn').classList.add('hidden');
   $('chatMessages').innerHTML='<div class="empty-state">Loading messages…</div>';
   showView('chat');
@@ -1064,8 +1066,10 @@ async function openChat(userId){
     if(!p)throw new Error('User not found');
     activeChatUserId=userId;
     activeChatProfile=p;
-    $('chatTitle').textContent=p.display_name||'Chat';
-    $('chatSubtitle').textContent=p.age?`Age ${p.age}`:'';
+    $('chatSubtitle').textContent=p.display_name||'Chat';
+    $('chatMeta').textContent=p.age?`Age ${p.age}`:'';
+    $('chatAvatar').innerHTML=p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'));
+    $('chatReportBtn').dataset.userId=userId;
     $('chatMenuBtn').classList.remove('hidden');
     $('chatMenuBtn').dataset.otherId=userId;
     $('chatMessages').innerHTML='<div class="empty-state">Loading messages…</div>';
