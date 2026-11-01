@@ -1113,6 +1113,20 @@ async function loadChatMessages(){
   }catch(err){box.innerHTML=`<div class="empty-state">Could not load messages: ${escapeHtml(niceError(err))}</div>`;showMessage(niceError(err),true);}
 }
 $('backMatches').addEventListener('click',()=>{activeChatUserId=null;activeChatProfile=null;activeMatch=null;$('chatMenuPop').classList.add('hidden');showView('matches');});
+$('chatForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!currentUser||!activeMatch){showMessage('Open a match before sending a message.',true);return;}
+  const input=$('chatInput'),send=$('sendBtn'),body=input.value.trim();
+  if(!body)return;
+  send.disabled=true;
+  try{
+    const {error}=await sb.from('messages').insert({match_id:activeMatch.id,sender_id:currentUser.id,body});
+    if(error)throw error;
+    input.value='';
+    await loadChatMessages();
+  }catch(err){showMessage('Message not sent: '+niceError(err),true);}
+  finally{send.disabled=false;}
+});
 
 $('chatMenuBtn').addEventListener('click',()=>{
   $('chatMenuPop').classList.toggle('hidden');
