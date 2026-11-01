@@ -275,8 +275,8 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
 /* Profile edit icon matches the account/settings control */
 .profile-view #editProfileBtn{
   position:absolute;top:8px;left:10px;right:auto;z-index:5;
-  width:40px;height:40px;min-height:40px;padding:0;
-  display:grid;place-items:center;border-radius:50%;
+  width:40px!important;min-width:40px!important;max-width:40px!important;height:40px!important;min-height:40px!important;max-height:40px!important;padding:0!important;flex:0 0 40px!important;
+  display:grid!important;place-items:center;border-radius:50%!important;
   color:var(--ink);background:var(--card);
   border:1px solid var(--line);box-shadow:0 4px 12px rgba(90,55,100,.1);
 }
