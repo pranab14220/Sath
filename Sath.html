@@ -121,13 +121,128 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
   display: none !important;
 }
 
+
+
+/* Saath pastel redesign — visual layer only; Supabase logic and data flow unchanged */
+:root{--bg:#fbf5fb;--panel:#fffaff;--panel2:#f7effb;--text:#30263b;--muted:#83768e;--line:#eaddec;--pink:#f04491;--purple:#8c55d9;--green:#20b98b;--red:#ef6687}
+html{background:#fbf4fb}body{color:var(--text);background:radial-gradient(ellipse at 12% 8%,#ffe0eb 0,transparent 36%),radial-gradient(ellipse at 88% 12%,#e6d4ff 0,transparent 38%),linear-gradient(145deg,#fff9fb,#f6efff 58%,#f3f7ff);background-attachment:fixed}
+.wrap{max-width:1120px}.brand{background:linear-gradient(100deg,#4a315c,#e34e9a 65%,#8a5be0);background-clip:text;-webkit-background-clip:text;color:transparent}.brand span{color:#ec4c91;-webkit-text-fill-color:#ec4c91}
+.muted{color:#887b91}.pill,.swipe-meter{background:#ffffffc9;color:#65556f;border:1px solid #ead9ef;box-shadow:0 5px 18px #8f65a312}
+.sidebar,.panel,.card{background:#ffffffd9;border:1px solid #eaddec;box-shadow:0 12px 35px #75518b12;backdrop-filter:blur(16px)}
+.panel{border-radius:22px}.hero{background:linear-gradient(125deg,#fce2f0,#e9ddff 55%,#e1f4ff);border:1px solid #eed5ee;color:#3b2b49;box-shadow:0 12px 28px #8c55d914}.hero .muted{color:#75647e}
+.nav{color:#776980;border-radius:13px}.nav.active{background:linear-gradient(110deg,#ffe2ef,#eee3ff);color:#563b6d;border-color:#e9cce8;box-shadow:none}
+button{color:#fff;background:linear-gradient(135deg,#f04f99,#9b63df);box-shadow:0 5px 13px #c25ba51c}button.secondary{background:#f4edf8;color:#675475;border:1px solid #e6d8ed;box-shadow:none}button.danger{background:#fff0f3;color:#bd496b;border:1px solid #f3cbd7;box-shadow:none}
+input,select,textarea{background:#fff;border:1px solid #e6d9eb;color:#3e3048}input:focus,select:focus,textarea:focus{border-color:#e78ab9!important;box-shadow:0 0 0 3px #f7c9e21c}
+.tag{background:#f7effb;border:1px solid #eadcf0;color:#71577f}.status{background:#e8faf3;color:#28775c}.status.error{background:#fff0f3;color:#b84768}
+.discover-heading{margin-bottom:14px}.filter-open{background:linear-gradient(130deg,#a56ae3,#ec79b0);padding:8px 13px;border-radius:12px;font-size:12px;box-shadow:0 5px 13px #b66aa51a}.swipe-meter{font-size:11px;padding:8px 11px}
+.discover-stage{max-width:460px}.person-card{background:#fff;border:1px solid #f0dfea;border-radius:25px;box-shadow:0 18px 48px #9d6da21c;overflow:hidden;padding:0;min-height:0;text-align:left;display:flex;flex-direction:column}.person-card:before{display:none}
+.profile-photo-wrap{position:relative;width:100%;height:clamp(330px,58vh,560px);overflow:hidden;background:linear-gradient(145deg,#f7ddeb,#e5dcfa)}.profile-photo-wrap>.avatar{width:100%;height:100%;margin:0;border:0;border-radius:0;box-shadow:none;background:transparent;font-size:58px}.profile-photo-wrap>.avatar img{width:100%;height:100%;object-fit:cover;object-position:center 35%;border-radius:0}.photo-caption{position:absolute;inset:auto 0 0;padding:70px 18px 17px;color:#fff;background:linear-gradient(transparent,#1e142cbd 80%)}.photo-caption h2{margin:0 0 5px;font-size:25px;line-height:1.2;letter-spacing:-.4px;text-shadow:0 1px 8px #0005}.online-label{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.4px;text-transform:uppercase;padding:5px 9px;border-radius:99px;background:#ffffff2b;backdrop-filter:blur(8px);margin-bottom:10px}.online-label span{width:6px;height:6px;border-radius:50%;background:#54e2ad}.photo-location{display:inline-block;font-size:11px;color:#fff;padding:5px 9px;border-radius:99px;background:#ffffff30;backdrop-filter:blur(8px)}
+.person-details{padding:13px 16px 16px;display:flex;flex-direction:column;gap:0}.person-details .person-meta{margin:0}.person-details .tag{font-size:10px;padding:4px 9px}.person-details .bio{color:#796c83;font-size:12px;line-height:1.5;margin:8px 0 13px;min-height:0;-webkit-line-clamp:3}.person-details .swipe-actions{display:flex;justify-content:center;align-items:center;gap:15px;width:100%;margin:0}.person-details .swipe-actions button.mini-action{width:43px;height:43px;min-width:43px;min-height:43px;padding:0;border:0;border-radius:50%;font-size:19px;display:grid;place-items:center;box-shadow:0 5px 14px #8b5aa01c}.person-details .pass-action{background:#f0edf5;color:#75677f;border:1px solid #e4dce9!important}.person-details .like-action{background:linear-gradient(135deg,#ff6caa,#e83d8b);color:#fff;box-shadow:0 7px 17px #e83d8b35!important}.person-details .block-action{background:linear-gradient(135deg,#b38af0,#8661d0);color:#fff}
+.profile-photo-preview{border-color:#ead5ed;background:#f8f1fa}.list-item{background:#fff;border-color:#eaddec}.chat-box{background:#fbf7fc;border-color:#eaddec}.bubble{background:#f0e8f7;color:#4c3d59}.bubble.mine{background:#f8d9e9;color:#61364f}
+.filter-backdrop{background:#4a355b55;backdrop-filter:blur(5px)}.filter-drawer{background:linear-gradient(160deg,#fffaff,#f5edfb);border-left:1px solid #eaddec;color:#352840}.drawer-note{background:#f5eafa;border-color:#e9d6ef;color:#70517e}.drawer-close{background:#f1e8f6;color:#695478;border-color:#e5d8eb}
+.mobile-nav{background:#ffffffdf;border:1px solid #eaddec;backdrop-filter:blur(18px);box-shadow:0 9px 30px #75518b20;border-radius:22px;padding:7px 9px;gap:5px}.mobile-nav .nav{background:transparent;border:0;color:#75677e;font-size:0;justify-content:center;min-height:43px;box-shadow:none}.mobile-nav .nav span{font-size:21px;line-height:1}.mobile-nav .nav.active{background:linear-gradient(135deg,#fce0ed,#eee2ff);color:#a64f9d;border-radius:15px}
+.foot{color:#9a8da2}
+@media(max-width:740px){.wrap{padding:10px 12px 14px}.top{padding:8px 2px 14px}.brand{font-size:26px}.discover-stage{max-width:430px}.profile-photo-wrap{height:clamp(300px,48vh,440px)}.person-card{border-radius:22px}.person-details{padding:11px 14px 13px}.person-details .swipe-actions{gap:14px}.person-details .swipe-actions button.mini-action{width:40px;height:40px;min-width:40px;min-height:40px;font-size:18px}.mobile-nav{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));margin:14px auto 0;max-width:460px}.mobile-nav .nav{flex:1;padding:9px 2px}.panel{padding:14px}}
+
+/* Romantic cute-minimal finish: matches, messages and profile follow the same visual language. */
+:root{--pink:#ed4d91;--purple:#9855c9;--green:#31b98c;--red:#ee718d}
+body{background:radial-gradient(ellipse at 8% 0%,#ffe0e9 0,transparent 34%),radial-gradient(ellipse at 92% 8%,#e9d9ff 0,transparent 36%),linear-gradient(145deg,#fff8f8,#fff4fa 48%,#f6f1ff);background-attachment:fixed}
+.top{align-items:center}.brand{letter-spacing:-1.2px}.brand span{display:inline-block;margin-left:2px;transform:rotate(-8deg)}
+#view-matches>.panel,#view-chat>.panel,#view-me>.panel{background:rgba(255,255,255,.9);border:1px solid #f0dce9;border-radius:25px;box-shadow:0 15px 42px #9d6da21a}
+#view-matches h2,#view-chat h2,#view-me h2{color:#56384f;letter-spacing:-.45px}
+#view-matches>.panel>p{font-size:13px}
+#matchesList{gap:9px;margin-top:17px}
+#matchesList .list-item{position:relative;min-height:76px;padding:10px 11px;border:1px solid #f1e2ec;border-radius:19px;background:linear-gradient(110deg,#fff 0%,#fff9fc 100%);box-shadow:0 5px 15px #a65b8a0b}
+#matchesList .avatar{width:51px!important;height:51px!important;border:2px solid #f5d7e7;background:linear-gradient(135deg,#f5a5c7,#bd91e7);font-size:17px!important}
+#matchesList .grow strong{font-size:14px;color:#50394f}#matchesList .grow p{font-size:11px;margin-top:4px}
+#matchesList button[data-open-match]{width:37px;height:37px;min-width:37px;padding:0;border-radius:50%;font-size:0;background:linear-gradient(135deg,#ff79ad,#e74791);box-shadow:0 5px 12px #e747912c;position:relative}
+#matchesList button[data-open-match]:after{content:'✉';font-size:16px;color:#fff}
+#matchesList button[data-block-match]{width:30px;height:30px;min-width:30px;padding:0;border-radius:50%;font-size:0;background:#f7eff8;color:#9b7aa2;border:1px solid #eee0f0;box-shadow:none}
+#matchesList button[data-block-match]:after{content:'⋯';font-size:18px}
+#profileSummary .profile-card{display:flex;flex-direction:column;text-align:center;align-items:center;gap:10px;padding:23px 16px 19px;border:1px solid #f1dce9;border-radius:23px;background:linear-gradient(150deg,#fff,#fff6fb 70%,#f7f1ff);box-shadow:0 9px 25px #9d6da212}
+#profileSummary .avatar{width:104px;height:104px;border:4px solid #fff;box-shadow:0 5px 20px #d56e9c25;background:linear-gradient(145deg,#f6a4c7,#a878d9);font-size:32px}
+#profileSummary .person{width:100%}#profileSummary .person h2{font-size:22px;margin:0 0 4px;color:#54364f}
+#profileSummary .person .muted{font-size:12px}#profileSummary .person p{max-width:440px;margin:12px auto;color:#77677d;font-size:13px;line-height:1.6}
+#profileSummary .tag{display:inline-block;margin:4px 3px 0;background:#fff0f6;border-color:#f5d9e8;color:#a04e79;border-radius:99px;padding:6px 11px}
+#view-chat .chat-box{border:1px solid #f0dce9;background:linear-gradient(180deg,#fffafd,#fff5fa);border-radius:20px;min-height:300px}
+#view-chat .bubble{background:#f4eafa;color:#59445f;border-radius:17px 17px 17px 5px}#view-chat .bubble.mine{background:linear-gradient(135deg,#f8c6dc,#ead6fb);color:#603d59;border-radius:17px 17px 5px 17px}
+#chatForm input{border-radius:999px;padding:13px 16px}#chatForm button{border-radius:999px;min-width:82px}
+.mobile-nav{border-radius:24px;background:#fffFf2;border:1px solid #f0dce9;box-shadow:0 12px 34px #8f5c8e24}
+.mobile-nav .nav.active{background:linear-gradient(135deg,#ffe0ec,#f0e2ff);color:#b44c8c}
+@media(max-width:740px){#view-matches>.panel,#view-chat>.panel,#view-me>.panel{padding:17px 14px}#matchesList .list-item{gap:9px;padding:9px}#matchesList button[data-block-match]{display:none}#profileSummary .profile-card{padding:22px 13px}#profileSummary .avatar{width:96px;height:96px}.mobile-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(9px,env(safe-area-inset-bottom));width:min(460px,calc(100% - 28px));margin:0;z-index:20;padding:7px 9px}.wrap{padding-bottom:88px}}
+
+
+
+/* FIX: keep Discover action buttons perfectly circular on all screen sizes */
+.person-details .swipe-actions{display:flex!important;justify-content:center!important;align-items:center!important;gap:18px!important;width:100%!important}
+.person-details .swipe-actions button.mini-action{flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;max-width:44px!important;max-height:44px!important;aspect-ratio:1/1!important;padding:0!important;border-radius:50%!important;line-height:1!important;display:grid!important;place-items:center!important;box-sizing:border-box!important}
+@media(max-width:740px){.person-details .swipe-actions{gap:18px!important}.person-details .swipe-actions button.mini-action{flex-basis:44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;max-width:44px!important;max-height:44px!important}}
+
+
+
+/* Saath unified theme system: gentle light mode + deep romantic night mode */
+.top-tools{display:flex;align-items:center;gap:10px;min-width:0}
+.theme-toggle{position:relative;width:76px;height:38px;padding:0;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:0;background:#eee3f7;border:1px solid #e3d3ef;box-shadow:inset 0 1px 3px #6e47751a;flex:0 0 auto;color:#735c88}
+.theme-toggle .sun-icon,.theme-toggle .moon-icon{position:relative;z-index:1;width:36px;text-align:center;font-size:18px;line-height:36px}
+.theme-toggle .sun-icon{color:#ef6795}.theme-toggle .moon-icon{color:#7664a2}
+.theme-knob{position:absolute;left:3px;top:3px;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 2px 7px #583a672b;transition:transform .22s ease}
+body.dark-mode .theme-toggle{background:#34304f;border-color:#4a426b;color:#fff}
+body.dark-mode .theme-knob{transform:translateX(38px);background:#211d38}
+body.dark-mode .theme-toggle .sun-icon{color:#9a91b8}body.dark-mode .theme-toggle .moon-icon{color:#ffe29a}
+@media(max-width:740px){.top-tools{gap:7px}.theme-toggle{width:70px;height:36px}.theme-toggle .sun-icon,.theme-toggle .moon-icon{width:33px;line-height:34px}.theme-knob{width:28px;height:28px}.top{gap:8px}.brand{font-size:25px}.top .pill{max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
+/* Dark theme overrides all app sections while preserving the same romantic accents. */
+body.dark-mode{color:#f6effb;background:radial-gradient(ellipse at 8% 0%,#342044 0,transparent 35%),radial-gradient(ellipse at 92% 8%,#1d2949 0,transparent 38%),linear-gradient(145deg,#11101d,#171427 55%,#111827);background-attachment:fixed}
+body.dark-mode .muted,body.dark-mode .small.muted{color:#b7abc7}
+body.dark-mode .pill{background:#272239;border-color:#493b5a;color:#d4c6df}
+body.dark-mode .sidebar,body.dark-mode .panel,body.dark-mode .card{background:linear-gradient(145deg,rgba(39,32,55,.97),rgba(26,25,45,.97));border-color:#493b5b;box-shadow:0 14px 38px #05030d66}
+body.dark-mode .hero{background:linear-gradient(130deg,#402342,#282447 58%,#1d3448);border-color:#62466a}
+body.dark-mode .hero .muted{color:#d3c2d9}
+body.dark-mode .nav{color:#c0b4cd}body.dark-mode .nav.active{background:linear-gradient(110deg,#74375f,#49376e);border-color:#91608f;color:#fff}
+body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#211d32;border-color:#51435f;color:#f8efff}
+body.dark-mode input::placeholder,body.dark-mode textarea::placeholder{color:#a99bb8}
+body.dark-mode .person-card{background:linear-gradient(145deg,#2b263f,#1b1a2d 72%);border-color:#564666;box-shadow:0 20px 55px #05030d80}
+body.dark-mode .person-details{background:#242035;color:#f7effb}
+body.dark-mode .person-details .bio{color:#c5b8ce}
+body.dark-mode .person-details .tag{background:#3a2b48;border-color:#604765;color:#f0d9ec}
+body.dark-mode .person-details .pass-action{background:#3a354b;color:#e1d5ea;border-color:#5a4e68!important}
+body.dark-mode .person-details .block-action{background:linear-gradient(135deg,#7652a5,#563d86);color:#fff}
+body.dark-mode #view-matches>.panel,body.dark-mode #view-chat>.panel,body.dark-mode #view-me>.panel{background:rgba(36,30,51,.96);border-color:#51415f;box-shadow:0 14px 38px #05030d66}
+body.dark-mode #view-matches h2,body.dark-mode #view-chat h2,body.dark-mode #view-me h2{color:#ffe5f1}
+body.dark-mode #matchesList .list-item{background:linear-gradient(110deg,#30283f,#28243a);border-color:#51415f;box-shadow:0 5px 15px #05030d30}
+body.dark-mode #matchesList .grow strong{color:#f6eaf5}body.dark-mode #matchesList .grow p{color:#b8a9c4}
+body.dark-mode #matchesList button[data-block-match]{background:#40354c;border-color:#5a4966;color:#e8d8ed}
+body.dark-mode #profileSummary .profile-card{background:linear-gradient(150deg,#30263d,#27243d 70%,#24223a);border-color:#51415f;box-shadow:0 9px 25px #05030d44}
+body.dark-mode #profileSummary .person h2{color:#ffe7f3}body.dark-mode #profileSummary .person p{color:#cbbbd2}
+body.dark-mode #profileSummary .tag{background:#3c2b48;border-color:#654968;color:#f4d7eb}
+body.dark-mode #view-chat .chat-box{background:linear-gradient(180deg,#211d32,#282137);border-color:#51415f}
+body.dark-mode #view-chat .bubble{background:#39304a;color:#f2e9f5}body.dark-mode #view-chat .bubble.mine{background:linear-gradient(135deg,#853d69,#604b91);color:#fff}
+body.dark-mode .list-item{background:#2b253c;border-color:#51415f}
+body.dark-mode .profile-photo-preview{background:#282139;border-color:#654968}
+body.dark-mode .filter-backdrop{background:#080611c9}
+body.dark-mode .filter-drawer{background:linear-gradient(160deg,#292239,#1d1b30);border-color:#51415f;color:#f6effb}
+body.dark-mode .drawer-note{background:#392c48;border-color:#5a4565;color:#ead8f0}
+body.dark-mode .drawer-close{background:#40344e;color:#f4e7f5;border-color:#5c4a68}
+body.dark-mode .mobile-nav{background:#211d32f2;border-color:#51415f;box-shadow:0 12px 34px #05030d88}
+body.dark-mode .mobile-nav .nav{color:#c0b4cd}body.dark-mode .mobile-nav .nav.active{background:linear-gradient(135deg,#633651,#49386c);color:#ff9fc7}
+body.dark-mode .status{background:#30263f;color:#f1dff0;border:1px solid #594565}
+body.dark-mode .status.error{background:#4a2637;color:#ffd2df}
+body.dark-mode .plan{background:#282238;border-color:#51415f}
+body.dark-mode .empty{color:#c0b4cd}
+body.dark-mode .foot{color:#aa9bb7}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <div><div class="brand">Saath<span>♥</span></div><div class="muted small">A little closer to someone real</div></div>
-    <div class="pill" id="authBadge">Not signed in</div>
+    <div class="top-tools">
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
+        <span class="sun-icon" aria-hidden="true">☀</span><span class="moon-icon" aria-hidden="true">☾</span><span class="theme-knob"></span>
+      </button>
+      <div class="pill" id="authBadge">Not signed in</div>
+    </div>
   </header>
 
   <section id="loginScreen" class="panel">
@@ -155,7 +270,7 @@ input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shado
           </div>
         </section>
 
-        <section id="view-matches" class="view hidden"><div class="panel"><h2>Your matches</h2><p class="muted">Mutual likes yahan dikhte hain.</p><div id="matchesList" class="list"><div class="empty">Loading matches…</div></div></div></section>
+        <section id="view-matches" class="view hidden"><div class="panel"><h2>Made for each other <span style="color:#ed4d91">♥</span></h2><p class="muted">Jin logon ke saath mutual connection bana hai.</p><div id="matchesList" class="list"><div class="empty">Loading matches…</div></div></div></section>
 
         <section id="view-chat" class="view hidden">
           <div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><div><h2 style="margin:0">Chat</h2><p id="chatSubtitle" class="muted">Match select karo</p></div><button class="secondary" id="backMatches">Matches</button></div>
@@ -234,7 +349,7 @@ let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], can
 let activeMatch = null, activeChatChannel = null, matchesCache = [];
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
 
-const navItems = [['discover','⌕','Discover'],['matches','♡','Matches'],['me','☺','My profile'],['plans','✦','Swipe plans']];
+const navItems = [['discover','⌕','Discover'],['matches','♡','Matches'],['chat','✉','Messages'],['me','☺','My profile']];
 function showMessage(message,error=false,target='globalMessage'){
   const el=$(target); if(!el)return;
   el.textContent=message;el.classList.remove('hidden','error');if(error)el.classList.add('error');
@@ -358,8 +473,8 @@ async function refreshWallet(){
   if(!currentUser||!sb)return;
   const {data,error}=await sb.rpc('get_my_swipe_status');
   if(error){$('swipeCount').textContent='Swipe balance unavailable';return;}
-  const bonus=data?.bonus_credits||0,used=data?.free_used||0;
-  $('swipeCount').textContent=`Free today: ${Math.max(0,7-used)}/7 · Bonus: ${bonus}`;
+  const used=data?.free_used||0;
+  $('swipeCount').textContent=`Free today: ${Math.max(0,7-used)}/7`;
 }
 function avatarMarkup(profile, extraClass=''){
   const name=profile?.display_name||'Saath user';
@@ -378,7 +493,7 @@ function renderMyProfile(){
   $('displayName').value=p.display_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||'';
   $('age').value=p.age||'';$('gender').value=p.gender||'';$('lookingFor').value=p.looking_for||'';
   $('state').value=p.state||'';$('city').value=p.city||'';$('bio').value=p.bio||'';
-  $('profileSummary').innerHTML=p.id?`<div class="profile-card">${avatarMarkup(p)}<div class="person"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">${escapeHtml(p.city)}, ${escapeHtml(p.state)}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender)}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for)}</span></div></div>`:'<p class="muted">Profile abhi complete nahi hai.</p>';
+  $('profileSummary').innerHTML=p.id?`<div class="profile-card">${avatarMarkup(p)}<div class="person"><div class="small muted">YOUR SAATH PROFILE</div><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender||'Not specified')}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for||'Not specified')}</span></div></div>`:'<p class="muted">Profile abhi complete nahi hai.</p>'; 
   renderPhotoPreview();
 }
 $('profileForm').addEventListener('submit',async e=>{
@@ -516,7 +631,7 @@ function renderCandidate(){
   const box=$('discoverCard');
   if(candidateIndex>=candidateProfiles.length){box.innerHTML='<div class="empty"><h3>Abhi aur profiles nahi hain</h3><p>Filters badal kar dobara try karo.</p><button id="reloadDiscover">Refresh profiles</button></div>';$('reloadDiscover')?.addEventListener('click',()=>loadDiscover(true));return;}
   const p=candidateProfiles[candidateIndex];
-  box.innerHTML=`${avatarMarkup(p)}<div class="person-details"><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted person-location">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div><div class="person-meta"><span class="tag">${escapeHtml(p.gender||'Not specified')}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button id="passBtn" type="button">✕ Pass</button><button id="blockBtn" type="button">⊘ Block</button><button id="likeBtn" type="button">♥ Like</button></div></div>`;
+  box.innerHTML=`<div class="profile-photo-wrap">${avatarMarkup(p)}<div class="photo-caption"><div class="online-label"><span></span> Discover</div><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="photo-location">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div></div></div><div class="person-details"><div class="person-meta"><span class="tag">${escapeHtml(p.gender||'Not specified')}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button id="passBtn" class="mini-action pass-action" type="button" aria-label="Pass" title="Pass">✕</button><button id="likeBtn" class="mini-action like-action" type="button" aria-label="Like" title="Like">♥</button><button id="blockBtn" class="mini-action block-action" type="button" aria-label="Block" title="Block">⊘</button></div></div>`;
   $('passBtn').onclick=()=>doSwipe(p.id,'pass');$('likeBtn').onclick=()=>doSwipe(p.id,'like');$('blockBtn').onclick=()=>blockUser(p.id);
 }
 async function doSwipe(targetId,action){
@@ -533,7 +648,7 @@ async function loadMatches(){
   if(!currentUser)return;const box=$('matchesList');box.innerHTML='<div class="empty">Matches load ho rahe hain…</div>';
   try{
     const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});if(error)throw error;
-    matchesCache=data||[];if(!matchesCache.length){box.innerHTML='<div class="empty">Abhi matches nahi hain. Discover mein profiles like karo.</div>';return;}
+    matchesCache=data||[];if(!matchesCache.length){box.innerHTML='<div class="empty">Abhi koi match nahi mila. Discover mein kisi ko pasand karo — shayad yahin se kahani shuru ho.</div>';return;}
     const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
     const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);if(pe)throw pe;
     const map=new Map((people||[]).map(p=>[p.id,p]));
@@ -584,5 +699,28 @@ $('deleteProfileBtn').onclick=async()=>{
 };
 init();
 </script>
+
+<script>
+(function(){
+  const key='saath_theme_mode';
+  const apply=(mode)=>{
+    const dark=mode==='dark';
+    document.body.classList.toggle('dark-mode',dark);
+    const btn=document.getElementById('themeToggle');
+    if(btn){btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');btn.title=dark?'Switch to light mode':'Switch to dark mode';}
+    const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?'#171427':'#fff7fa';
+  };
+  let saved='light';try{saved=localStorage.getItem(key)||'light';}catch(e){}
+  apply(saved);
+  document.addEventListener('DOMContentLoaded',()=>{
+    const btn=document.getElementById('themeToggle');if(!btn)return;
+    btn.addEventListener('click',()=>{
+      const next=document.body.classList.contains('dark-mode')?'light':'dark';
+      apply(next);try{localStorage.setItem(key,next);}catch(e){}
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
