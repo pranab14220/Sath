@@ -201,7 +201,7 @@ html.dark-mode .round-btn.like,body.dark-mode .round-btn.like{
 .match-row{width:100%;display:flex;align-items:center;gap:12px;padding:10px 12px;min-height:74px;text-align:left;background:var(--card);border:1px solid #f6e7ef;border-radius:20px;box-shadow:0 8px 18px rgba(160,80,120,.05)}
 html.dark-mode .match-row,body.dark-mode .match-row{border-color:var(--line)}
 .official-match-row{position:sticky;top:0;z-index:5;border:2px solid #c084fc!important;background:linear-gradient(100deg,#fff0f7,#f4eaff)!important;box-shadow:0 8px 22px rgba(168,85,247,.16)!important}.official-pin{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#a855f7;color:#fff;font-size:9px;letter-spacing:.06em;vertical-align:middle}.official-match-row .muted{color:#8b4c9e!important}html.dark-mode .official-match-row,body.dark-mode .official-match-row{background:linear-gradient(100deg,#382238,#30213f)!important}.match-row .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.match-row strong{font-size:15px;font-weight:800}
+.unread-dot{display:inline-block;width:9px;height:9px;min-width:9px;border-radius:50%;background:#ff3f86;box-shadow:0 0 0 3px rgba(255,63,134,.13);margin-left:auto;flex:0 0 auto}.nav-unread-dot{position:absolute;top:5px;right:calc(50% - 23px);width:8px;height:8px;border-radius:50%;background:#ff3f86;box-shadow:0 0 0 3px rgba(255,63,134,.16)}.match-row.has-unread{border-color:#ff9bc2;box-shadow:0 5px 18px rgba(255,63,134,.10)}html.dark-mode .match-row.has-unread,body.dark-mode .match-row.has-unread{border-color:#b85b89}.match-row strong{font-size:15px;font-weight:800}
 .match-row .muted{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chev{color:#c8bdd0}
 .avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#ffb3cc,#d4b5f7);color:#fff;font-weight:800;flex:0 0 auto}
@@ -631,6 +631,10 @@ function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'
 function initials(s='S'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'S';}
 function niceError(e){return e?.message||String(e||'Unknown error');}
 function formatRemaining(until){if(!until)return 'Unknown';const end=new Date(until),now=new Date();if(!Number.isFinite(end.getTime()))return 'Unknown';if(end<=now)return 'Expired';const addMonths=(date,count)=>{const d=new Date(date),day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+count);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return d;};let months=Math.max(0,(end.getFullYear()-now.getFullYear())*12+end.getMonth()-now.getMonth());while(months>0&&addMonths(now,months)>end)months--;while(addMonths(now,months+1)<=end)months++;const afterMonths=addMonths(now,months),days=Math.max(0,Math.ceil((end-afterMonths)/86400000));const parts=[];if(months)parts.push(`${months} month${months===1?'':'s'}`);if(days)parts.push(`${days} day${days===1?'':'s'}`);return `${parts.join(' and ')||'Less than a day'} remaining`;}
+function messageSeenKey(matchId){return 'saath_seen_'+(currentUser?.id||'guest')+'_'+matchId;}
+function getMessageSeenAt(matchId){try{return localStorage.getItem(messageSeenKey(matchId))||'';}catch(e){return '';}}
+function setMessageSeenAt(matchId,stamp){try{localStorage.setItem(messageSeenKey(matchId),stamp||new Date().toISOString());}catch(e){}}
+function updateMatchesUnreadDot(show){document.querySelectorAll('#matchesUnreadDot').forEach(el=>el.classList.toggle('hidden',!show));}
 function formatTime(iso){
   if(!iso)return '';
   const d=new Date(iso);
@@ -642,7 +646,7 @@ function navMarkup(){
     const svg = icon==='user'
       ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-user"></use></svg>`
       : `<svg class="ico heart-line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"></use></svg><svg class="ico heart-fill" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart-fill"></use></svg>`;
-    return `<button class="nav ${id==='discover'?'active':''}" data-view="${id}" type="button">${svg}<span>${label}</span></button>`;
+    return `<button class="nav ${id==='discover'?'active':''}" data-view="${id}" type="button">${svg}<span>${label}</span>${id==='matches'?'<i class="nav-unread-dot hidden" id="matchesUnreadDot" aria-label="New message"></i>':''}</button>`;
   }).join('');
 }
 $('desktopNav').innerHTML=navMarkup();
@@ -1092,31 +1096,34 @@ async function loadMatches(){
     const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});
     if(error)throw error;
     matchesCache=data||[];
-    // Official SATHI.ADMIN thread is always pinned above member matches.
+    const incomingByMatch=new Map();
+    if(matchesCache.length){
+      const ids=matchesCache.map(m=>m.id);
+      const {data:incoming,error:incomingError}=await sb.from('messages').select('id,match_id,sender_id,created_at').in('match_id',ids).neq('sender_id',currentUser.id).order('created_at',{ascending:false}).limit(1000);
+      if(incomingError)throw incomingError;
+      (incoming||[]).forEach(msg=>{if(!incomingByMatch.has(msg.match_id))incomingByMatch.set(msg.match_id,msg);});
+    }
+    const unreadIds=new Set();
+    matchesCache.forEach(m=>{const latest=incomingByMatch.get(m.id);const seen=getMessageSeenAt(m.id);if(latest&&(!seen||new Date(latest.created_at)>new Date(seen)))unreadIds.add(m.id);});
+    updateMatchesUnreadDot(unreadIds.size>0);
     const {data:officialRows,error:officialError}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(1);
     if(officialError)throw officialError;
     const official=officialRows?.[0]||null;
+    const orderedMatches=[...matchesCache].sort((a,b)=>{const au=unreadIds.has(a.id),bu=unreadIds.has(b.id);if(au!==bu)return au?-1:1;return new Date(b.created_at)-new Date(a.created_at);});
     let html='';
-    if(official){
-      html+=`<button class="match-row admin-thread" type="button" id="openAdminThread"><div class="avatar">${ico('i-shield')}</div><div class="match-copy"><strong>SATHI.ADMIN</strong><span>${escapeHtml(official.body||'Official message')}</span></div><span class="match-time">${formatTime(official.created_at)}</span></button>`;
-    }
-    if(!matchesCache.length&&!official){
-      box.innerHTML='<div class="empty-state"><h3>No matches yet</h3><p>Your matches and official messages will appear here.</p></div>';
-      return;
-    }
-    for(const m of matchesCache){
+    if(official)html+=`<button class="match-row admin-thread" type="button" id="openAdminThread"><div class="avatar">${ico('i-shield')}</div><div class="match-copy"><strong>SATHI.ADMIN</strong><span>${escapeHtml(official.body||'Official message')}</span></div><span class="match-time">${formatTime(official.created_at)}</span></button>`;
+    if(!orderedMatches.length&&!official){box.innerHTML='<div class="empty-state"><h3>No matches yet</h3><p>Your matches and official messages will appear here.</p></div>';return;}
+    for(const m of orderedMatches){
       const otherId=m.user_a===currentUser.id?m.user_b:m.user_a;
       const {data:p}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',otherId).maybeSingle();
       if(!p)continue;
-      html+=`<button class="match-row" type="button" data-match-id="${m.id}"><div class="avatar">${p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'))}</div><div class="match-copy"><strong>${escapeHtml(p.display_name||'Member')}${p.age?`, ${escapeHtml(String(p.age))}`:''}</strong><span>Open conversation</span></div><span class="match-time">${formatTime(m.created_at)}</span></button>`;
+      const unread=unreadIds.has(m.id);
+      html+=`<button class="match-row ${unread?'has-unread':''}" type="button" data-match-id="${m.id}"><div class="avatar">${p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'))}</div><div class="match-copy"><strong>${escapeHtml(p.display_name||'Member')}${p.age?`, ${escapeHtml(String(p.age))}`:''}</strong><span>Open conversation</span></div>${unread?'<i class="unread-dot" aria-label="New message"></i>':''}<span class="match-time">${formatTime(m.created_at)}</span></button>`;
     }
     box.innerHTML=html;
     $('openAdminThread')?.addEventListener('click',()=>openAdminChat());
     box.querySelectorAll('[data-match-id]').forEach(b=>b.addEventListener('click',()=>openChat(b.dataset.matchId)));
-  }catch(err){
-    box.innerHTML=`<div class="empty-state"><p>${escapeHtml(niceError(err))}</p><button class="btn-pink" id="retryMatches" type="button">Try again</button></div>`;
-    $('retryMatches')?.addEventListener('click',loadMatches);
-  }
+  }catch(err){box.innerHTML=`<div class="empty-state"><p>${escapeHtml(niceError(err))}</p><button class="btn-pink" id="retryMatches" type="button">Try again</button></div>`;$('retryMatches')?.addEventListener('click',loadMatches);}
 }
 async function openAdminChat(){
   activeChatUserId='ADMIN';
@@ -1141,6 +1148,7 @@ async function openChat(matchId){
   const match=matchesCache.find(m=>m.id===matchId);
   if(!match){showMessage('Match not found. Please refresh Matches.',true);return;}
   activeMatch=match;
+  setMessageSeenAt(matchId,new Date().toISOString());
   const userId=match.user_a===currentUser.id?match.user_b:match.user_a;
   activeChatUserId=userId;
   try{
