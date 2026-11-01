@@ -243,6 +243,20 @@ html.dark-mode .bubble,body.dark-mode .bubble{background:#2e2740}
 
 .profile-view{position:relative;padding:8px 22px 24px;text-align:center}
 .gear-float{position:absolute;top:8px;right:10px;color:#8d8198}
+
+.profile-view .gear-float,.profile-view .edit-profile-float{
+  position:absolute;top:8px;width:40px;height:40px;border-radius:50%;
+  display:grid;place-items:center;background:var(--card);
+  border:1px solid var(--line);box-shadow:0 4px 12px rgba(90,55,100,.1);
+}
+.profile-view .gear-float{right:10px}
+.profile-view .edit-profile-float{left:10px}
+html.dark-mode .profile-view .gear-float,body.dark-mode .profile-view .gear-float,
+html.dark-mode .profile-view .edit-profile-float,body.dark-mode .profile-view .edit-profile-float{
+  background:#30283d;border-color:#4a405b;color:#f2eaf8;
+  box-shadow:0 3px 10px rgba(0,0,0,.24);
+}
+
 .avatar-lg{position:relative;width:128px;height:128px;margin:8px auto 12px}
 .avatar-lg-photo{width:128px;height:128px;border-radius:50%;overflow:hidden;border:4px solid #fff;box-shadow:0 12px 28px rgba(200,80,130,.22);background:linear-gradient(135deg,#ffb3cc,#c9a6f5);display:grid;place-items:center;font-size:40px;font-weight:800;color:#fff}
 html.dark-mode .avatar-lg-photo,body.dark-mode .avatar-lg-photo{border-color:#2a2438}
@@ -834,7 +848,7 @@ function renderMyProfile(){
     <p class="loc">${ico('i-pin')}<span>${escapeHtml(loc||'Add your city')}</span></p>
     <p class="bio">${escapeHtml(p.bio||'Add a short bio so people know you.')}</p>
     ${chips.length?`<div class="section-label">Interests</div><div class="chips">${chips.map(c=>`<span class="chip">${escapeHtml(c)}</span>`).join('')}</div>`:''}
-    <button type="button" class="btn-soft" id="editProfileBtn">${ico('i-pencil')} Edit Profile</button>`
+    <button type="button" class="icon-btn edit-profile-float" id="editProfileBtn" aria-label="Edit profile" title="Edit profile">${ico('i-pencil')}</button>`
     :`<div class="avatar-lg"><div class="avatar-lg-photo"><span>${escapeHtml(initials(currentUser.user_metadata?.name||'Me'))}</span></div></div>
       <h2>Your profile</h2>
       <p class="bio">Add your name, age, and city to start.</p>
