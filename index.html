@@ -272,12 +272,17 @@ html.dark-mode .bio,body.dark-mode .bio{color:var(--muted)}
 .chip{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;background:var(--chip);color:var(--chip-ink);font-size:13px;font-weight:800}
 .profile-view .btn-soft{margin-top:18px}
 
-/* Refined profile actions for dark mode */
+/* Profile edit icon matches the account/settings control */
+.profile-view #editProfileBtn{
+  position:absolute;top:8px;left:10px;right:auto;z-index:5;
+  width:40px;height:40px;min-height:40px;padding:0;
+  display:grid;place-items:center;border-radius:50%;
+  color:var(--ink);background:var(--card);
+  border:1px solid var(--line);box-shadow:0 4px 12px rgba(90,55,100,.1);
+}
 html.dark-mode .profile-view #editProfileBtn,body.dark-mode .profile-view #editProfileBtn{
-  width:100%;min-height:52px;padding:0 18px;border-radius:999px;
-  color:#fff;background:linear-gradient(110deg,#a879e8,#d46aa9);
-  border:1px solid rgba(220,178,255,.28);
-  box-shadow:0 7px 18px rgba(151,104,210,.24);
+  color:#f2eaf8;background:#30283d;border-color:#4a405b;
+  box-shadow:0 3px 10px rgba(0,0,0,.24);
 }
 #accountSheet #logoutBtn,#accountSheet #deleteProfileBtn{
   display:flex;width:100%;min-height:52px;margin:10px 0 0;padding:0 18px;
