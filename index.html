@@ -631,9 +631,6 @@ function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&','<':'
 function initials(s='S'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'S';}
 function niceError(e){return e?.message||String(e||'Unknown error');}
 function formatRemaining(until){if(!until)return 'Unknown';const end=new Date(until),now=new Date();if(!Number.isFinite(end.getTime()))return 'Unknown';if(end<=now)return 'Expired';const addMonths=(date,count)=>{const d=new Date(date),day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+count);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return d;};let months=Math.max(0,(end.getFullYear()-now.getFullYear())*12+end.getMonth()-now.getMonth());while(months>0&&addMonths(now,months)>end)months--;while(addMonths(now,months+1)<=end)months++;const afterMonths=addMonths(now,months),days=Math.max(0,Math.ceil((end-afterMonths)/86400000));const parts=[];if(months)parts.push(`${months} month${months===1?'':'s'}`);if(days)parts.push(`${days} day${days===1?'':'s'}`);return `${parts.join(' and ')||'Less than a day'} remaining`;}
-function messageSeenKey(matchId){return 'saath_seen_'+(currentUser?.id||'guest')+'_'+matchId;}
-function getMessageSeenAt(matchId){try{return localStorage.getItem(messageSeenKey(matchId))||'';}catch(e){return '';}}
-function setMessageSeenAt(matchId,stamp){try{localStorage.setItem(messageSeenKey(matchId),stamp||new Date().toISOString());}catch(e){}}
 function updateMatchesUnreadDot(show){document.querySelectorAll('#matchesUnreadDot').forEach(el=>el.classList.toggle('hidden',!show));}
 function formatTime(iso){
   if(!iso)return '';
@@ -1103,8 +1100,11 @@ async function loadMatches(){
       if(incomingError)throw incomingError;
       (incoming||[]).forEach(msg=>{if(!incomingByMatch.has(msg.match_id))incomingByMatch.set(msg.match_id,msg);});
     }
+    const {data:readRows,error:readError}=await sb.from('message_reads').select('match_id,last_read_at').eq('user_id',currentUser.id);
+    if(readError)throw readError;
+    const readAtByMatch=new Map((readRows||[]).map(row=>[row.match_id,row.last_read_at]));
     const unreadIds=new Set();
-    matchesCache.forEach(m=>{const latest=incomingByMatch.get(m.id);const seen=getMessageSeenAt(m.id);if(latest&&(!seen||new Date(latest.created_at)>new Date(seen)))unreadIds.add(m.id);});
+    matchesCache.forEach(m=>{const latest=incomingByMatch.get(m.id);const seen=readAtByMatch.get(m.id);if(latest&&(!seen||new Date(latest.created_at)>new Date(seen)))unreadIds.add(m.id);});
     updateMatchesUnreadDot(unreadIds.size>0);
     const {data:officialRows,error:officialError}=await sb.from('admin_messages').select('id,body,created_at,read_at,sender_label').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(1);
     if(officialError)throw officialError;
@@ -1148,8 +1148,17 @@ async function openChat(matchId){
   const match=matchesCache.find(m=>m.id===matchId);
   if(!match){showMessage('Match not found. Please refresh Matches.',true);return;}
   activeMatch=match;
-  setMessageSeenAt(matchId,new Date().toISOString());
   const userId=match.user_a===currentUser.id?match.user_b:match.user_a;
+  try{
+    const {error:readError}=await sb.from('message_reads').upsert(
+      {user_id:currentUser.id,match_id:matchId,last_read_at:new Date().toISOString()},
+      {onConflict:'user_id,match_id'}
+    );
+    if(readError)throw readError;
+    await loadMatches();
+  }catch(readErr){
+    showMessage('Chat opened, but read status could not sync across devices: '+niceError(readErr),true);
+  }
   activeChatUserId=userId;
   try{
     const {data:p,error}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',userId).maybeSingle();
