@@ -1048,11 +1048,11 @@ async function loadMatches(){
       const otherId=m.user_a===currentUser.id?m.user_b:m.user_a;
       const {data:p}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',otherId).maybeSingle();
       if(!p)continue;
-      html+=`<button class="match-row" type="button" data-user-id="${p.id}"><div class="avatar">${p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'))}</div><div class="match-copy"><strong>${escapeHtml(p.display_name||'Member')}${p.age?`, ${escapeHtml(String(p.age))}`:''}</strong><span>Open conversation</span></div><span class="match-time">${formatTime(m.created_at)}</span></button>`;
+      html+=`<button class="match-row" type="button" data-match-id="${m.id}"><div class="avatar">${p.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p.display_name||'S'))}</div><div class="match-copy"><strong>${escapeHtml(p.display_name||'Member')}${p.age?`, ${escapeHtml(String(p.age))}`:''}</strong><span>Open conversation</span></div><span class="match-time">${formatTime(m.created_at)}</span></button>`;
     }
     box.innerHTML=html;
     $('openAdminThread')?.addEventListener('click',()=>openAdminChat());
-    box.querySelectorAll('[data-user-id]').forEach(b=>b.addEventListener('click',()=>openChat(b.dataset.userId)));
+    box.querySelectorAll('[data-match-id]').forEach(b=>b.addEventListener('click',()=>openChat(b.dataset.matchId)));
   }catch(err){
     box.innerHTML=`<div class="empty-state"><p>${escapeHtml(niceError(err))}</p><button class="btn-pink" id="retryMatches" type="button">Try again</button></div>`;
     $('retryMatches')?.addEventListener('click',loadMatches);
@@ -1076,13 +1076,17 @@ async function openAdminChat(){
     if(unread.length)await sb.from('admin_messages').update({read_at:new Date().toISOString()}).in('id',unread);
   }catch(err){showMessage(niceError(err),true);}
 }
-async function openChat(userId){
+async function openChat(matchId){
   if(!currentUser)return;
+  const match=matchesCache.find(m=>m.id===matchId);
+  if(!match){showMessage('Match not found. Please refresh Matches.',true);return;}
+  activeMatch=match;
+  const userId=match.user_a===currentUser.id?match.user_b:match.user_a;
+  activeChatUserId=userId;
   try{
     const {data:p,error}=await sb.from('profiles').select('id,display_name,age,photo_url').eq('id',userId).maybeSingle();
     if(error)throw error;
     if(!p)throw new Error('User not found');
-    activeChatUserId=userId;
     activeChatProfile=p;
     $('chatSubtitle').textContent=p.display_name||'Chat';
     $('chatMeta').textContent=p.age?`Age ${p.age}`:'';
@@ -1093,20 +1097,22 @@ async function openChat(userId){
     $('chatMessages').innerHTML='<div class="empty-state">Loading messages…</div>';
     showView('chat');
     await loadChatMessages();
-  }catch(err){showMessage(niceError(err),true);}
+  }catch(err){$('chatMessages').innerHTML=`<div class="empty-state">Could not load chat: ${escapeHtml(niceError(err))}</div>`;showMessage(niceError(err),true);}
 }
 async function loadChatMessages(){
-  if(!currentUser||!activeChatUserId||activeChatUserId==='ADMIN')return;
+  if(!currentUser||!activeMatch||activeChatUserId==='ADMIN')return;
+  const box=$('chatMessages');
   try{
-    const {data,error}=await sb.from('messages').select('id,sender_id,receiver_id,body,created_at').or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatUserId}),and(sender_id.eq.${activeChatUserId},receiver_id.eq.${currentUser.id})`).order('created_at',{ascending:true});
+    const {data,error}=await sb.from('messages').select('id,match_id,sender_id,body,created_at').eq('match_id',activeMatch.id).order('created_at',{ascending:true}).limit(300);
     if(error)throw error;
-    $('chatMessages').innerHTML=(data||[]).map(m=>{
+    box.innerHTML=(data||[]).map(m=>{
       const own=m.sender_id===currentUser.id;
       return `<div class="message ${own?'sent':'received'}"><div class="message-bubble">${escapeHtml(m.body||'')}</div><div class="message-time">${formatTime(m.created_at)}</div></div>`;
     }).join('')||'<div class="empty-state">Say hello 👋</div>';
-    $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
-  }catch(err){showMessage(niceError(err),true);}
+    box.scrollTop=box.scrollHeight;
+  }catch(err){box.innerHTML=`<div class="empty-state">Could not load messages: ${escapeHtml(niceError(err))}</div>`;showMessage(niceError(err),true);}
 }
+$('backMatches').addEventListener('click',()=>{activeChatUserId=null;activeChatProfile=null;activeMatch=null;$('chatMenuPop').classList.add('hidden');showView('matches');});
 
 $('chatMenuBtn').addEventListener('click',()=>{
   $('chatMenuPop').classList.toggle('hidden');
