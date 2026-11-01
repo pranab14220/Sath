@@ -1,908 +1,716 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1020">
-<title>Saath — Find Your Connection</title>
-<!-- Discover fix: 2026-10-29; removed unknown created_at field, clarified profile diagnostics. -->
-<style>
-:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--text:#f5f7ff;--muted:#aab5ce;--line:#2a3652;--pink:#ff4d87;--purple:#8b5cf6;--green:#34d399;--red:#fb7185}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172341 0,#0b1020 45%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:11px 15px;font-weight:700;color:white;background:linear-gradient(135deg,var(--pink),var(--purple))}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#25314d;border:1px solid #3a4868}.danger{background:#5c2038;border:1px solid #9f3459}.success{background:#145344}.hidden{display:none!important}.wrap{max-width:1080px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--pink)}.pill{border:1px solid var(--line);background:#111a2c;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}.layout{display:grid;grid-template-columns:220px 1fr;gap:18px}.sidebar,.panel,.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px}.sidebar{padding:12px;height:max-content;position:sticky;top:12px}.nav{width:100%;display:flex;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;color:var(--muted);border:1px solid transparent}.nav.active{background:#24213e;color:#fff;border-color:#51406d}.main{min-width:0}.panel{padding:18px;margin-bottom:15px}.hero{padding:22px;background:linear-gradient(130deg,#251c3c,#142641);border:1px solid #49355f;border-radius:22px;margin-bottom:15px}.hero h1{font-size:clamp(24px,5vw,36px);margin:0 0 8px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}.field label{font-size:13px;color:var(--muted)}input,select,textarea{width:100%;background:#0b1325;border:1px solid #34415f;border-radius:12px;padding:12px;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}.actions{display:flex;gap:8px;flex-wrap:wrap}.profile-card{padding:18px;display:flex;gap:14px;align-items:center}.avatar{overflow:hidden;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-size:27px;font-weight:900;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover;display:block}.person h2{margin:0 0 5px}.tag{display:inline-block;background:#222e49;border:1px solid #34415f;padding:5px 9px;border-radius:999px;font-size:12px;color:#d8e1f8;margin:3px 3px 0 0}.person-card{background:linear-gradient(150deg,#18233b,#11182b);border:1px solid #35415e;border-radius:20px;padding:18px}.person-card .avatar{width:110px;height:110px;margin:0 auto 13px}.profile-photo-tools{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:12px 0 18px}.profile-photo-preview{width:104px;height:104px;border-radius:50%;overflow:hidden;border:2px solid #51406d;background:#111a2c;display:grid;place-items:center;flex-shrink:0}.profile-photo-preview img{width:100%;height:100%;object-fit:cover}.profile-photo-actions{display:flex;gap:8px;flex-wrap:wrap}.person-card h2{margin:0 0 4px}.person-card .bio{min-height:48px;color:#d0d8ea;margin:12px 0}.swipe-actions{display:flex;gap:10px;margin-top:16px}.swipe-actions button{flex:1}.plan{border:1px solid #35415e;border-radius:16px;padding:15px;background:#111a2c}.plan h3{margin:0 0 5px}.plan .price{font-size:25px;font-weight:900;margin:8px 0}.list{display:flex;flex-direction:column;gap:10px}.list-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#111a2c;border-radius:14px}.list-item .grow{flex:1;min-width:0}.list-item p{margin:3px 0}.chat-box{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#0b1325;border:1px solid var(--line);border-radius:15px;padding:12px;margin:12px 0}.bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#24314d;align-self:flex-start;overflow-wrap:anywhere}.bubble.mine{background:#66305d;align-self:flex-end}.small{font-size:12px}.status{padding:10px 12px;border-radius:12px;background:#182b37;color:#b7f7dc;margin:10px 0}.error{background:#3a1b2a;color:#ffc0d0}.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;background:#020617c9;display:grid;place-items:center;padding:16px;z-index:10}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.inline{display:flex;gap:8px}.inline>*{min-width:0;flex:1}.empty{text-align:center;padding:30px 12px;color:var(--muted)}a{color:#f9a8d4}
-@media(max-width:740px){.wrap{padding:12px}.layout{display:block}.sidebar{display:none}.mobile-nav{display:flex;position:sticky;bottom:8px;z-index:5;gap:5px;padding:7px;background:#10182bdc;backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;margin-top:12px}.mobile-nav .nav{justify-content:center;text-align:center;padding:10px 4px;font-size:12px;margin:0}.grid{grid-template-columns:1fr}.panel{padding:14px}.hero{padding:18px}.top{align-items:flex-start}.brand{font-size:24px}.profile-card{align-items:flex-start}.inline{flex-direction:column}}
-
-/* Saath visual refresh */
-:root{--pink:#ff4f91;--purple:#8b5cf6;--cyan:#60d9ff;--panel:#111a30;--line:#2a3858}
-body{background:radial-gradient(ellipse at 12% -8%,#42245b 0,transparent 38%),radial-gradient(ellipse at 100% 10%,#153d60 0,transparent 32%),#080d1b;background-attachment:fixed}
-.wrap{max-width:1240px}
-.top{padding:12px 0 20px}
-.brand{font-size:30px;background:linear-gradient(100deg,#fff 25%,#ff8eb6 60%,#a78bfa);background-clip:text;-webkit-background-clip:text;color:transparent}
-.brand span{color:#ff5d9e;-webkit-text-fill-color:#ff5d9e}
-.sidebar,.panel,.card{background:linear-gradient(145deg,rgba(20,29,52,.96),rgba(13,20,38,.96));border-color:rgba(133,154,204,.2);box-shadow:0 18px 45px #02061730}
-.panel{padding:22px}
-.hero{background:linear-gradient(125deg,#3b1f4f 0%,#182b4a 55%,#112a3b 100%);border:1px solid #74508a;box-shadow:0 15px 35px #05081650}
-button{transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;box-shadow:0 6px 18px #ff4d871a}
-button:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}
-button:active:not(:disabled){transform:scale(.98)}
-input,select,textarea{background:rgba(5,11,25,.78);border-color:#344363}
-input:focus,select:focus,textarea:focus{border-color:#ff6da7!important;box-shadow:0 0 0 3px #ff4d871c}
-.pill{background:#151f36;border-color:#354363}
-.layout{grid-template-columns:205px minmax(0,1fr);gap:22px}
-.sidebar{backdrop-filter:blur(18px)}
-.nav{padding:12px 13px;border-radius:13px}
-.nav.active{background:linear-gradient(110deg,#6b2d62,#33275d);border-color:#8e4d8a;box-shadow:0 8px 22px #0a061b70}
-.main{min-width:0}
-.compact-topline{display:flex;justify-content:flex-end;align-items:center;margin:0 0 14px}
-.swipe-meter{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:12px;background:linear-gradient(110deg,#182641,#2b2044);border:1px solid #51416c;color:#f4eaff;font-size:12px;font-weight:750;box-shadow:0 7px 20px #03071235}
-.swipe-meter .meter-dot{width:7px;height:7px;border-radius:50%;background:#5eead4;box-shadow:0 0 10px #5eead4}
-.discover-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.discover-heading h2{margin:0;font-size:clamp(24px,3vw,31px);letter-spacing:-.8px}
-.discover-heading p{margin:5px 0 0;font-size:13px}
-.filter-open{white-space:nowrap;background:linear-gradient(135deg,#7c3aed,#ec4899);padding:11px 15px}
-.discover-stage{max-width:900px;margin:0 auto}
-.person-card{position:relative;overflow:hidden;min-height:430px;padding:clamp(24px,5vw,42px);border-radius:28px;border:1px solid #4c426e;background:radial-gradient(circle at 90% 0%,#6d327033,transparent 35%),linear-gradient(145deg,#1b2946,#11182b 72%);box-shadow:0 24px 70px #02061765;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.person-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#ff4d87,#9b6bff,#60d9ff)}
-.person-card>.avatar{width:112px;height:112px;font-size:38px;margin:4px auto 18px;border:4px solid #ffffff16;box-shadow:0 10px 35px #ff4d8730}
-.person-card h2{font-size:clamp(25px,4vw,34px);letter-spacing:-.6px;margin:0 0 7px}
-.person-card .bio{font-size:15px;line-height:1.7;max-width:600px;min-height:0;margin:18px auto 8px;color:#e0e7ff}
-.person-card .tag{margin-top:10px}
-.person-card .swipe-actions{width:min(100%,520px);margin-top:24px;gap:14px}
-.person-card .swipe-actions button{min-height:54px;font-size:16px;border-radius:16px}
-.person-card #likeBtn{background:linear-gradient(120deg,#ff4d87,#c026d3);box-shadow:0 10px 25px #ff4d8730}
-.person-card #passBtn{background:#27324b;border:1px solid #455473}
-.person-card #blockBtn{margin-top:6px;opacity:.8}
-.empty{line-height:1.65}
-.filter-backdrop{position:fixed;inset:0;background:#020617b8;backdrop-filter:blur(5px);z-index:30;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
-.filter-backdrop.open{opacity:1;visibility:visible}
-.filter-drawer{position:fixed;z-index:31;right:0;top:0;height:100dvh;width:min(390px,92vw);overflow:auto;padding:24px 20px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(160deg,#19243e,#0d1426 75%);border-left:1px solid #485475;box-shadow:-25px 0 65px #02061780;transform:translateX(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);visibility:hidden}
-.filter-drawer.open{transform:translateX(0);visibility:visible}
-.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-.drawer-head h3{margin:0;font-size:22px}
-.drawer-close{width:42px;height:42px;padding:0;background:#27334e;border:1px solid #465473;font-size:22px}
-.drawer-note{background:#20223e;border:1px solid #493b70;color:#d8d6ff;border-radius:13px;padding:11px 12px;font-size:12px;margin:8px 0 18px}
-.drawer-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.drawer-actions button{min-height:46px}
-.mobile-nav{box-shadow:0 10px 35px #02061770}
-@media(min-width:741px){.person-card{min-height:490px}.compact-topline{margin-top:-2px}}
-@media(max-width:740px){
- .wrap{padding:10px 12px 14px}.top{padding-bottom:14px}.brand{font-size:27px}
- .layout{display:block}.panel{padding:16px}.compact-topline{justify-content:flex-end;margin-bottom:10px}
- .discover-heading{align-items:center;margin-bottom:13px}.discover-heading p{max-width:230px}
- .person-card{min-height:420px;padding:25px 18px;border-radius:23px}
- .person-card>.avatar{width:100px;height:100px;font-size:34px}
- .person-card .swipe-actions{gap:10px}.person-card .swipe-actions button{min-height:52px}
- .mobile-nav{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));margin-top:15px}
- .mobile-nav .nav{font-size:11px;gap:5px;flex:1;padding:10px 2px}
- .filter-drawer{width:min(390px,94vw);padding:20px 17px calc(22px + env(safe-area-inset-bottom))}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0c0b0d" />
+  <title>Saath — simple dating</title>
+  <style>
+:root {
+  --bg: #0c0b0d;
+  --card: #17151a;
+  --elev: #221f26;
+  --line: #2e2a33;
+  --text: #f6f1ea;
+  --muted: #a39aa8;
+  --accent: #e25b6a;
+  --accent-2: #f0a36b;
+  --ok: #6dcf9a;
+  --danger: #ff6b6b;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  font-family: "Segoe UI", "Noto Sans", sans-serif;
 }
 
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+img { max-width: 100%; display: block; }
 
-/* Minimal Discover toolbar: filters left, swipe balance right */
-.discover-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:0 2px}
-.filter-open{order:0;white-space:nowrap;padding:8px 12px;border-radius:11px;font-size:12px;line-height:1.2;box-shadow:none}
-.swipe-meter{order:1;display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:11px;font-size:11px;font-weight:750;white-space:nowrap;box-shadow:none}
-.swipe-meter .meter-dot{width:6px;height:6px;flex-shrink:0}
-@media(max-width:740px){
- .discover-heading{margin:0 0 12px;padding:0;min-height:38px}
- .filter-open{padding:8px 10px;font-size:12px}
- .swipe-meter{padding:7px 9px;font-size:10px;gap:6px}
+.app {
+  min-height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 18px 16px 28px;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.logo {
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  font-size: 1.35rem;
+}
+.logo span { color: var(--accent); }
+.muted { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+.tiny { color: var(--muted); font-size: 0.78rem; }
 
-/* Discover card: large natural-fit photo, tidy details, compact single-row actions */
-.person-card{padding:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left;min-height:0;overflow:hidden;border-radius:22px}
-.person-card:before{z-index:2;pointer-events:none}
-.person-card>.avatar{display:flex;align-items:center;justify-content:center;align-self:stretch;flex:0 0 auto;width:100%;height:clamp(220px,42vh,330px);margin:0 0 0;border:0;border-radius:21px 21px 0 0;box-shadow:none;font-size:52px;overflow:hidden;background:linear-gradient(135deg,#39274e,#182c48)}
-.person-card>.avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:0}
-.person-details{padding:15px 18px 17px;display:flex;flex-direction:column;align-items:stretch;gap:0}
-.person-details h2{font-size:clamp(22px,3vw,28px);line-height:1.2;letter-spacing:-.4px;margin:0 0 5px;text-align:left;overflow-wrap:anywhere}
-.person-details .person-location{font-size:13px;line-height:1.4;margin:0 0 6px;text-align:left}
-.person-details .person-meta{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 4px}
-.person-details .tag{margin:0;padding:4px 8px;font-size:11px;line-height:1.3}
-.person-details .bio{font-size:13px;line-height:1.45;margin:8px 0 12px;max-width:none;min-height:0;text-align:left;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.person-details .swipe-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;width:100%;margin:0}
-.person-details .swipe-actions button{min-width:0;min-height:38px;height:38px;padding:7px 5px;font-size:12px;line-height:1.1;border-radius:11px;white-space:nowrap;box-shadow:none}
-.person-details #passBtn{background:#26334d;border:1px solid #455473}
-.person-details #likeBtn{background:linear-gradient(120deg,#ff4d87,#c026d3)}
-.person-details #blockBtn{background:#30243d;border:1px solid #654264;opacity:1}
-@media(max-width:740px){
- .person-card{border-radius:20px}
- .person-card>.avatar{height:clamp(215px,40vh,300px);border-radius:19px 19px 0 0}
- .person-details{padding:13px 14px 15px}
- .person-details h2{font-size:23px}
- .person-details .bio{font-size:12px;line-height:1.4;margin:7px 0 10px;-webkit-line-clamp:3}
- .person-details .swipe-actions{gap:6px}
- .person-details .swipe-actions button{font-size:11px;padding:7px 3px;height:36px;min-height:36px;border-radius:10px}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: var(--shadow);
 }
 
-/* Temporarily hide Swipe Plans / Premium section */
-#view-plans,
-[data-view="plans"] {
-  display: none !important;
+h1, h2 { margin: 0 0 8px; letter-spacing: -0.03em; }
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.2rem; }
+
+label { display: block; margin: 12px 0 6px; font-size: 0.82rem; color: var(--muted); }
+input, textarea, select {
+  width: 100%;
+  background: var(--elev);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 13px;
+  outline: none;
 }
+textarea { min-height: 90px; resize: vertical; }
+input:focus, textarea:focus, select:focus { border-color: #6a4a52; }
 
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
 
-
-/* Saath pastel redesign — visual layer only; Supabase logic and data flow unchanged */
-:root{--bg:#fbf5fb;--panel:#fffaff;--panel2:#f7effb;--text:#30263b;--muted:#83768e;--line:#eaddec;--pink:#f04491;--purple:#8c55d9;--green:#20b98b;--red:#ef6687}
-html{background:#fbf4fb}body{color:var(--text);background:radial-gradient(ellipse at 12% 8%,#ffe0eb 0,transparent 36%),radial-gradient(ellipse at 88% 12%,#e6d4ff 0,transparent 38%),linear-gradient(145deg,#fff9fb,#f6efff 58%,#f3f7ff);background-attachment:fixed}
-.wrap{max-width:1120px}.brand{background:linear-gradient(100deg,#4a315c,#e34e9a 65%,#8a5be0);background-clip:text;-webkit-background-clip:text;color:transparent}.brand span{color:#ec4c91;-webkit-text-fill-color:#ec4c91}
-.muted{color:#887b91}.pill,.swipe-meter{background:#ffffffc9;color:#65556f;border:1px solid #ead9ef;box-shadow:0 5px 18px #8f65a312}
-.sidebar,.panel,.card{background:#ffffffd9;border:1px solid #eaddec;box-shadow:0 12px 35px #75518b12;backdrop-filter:blur(16px)}
-.panel{border-radius:22px}.hero{background:linear-gradient(125deg,#fce2f0,#e9ddff 55%,#e1f4ff);border:1px solid #eed5ee;color:#3b2b49;box-shadow:0 12px 28px #8c55d914}.hero .muted{color:#75647e}
-.nav{color:#776980;border-radius:13px}.nav.active{background:linear-gradient(110deg,#ffe2ef,#eee3ff);color:#563b6d;border-color:#e9cce8;box-shadow:none}
-button{color:#fff;background:linear-gradient(135deg,#f04f99,#9b63df);box-shadow:0 5px 13px #c25ba51c}button.secondary{background:#f4edf8;color:#675475;border:1px solid #e6d8ed;box-shadow:none}button.danger{background:#fff0f3;color:#bd496b;border:1px solid #f3cbd7;box-shadow:none}
-input,select,textarea{background:#fff;border:1px solid #e6d9eb;color:#3e3048}input:focus,select:focus,textarea:focus{border-color:#e78ab9!important;box-shadow:0 0 0 3px #f7c9e21c}
-.tag{background:#f7effb;border:1px solid #eadcf0;color:#71577f}.status{background:#e8faf3;color:#28775c}.status.error{background:#fff0f3;color:#b84768}
-.discover-heading{margin-bottom:14px}.filter-open{background:linear-gradient(130deg,#a56ae3,#ec79b0);padding:8px 13px;border-radius:12px;font-size:12px;box-shadow:0 5px 13px #b66aa51a}.swipe-meter{font-size:11px;padding:8px 11px}
-.discover-stage{max-width:460px}.person-card{background:#fff;border:1px solid #f0dfea;border-radius:25px;box-shadow:0 18px 48px #9d6da21c;overflow:hidden;padding:0;min-height:0;text-align:left;display:flex;flex-direction:column}.person-card:before{display:none}
-.profile-photo-wrap{position:relative;width:100%;height:clamp(330px,58vh,560px);overflow:hidden;background:linear-gradient(145deg,#f7ddeb,#e5dcfa)}.profile-photo-wrap>.avatar{width:100%;height:100%;margin:0;border:0;border-radius:0;box-shadow:none;background:transparent;font-size:58px}.profile-photo-wrap>.avatar img{width:100%;height:100%;object-fit:cover;object-position:center 35%;border-radius:0}.photo-caption{position:absolute;inset:auto 0 0;padding:70px 18px 17px;color:#fff;background:linear-gradient(transparent,#1e142cbd 80%)}.photo-caption h2{margin:0 0 5px;font-size:25px;line-height:1.2;letter-spacing:-.4px;text-shadow:0 1px 8px #0005}.online-label{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.4px;text-transform:uppercase;padding:5px 9px;border-radius:99px;background:#ffffff2b;backdrop-filter:blur(8px);margin-bottom:10px}.online-label span{width:6px;height:6px;border-radius:50%;background:#54e2ad}.photo-location{display:inline-block;font-size:11px;color:#fff;padding:5px 9px;border-radius:99px;background:#ffffff30;backdrop-filter:blur(8px)}
-.person-details{padding:13px 16px 16px;display:flex;flex-direction:column;gap:0}.person-details .person-meta{margin:0}.person-details .tag{font-size:10px;padding:4px 9px}.person-details .bio{color:#796c83;font-size:12px;line-height:1.5;margin:8px 0 13px;min-height:0;-webkit-line-clamp:3}.person-details .swipe-actions{display:flex;justify-content:center;align-items:center;gap:15px;width:100%;margin:0}.person-details .swipe-actions button.mini-action{width:43px;height:43px;min-width:43px;min-height:43px;padding:0;border:0;border-radius:50%;font-size:19px;display:grid;place-items:center;box-shadow:0 5px 14px #8b5aa01c}.person-details .pass-action{background:#f0edf5;color:#75677f;border:1px solid #e4dce9!important}.person-details .like-action{background:linear-gradient(135deg,#ff6caa,#e83d8b);color:#fff;box-shadow:0 7px 17px #e83d8b35!important}.person-details .block-action{background:linear-gradient(135deg,#b38af0,#8661d0);color:#fff}
-.profile-photo-preview{border-color:#ead5ed;background:#f8f1fa}.list-item{background:#fff;border-color:#eaddec}.chat-box{background:#fbf7fc;border-color:#eaddec}.bubble{background:#f0e8f7;color:#4c3d59}.bubble.mine{background:#f8d9e9;color:#61364f}
-.filter-backdrop{background:#4a355b55;backdrop-filter:blur(5px)}.filter-drawer{background:linear-gradient(160deg,#fffaff,#f5edfb);border-left:1px solid #eaddec;color:#352840}.drawer-note{background:#f5eafa;border-color:#e9d6ef;color:#70517e}.drawer-close{background:#f1e8f6;color:#695478;border-color:#e5d8eb}
-.mobile-nav{background:#ffffffdf;border:1px solid #eaddec;backdrop-filter:blur(18px);box-shadow:0 9px 30px #75518b20;border-radius:22px;padding:7px 9px;gap:5px}.mobile-nav .nav{background:transparent;border:0;color:#75677e;font-size:0;justify-content:center;min-height:43px;box-shadow:none}.mobile-nav .nav span{font-size:21px;line-height:1}.mobile-nav .nav.active{background:linear-gradient(135deg,#fce0ed,#eee2ff);color:#a64f9d;border-radius:15px}
-.foot{color:#9a8da2}
-@media(max-width:740px){.wrap{padding:10px 12px 14px}.top{padding:8px 2px 14px}.brand{font-size:26px}.discover-stage{max-width:430px}.profile-photo-wrap{height:clamp(300px,48vh,440px)}.person-card{border-radius:22px}.person-details{padding:11px 14px 13px}.person-details .swipe-actions{gap:14px}.person-details .swipe-actions button.mini-action{width:40px;height:40px;min-width:40px;min-height:40px;font-size:18px}.mobile-nav{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));margin:14px auto 0;max-width:460px}.mobile-nav .nav{flex:1;padding:9px 2px}.panel{padding:14px}}
-
-/* Romantic cute-minimal finish: matches, messages and profile follow the same visual language. */
-:root{--pink:#ed4d91;--purple:#9855c9;--green:#31b98c;--red:#ee718d}
-body{background:radial-gradient(ellipse at 8% 0%,#ffe0e9 0,transparent 34%),radial-gradient(ellipse at 92% 8%,#e9d9ff 0,transparent 36%),linear-gradient(145deg,#fff8f8,#fff4fa 48%,#f6f1ff);background-attachment:fixed}
-.top{align-items:center}.brand{letter-spacing:-1.2px}.brand span{display:inline-block;margin-left:2px;transform:rotate(-8deg)}
-#view-matches>.panel,#view-chat>.panel,#view-me>.panel{background:rgba(255,255,255,.9);border:1px solid #f0dce9;border-radius:25px;box-shadow:0 15px 42px #9d6da21a}
-#view-matches h2,#view-chat h2,#view-me h2{color:#56384f;letter-spacing:-.45px}
-#view-matches>.panel>p{font-size:13px}
-#matchesList{gap:9px;margin-top:17px}
-#matchesList .list-item{position:relative;min-height:76px;padding:10px 11px;border:1px solid #f1e2ec;border-radius:19px;background:linear-gradient(110deg,#fff 0%,#fff9fc 100%);box-shadow:0 5px 15px #a65b8a0b}
-#matchesList .avatar{width:51px!important;height:51px!important;border:2px solid #f5d7e7;background:linear-gradient(135deg,#f5a5c7,#bd91e7);font-size:17px!important}
-#matchesList .grow strong{font-size:14px;color:#50394f}#matchesList .grow p{font-size:11px;margin-top:4px}
-#matchesList button[data-open-match]{width:37px;height:37px;min-width:37px;padding:0;border-radius:50%;font-size:0;background:linear-gradient(135deg,#ff79ad,#e74791);box-shadow:0 5px 12px #e747912c;position:relative}
-#matchesList button[data-open-match]:after{content:'✉';font-size:16px;color:#fff}
-#matchesList button[data-block-match]{width:30px;height:30px;min-width:30px;padding:0;border-radius:50%;font-size:0;background:#f7eff8;color:#9b7aa2;border:1px solid #eee0f0;box-shadow:none}
-#matchesList button[data-block-match]:after{content:'⋯';font-size:18px}
-#profileSummary .profile-card{display:flex;flex-direction:column;text-align:center;align-items:center;gap:10px;padding:23px 16px 19px;border:1px solid #f1dce9;border-radius:23px;background:linear-gradient(150deg,#fff,#fff6fb 70%,#f7f1ff);box-shadow:0 9px 25px #9d6da212}
-#profileSummary .avatar{width:104px;height:104px;border:4px solid #fff;box-shadow:0 5px 20px #d56e9c25;background:linear-gradient(145deg,#f6a4c7,#a878d9);font-size:32px}
-#profileSummary .person{width:100%}#profileSummary .person h2{font-size:22px;margin:0 0 4px;color:#54364f}
-#profileSummary .person .muted{font-size:12px}#profileSummary .person p{max-width:440px;margin:12px auto;color:#77677d;font-size:13px;line-height:1.6}
-#profileSummary .tag{display:inline-block;margin:4px 3px 0;background:#fff0f6;border-color:#f5d9e8;color:#a04e79;border-radius:99px;padding:6px 11px}
-#view-chat .chat-box{border:1px solid #f0dce9;background:linear-gradient(180deg,#fffafd,#fff5fa);border-radius:20px;min-height:300px}
-#view-chat .bubble{background:#f4eafa;color:#59445f;border-radius:17px 17px 17px 5px}#view-chat .bubble.mine{background:linear-gradient(135deg,#f8c6dc,#ead6fb);color:#603d59;border-radius:17px 17px 5px 17px}
-#chatForm input{border-radius:999px;padding:13px 16px}#chatForm button{border-radius:999px;min-width:82px}
-.mobile-nav{border-radius:24px;background:#fffFf2;border:1px solid #f0dce9;box-shadow:0 12px 34px #8f5c8e24}
-.mobile-nav .nav.active{background:linear-gradient(135deg,#ffe0ec,#f0e2ff);color:#b44c8c}
-@media(max-width:740px){#view-matches>.panel,#view-chat>.panel,#view-me>.panel{padding:17px 14px}#matchesList .list-item{gap:9px;padding:9px}#matchesList button[data-block-match]{display:none}#profileSummary .profile-card{padding:22px 13px}#profileSummary .avatar{width:96px;height:96px}.mobile-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(9px,env(safe-area-inset-bottom));width:min(460px,calc(100% - 28px));margin:0;z-index:20;padding:7px 9px}.wrap{padding-bottom:88px}}
-
-
-
-/* FIX: keep Discover action buttons perfectly circular on all screen sizes */
-.person-details .swipe-actions{display:flex!important;justify-content:center!important;align-items:center!important;gap:18px!important;width:100%!important}
-.person-details .swipe-actions button.mini-action{flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;max-width:44px!important;max-height:44px!important;aspect-ratio:1/1!important;padding:0!important;border-radius:50%!important;line-height:1!important;display:grid!important;place-items:center!important;box-sizing:border-box!important}
-@media(max-width:740px){.person-details .swipe-actions{gap:18px!important}.person-details .swipe-actions button.mini-action{flex-basis:44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;max-width:44px!important;max-height:44px!important}}
-
-
-
-/* Saath unified theme system: gentle light mode + deep romantic night mode */
-.top-tools{display:flex;align-items:center;gap:10px;min-width:0}
-.theme-toggle{position:relative;width:76px;height:38px;padding:0;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:0;background:#eee3f7;border:1px solid #e3d3ef;box-shadow:inset 0 1px 3px #6e47751a;flex:0 0 auto;color:#735c88}
-.theme-toggle .sun-icon,.theme-toggle .moon-icon{position:relative;z-index:1;width:36px;text-align:center;font-size:18px;line-height:36px}
-.theme-toggle .sun-icon{color:#ef6795}.theme-toggle .moon-icon{color:#7664a2}
-.theme-knob{position:absolute;left:3px;top:3px;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 2px 7px #583a672b;transition:transform .22s ease}
-body.dark-mode .theme-toggle{background:#34304f;border-color:#4a426b;color:#fff}
-body.dark-mode .theme-knob{transform:translateX(38px);background:#211d38}
-body.dark-mode .theme-toggle .sun-icon{color:#9a91b8}body.dark-mode .theme-toggle .moon-icon{color:#ffe29a}
-@media(max-width:740px){.top-tools{gap:7px}.theme-toggle{width:70px;height:36px}.theme-toggle .sun-icon,.theme-toggle .moon-icon{width:33px;line-height:34px}.theme-knob{width:28px;height:28px}.top{gap:8px}.brand{font-size:25px}.top .pill{max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
-
-/* Dark theme overrides all app sections while preserving the same romantic accents. */
-body.dark-mode{color:#f6effb;background:radial-gradient(ellipse at 8% 0%,#342044 0,transparent 35%),radial-gradient(ellipse at 92% 8%,#1d2949 0,transparent 38%),linear-gradient(145deg,#11101d,#171427 55%,#111827);background-attachment:fixed}
-body.dark-mode .muted,body.dark-mode .small.muted{color:#b7abc7}
-body.dark-mode .pill{background:#272239;border-color:#493b5a;color:#d4c6df}
-body.dark-mode .sidebar,body.dark-mode .panel,body.dark-mode .card{background:linear-gradient(145deg,rgba(39,32,55,.97),rgba(26,25,45,.97));border-color:#493b5b;box-shadow:0 14px 38px #05030d66}
-body.dark-mode .hero{background:linear-gradient(130deg,#402342,#282447 58%,#1d3448);border-color:#62466a}
-body.dark-mode .hero .muted{color:#d3c2d9}
-body.dark-mode .nav{color:#c0b4cd}body.dark-mode .nav.active{background:linear-gradient(110deg,#74375f,#49376e);border-color:#91608f;color:#fff}
-body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#211d32;border-color:#51435f;color:#f8efff}
-body.dark-mode input::placeholder,body.dark-mode textarea::placeholder{color:#a99bb8}
-body.dark-mode .person-card{background:linear-gradient(145deg,#2b263f,#1b1a2d 72%);border-color:#564666;box-shadow:0 20px 55px #05030d80}
-body.dark-mode .person-details{background:#242035;color:#f7effb}
-body.dark-mode .person-details .bio{color:#c5b8ce}
-body.dark-mode .person-details .tag{background:#3a2b48;border-color:#604765;color:#f0d9ec}
-body.dark-mode .person-details .pass-action{background:#3a354b;color:#e1d5ea;border-color:#5a4e68!important}
-body.dark-mode .person-details .block-action{background:linear-gradient(135deg,#7652a5,#563d86);color:#fff}
-body.dark-mode #view-matches>.panel,body.dark-mode #view-chat>.panel,body.dark-mode #view-me>.panel{background:rgba(36,30,51,.96);border-color:#51415f;box-shadow:0 14px 38px #05030d66}
-body.dark-mode #view-matches h2,body.dark-mode #view-chat h2,body.dark-mode #view-me h2{color:#ffe5f1}
-body.dark-mode #matchesList .list-item{background:linear-gradient(110deg,#30283f,#28243a);border-color:#51415f;box-shadow:0 5px 15px #05030d30}
-body.dark-mode #matchesList .grow strong{color:#f6eaf5}body.dark-mode #matchesList .grow p{color:#b8a9c4}
-body.dark-mode #matchesList button[data-block-match]{background:#40354c;border-color:#5a4966;color:#e8d8ed}
-body.dark-mode #profileSummary .profile-card{background:linear-gradient(150deg,#30263d,#27243d 70%,#24223a);border-color:#51415f;box-shadow:0 9px 25px #05030d44}
-body.dark-mode #profileSummary .person h2{color:#ffe7f3}body.dark-mode #profileSummary .person p{color:#cbbbd2}
-body.dark-mode #profileSummary .tag{background:#3c2b48;border-color:#654968;color:#f4d7eb}
-body.dark-mode #view-chat .chat-box{background:linear-gradient(180deg,#211d32,#282137);border-color:#51415f}
-body.dark-mode #view-chat .bubble{background:#39304a;color:#f2e9f5}body.dark-mode #view-chat .bubble.mine{background:linear-gradient(135deg,#853d69,#604b91);color:#fff}
-body.dark-mode .list-item{background:#2b253c;border-color:#51415f}
-body.dark-mode .profile-photo-preview{background:#282139;border-color:#654968}
-body.dark-mode .filter-backdrop{background:#080611c9}
-body.dark-mode .filter-drawer{background:linear-gradient(160deg,#292239,#1d1b30);border-color:#51415f;color:#f6effb}
-body.dark-mode .drawer-note{background:#392c48;border-color:#5a4565;color:#ead8f0}
-body.dark-mode .drawer-close{background:#40344e;color:#f4e7f5;border-color:#5c4a68}
-body.dark-mode .mobile-nav{background:#211d32f2;border-color:#51415f;box-shadow:0 12px 34px #05030d88}
-body.dark-mode .mobile-nav .nav{color:#c0b4cd}body.dark-mode .mobile-nav .nav.active{background:linear-gradient(135deg,#633651,#49386c);color:#ff9fc7}
-body.dark-mode .status{background:#30263f;color:#f1dff0;border:1px solid #594565}
-body.dark-mode .status.error{background:#4a2637;color:#ffd2df}
-body.dark-mode .plan{background:#282238;border-color:#51415f}
-body.dark-mode .empty{color:#c0b4cd}
-body.dark-mode .foot{color:#aa9bb7}
-
-
-/* Saath exact-reference refresh: airy pink/lilac surfaces, compact theme switch,
-   three-tab navigation, and match rows that open their own conversation. */
-:root{
-  --ref-ink:#17184f;--ref-muted:#74749b;--ref-pink:#f04491;
-  --ref-lilac:#eee7ff;--ref-border:#eee5f4;
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, var(--accent), #c44762);
+  color: white;
+  font-weight: 700;
+  width: 100%;
+  margin-top: 14px;
 }
-body{
-  color:var(--ref-ink);
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+.btn.ok { background: #2f6d52; }
+.btn.pass { background: var(--elev); border: 1px solid var(--line); }
+.btn:disabled { opacity: 0.55; }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.tab {
+  background: var(--elev);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 6px;
+  color: var(--muted);
+}
+.tab.active { color: white; border-color: #6d3d48; background: #2a1c22; }
+
+.person {
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--elev);
+  border: 1px solid var(--line);
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+.avatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 5rem;
+  font-weight: 750;
   background:
-    radial-gradient(ellipse at 5% 0%,#ffe5ef 0,transparent 42%),
-    radial-gradient(ellipse at 95% 8%,#e8dcff 0,transparent 43%),
-    linear-gradient(145deg,#fff9fb,#fff7fc 55%,#f8f4ff);
-  background-attachment:fixed;
+    radial-gradient(circle at 30% 20%, rgba(226, 91, 106, 0.45), transparent 40%),
+    linear-gradient(160deg, #3a2430, #17151a 70%);
 }
-.wrap{max-width:980px}
-.top{padding:10px 2px 17px}
-.brand{font-size:29px;color:#17184f;background:none;-webkit-text-fill-color:#17184f}
-.brand span{color:#ef4a96;-webkit-text-fill-color:#ef4a96}
-.top .muted{color:#777594}
-.top-tools{margin-left:auto;gap:0}
-.theme-toggle{
-  width:58px!important;height:30px!important;padding:0!important;
-  border:1px solid #e8ddec!important;background:#fff!important;
-  box-shadow:0 3px 12px #7e5a8c18!important;overflow:hidden;
+.person .meta {
+  position: relative;
+  padding: 16px;
+  background: linear-gradient(transparent, rgba(8, 7, 9, 0.92) 30%);
 }
-.theme-toggle .sun-icon,.theme-toggle .moon-icon{
-  width:27px!important;line-height:28px!important;font-size:14px!important;
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
 }
-.theme-knob{left:2px!important;top:2px!important;width:24px!important;height:24px!important}
-body.dark-mode .theme-toggle{background:#34304f!important;border-color:#51456c!important}
-body.dark-mode .theme-knob{transform:translateX(28px)!important}
-body.dark-mode .brand{color:#fff!important;-webkit-text-fill-color:#fff!important}
-.layout{grid-template-columns:190px minmax(0,1fr);gap:18px}
-.sidebar,.panel,.card{
-  background:rgba(255,255,255,.91);border:1px solid #eee3f1;
-  box-shadow:0 10px 30px #9e78b016;backdrop-filter:blur(18px)
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+
+.list { display: flex; flex-direction: column; gap: 10px; }
+.item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: left;
+  width: 100%;
 }
-.panel{border-radius:24px;padding:22px}
-.nav{color:#77769a;border-radius:15px}
-.nav.active{background:linear-gradient(120deg,#ffe4f0,#eee5ff);color:#e44391;border-color:#f3d5e7}
-button{box-shadow:0 5px 13px #e75b981b}
-.discover-heading{margin-bottom:16px}
-.filter-open{background:linear-gradient(120deg,#fb4d91,#bd55db);border-radius:13px;padding:10px 15px}
-.swipe-meter{background:#fff;border:1px solid #eee4f2;color:#5e5a80;border-radius:14px}
-.discover-stage{max-width:430px}
-.person-card{border:1px solid #f0e5f0;border-radius:25px;background:#fff;box-shadow:0 12px 35px #9c70aa1b}
-.profile-photo-wrap{height:clamp(360px,57vh,560px)}
-.photo-caption{padding:78px 18px 18px}
-.person-details{padding:14px 17px 17px}
-.person-details .tag{font-size:12px;padding:6px 11px}
-.person-details .bio{font-size:14px;color:#77748f;margin:10px 0 15px}
-.person-details .swipe-actions{gap:18px!important}
-.person-details .swipe-actions button.mini-action{
-  width:48px!important;height:48px!important;min-width:48px!important;
-  min-height:48px!important;max-width:48px!important;max-height:48px!important;
-  flex:0 0 48px!important;border-radius:50%!important;font-size:20px!important
+.dot {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #3a2430;
+  font-weight: 750;
+  flex: none;
 }
-.person-details .pass-action{background:#eee9ff!important;color:#514d91!important;border:0!important}
-.person-details .like-action{background:linear-gradient(135deg,#ff4d91,#e72e88)!important}
-.person-details .block-action{background:#e8e2ff!important;color:#8052d7!important}
-#view-matches>.panel,#matchChatPanel,#view-me>.panel{
-  background:rgba(255,255,255,.92);border:1px solid #eee3f1;border-radius:25px;
-  box-shadow:0 12px 34px #9e78b018
+.grow { flex: 1; min-width: 0; }
+.item strong, .item span { display: block; }
+.item span { color: var(--muted); font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.chat-log {
+  height: 52vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0 10px;
 }
-#view-matches h2,#view-chat h2,#view-me h2{color:#17184f;letter-spacing:-.5px}
-#view-matches h2{font-size:27px;margin:0 0 5px}
-#view-matches>.panel>p{color:#77769a;font-size:14px;margin:0}
-#matchesList{gap:11px;margin-top:20px}
-#matchesList .match-row{
-  appearance:none;-webkit-appearance:none;width:100%;min-height:82px;
-  display:flex;align-items:center;gap:13px;text-align:left;
-  padding:11px 14px;border-radius:21px;border:1px solid #f0e8f3;
-  background:linear-gradient(110deg,#fff 0%,#fffafd 100%);
-  color:#17184f;box-shadow:0 5px 17px #a76f9b0b;
-  cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s
+.bubble {
+  max-width: 80%;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--elev);
+  border: 1px solid var(--line);
 }
-#matchesList .match-row:active{transform:scale(.985)}
-#matchesList .match-row:hover{border-color:#f3b9d5;box-shadow:0 8px 20px #d77ba41a}
-#matchesList .match-row .avatar{
-  width:58px!important;height:58px!important;min-width:58px!important;
-  border:2px solid #f8dce9;background:linear-gradient(135deg,#f6a6c8,#bd9bea);
-  font-size:18px!important
+.bubble.mine { margin-left: auto; background: #4a2430; }
+
+.banner {
+  background: #2a2118;
+  border: 1px solid #5c4630;
+  color: #f0d7b8;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
 }
-#matchesList .match-row .avatar img{width:100%;height:100%;object-fit:cover}
-#matchesList .match-row .grow{display:flex;flex-direction:column;gap:5px;min-width:0}
-#matchesList .match-row .grow strong{font-size:16px;color:#242252;font-weight:750}
-#matchesList .match-location{font-size:13px;color:#8583a3}
-#matchesList .match-arrow{margin-left:auto;font-size:29px;line-height:1;color:#8a76b5;font-weight:300}
-.chat-header{display:flex;align-items:center;gap:11px;padding:0 0 15px;border-bottom:1px solid #f0e7f2}
-.chat-back{width:37px;height:37px;min-width:37px;padding:0;border-radius:50%;background:#f0eaff;color:#6b59a0;font-size:26px;line-height:1;box-shadow:none}
-.chat-peer-avatar{width:43px;height:43px;min-width:43px;font-size:14px;border:2px solid #f6dbe9}
-.chat-peer-avatar img{width:100%;height:100%;object-fit:cover}
-.chat-peer-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
-.chat-peer-copy strong{font-size:16px;color:#252252}
-.chat-peer-copy span{font-size:11px}
-.chat-online-dot{margin-left:auto;width:9px;height:9px;border-radius:50%;background:#37c997;box-shadow:0 0 0 4px #e1f8ef}
-#matchChatPanel .chat-box{height:min(55vh,520px);min-height:320px;background:linear-gradient(180deg,#fffafd,#fff5fa);border:0;padding:16px 4px}
-#matchChatPanel .bubble{background:#f0eaff;color:#39345f;border-radius:18px 18px 18px 5px;padding:11px 14px}
-#matchChatPanel .bubble.mine{background:linear-gradient(135deg,#ff70ac,#d94fbb);color:white;border-radius:18px 18px 5px 18px}
-#chatForm{align-items:center;padding:6px;border:1px solid #eee3f1;border-radius:999px;background:#fff;gap:7px}
-#chatForm input{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:999px;padding:12px 14px}
-#chatForm button{width:43px;height:43px;min-width:43px;padding:0;border-radius:50%;background:linear-gradient(135deg,#ff4d91,#d34ed0);font-size:19px}
-#profileSummary .profile-card{background:linear-gradient(145deg,#fff,#fff6fb 65%,#f5efff)}
-.mobile-nav{
-  display:flex;position:fixed;left:50%;transform:translateX(-50%);
-  bottom:max(9px,env(safe-area-inset-bottom));width:min(460px,calc(100% - 28px));
-  margin:0;z-index:20;padding:8px 10px;border-radius:25px;
-  background:#ffffffed;border:1px solid #eee3f1;backdrop-filter:blur(20px);
-  box-shadow:0 10px 30px #9e78b02a;gap:6px
-}
-.mobile-nav .nav{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;min-height:58px;padding:7px 3px;margin:0;border:0;
-  background:transparent;color:#8381a1;font-size:11px;box-shadow:none
-}
-.mobile-nav .nav span{font-size:21px;line-height:1}
-.mobile-nav .nav.active{background:linear-gradient(135deg,#ffe4ef,#eee6ff);color:#e34491;border-radius:17px}
-.wrap{padding-bottom:94px}
-body.dark-mode{
-  color:#f8f1fb;
-  background:radial-gradient(ellipse at 5% 0%,#3b294b 0,transparent 42%),radial-gradient(ellipse at 95% 8%,#292748 0,transparent 43%),linear-gradient(145deg,#171421,#1d192b 55%,#171a2b);
-}
-body.dark-mode .sidebar,body.dark-mode .panel,body.dark-mode .card,
-body.dark-mode #view-matches>.panel,body.dark-mode #matchChatPanel,body.dark-mode #view-me>.panel{
-  background:rgba(39,32,55,.96);border-color:#51415f;color:#f8f1fb
-}
-body.dark-mode .muted,body.dark-mode .top .muted{color:#b9adc9}
-body.dark-mode #view-matches h2,body.dark-mode #view-me h2,body.dark-mode .chat-peer-copy strong{color:#ffe7f3}
-body.dark-mode #matchesList .match-row{background:linear-gradient(110deg,#30283f,#28243a);border-color:#51415f;color:#f8f1fb}
-body.dark-mode #matchesList .match-row .grow strong{color:#ffeaf5}
-body.dark-mode #matchesList .match-location{color:#b9adc9}
-body.dark-mode #matchesList .match-arrow{color:#d7a7d3}
-body.dark-mode .chat-header{border-color:#51415f}
-body.dark-mode #matchChatPanel .chat-box{background:linear-gradient(180deg,#211d32,#282137)}
-body.dark-mode #matchChatPanel .bubble{background:#39304a;color:#f2e9f5}
-body.dark-mode #matchChatPanel .bubble.mine{background:linear-gradient(135deg,#853d69,#604b91);color:#fff}
-body.dark-mode #chatForm{background:#211d32;border-color:#51415f}
-body.dark-mode #chatForm input{color:#fff}
-body.dark-mode .chat-back{background:#40344e;color:#f4e7f5}
-body.dark-mode .mobile-nav{background:#211d32f2;border-color:#51415f}
-body.dark-mode .mobile-nav .nav{color:#c0b4cd}
-body.dark-mode .mobile-nav .nav.active{background:linear-gradient(135deg,#633651,#49386c);color:#ff9fc7}
-@media(max-width:740px){
-  .wrap{padding:8px 12px 100px}
-  .top{padding:8px 2px 14px}
-  .brand{font-size:27px}
-  .top-tools{gap:0}
-  .theme-toggle{width:55px!important;height:29px!important}
-  .theme-toggle .sun-icon,.theme-toggle .moon-icon{width:25px!important;line-height:27px!important;font-size:13px!important}
-  .theme-knob{width:23px!important;height:23px!important}
-  .discover-stage{max-width:100%}
-  .profile-photo-wrap{height:clamp(350px,53vh,500px)}
-  #view-matches>.panel,#matchChatPanel,#view-me>.panel{padding:18px 14px}
-  #matchesList .match-row{min-height:77px;padding:9px 11px;gap:11px}
-  #matchesList .match-row .avatar{width:54px!important;height:54px!important;min-width:54px!important}
-  #matchesList .match-row .grow strong{font-size:15px}
-  #matchesList .match-location{font-size:12px}
-  #matchChatPanel .chat-box{height:calc(100dvh - 290px);min-height:280px}
-  .sidebar{display:none}
+.error { color: #ffb4b4; font-size: 0.86rem; min-height: 1.1em; margin-top: 8px; }
+.hidden { display: none !important; }
+.empty { text-align: center; padding: 28px 10px; color: var(--muted); }
+.topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--elev);
 }
 
 
-#loginScreen{max-width:460px;margin:26px auto;padding:22px;border-radius:28px;background:rgba(255,255,255,.93);border:1px solid #eee2f0;box-shadow:0 16px 42px #a77ba51a}
-#loginScreen .hero{border:0;border-radius:22px;padding:26px 20px;background:linear-gradient(145deg,#ffe5ef,#f0e5ff);color:#242252;text-align:center}
-#loginScreen .hero h1{font-size:25px;line-height:1.2}
-#loginScreen>h2{text-align:center;color:#252252;margin:20px 0 6px}
-#loginScreen>p{text-align:center;color:#77769a}
-#loginScreen #googleBtn{width:100%;margin:12px 0;border-radius:999px;padding:14px;background:linear-gradient(110deg,#ff4e91,#b24ce0)}
-body.dark-mode #loginScreen{background:#292239;border-color:#51415f}
-body.dark-mode #loginScreen .hero{background:linear-gradient(145deg,#402342,#282447);color:#fff}
-body.dark-mode #loginScreen>h2{color:#ffe7f3}
-
-</style>
+/* Single-file UI additions */
+:root[data-theme="light"] {
+  --bg:#f7f3f5; --card:#ffffff; --elev:#f1eaf0; --line:#e6dce4;
+  --text:#28212a; --muted:#796d79; --shadow:0 14px 34px rgba(64,35,55,.10);
+}
+:root[data-theme="light"] .tab.active { color:#702d4a; background:#f8e8ef; border-color:#e7b8ca; }
+:root[data-theme="light"] .person .meta { background:linear-gradient(transparent,rgba(20,12,18,.88) 30%); color:#fff; }
+:root[data-theme="light"] .bubble.mine { background:#f7dce7; color:#39202b; }
+:root[data-theme="light"] .dot { background:#f2dce6; color:#71384f; }
+.brand { gap:10px; }
+.brand .brand-actions { display:flex; gap:8px; align-items:center; }
+.profile-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.edit-pencil { font-size:1.15rem; color:var(--accent); }
+.modal-backdrop { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:18px; background:rgba(0,0,0,.68); backdrop-filter:blur(7px); }
+.modal-card { width:min(100%,480px); max-height:90dvh; overflow:auto; }
+.modal-heading { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px; }
+.modal-card .card { box-shadow:0 24px 70px rgba(0,0,0,.35); }
+.form-actions { align-items:center; }
+.form-actions .btn { flex:1; }
+.chat-form { align-items:center; gap:8px; }
+.chat-form input { min-width:0; flex:1 1 auto; }
+.chat-form .chat-send { flex:0 0 auto; width:auto; min-width:72px; padding:11px 17px; margin:0; }
+.matches-list { gap:0; }
+.matches-list .item { border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; padding:14px 4px; }
+.matches-list .item:last-child { border-bottom:0; }
+@media (min-width:600px) { .app { max-width:560px; } }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div><div class="brand">Saath<span>♥</span></div><div class="muted small">A little closer to someone real</div></div>
-    <div class="top-tools">
-      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
-        <span class="sun-icon" aria-hidden="true">☀</span><span class="moon-icon" aria-hidden="true">☾</span><span class="theme-knob"></span>
-      </button>
-    </div>
-  </header>
-
-  <section id="loginScreen" class="panel">
-    <div class="hero"><h1>Har achhi kahani, ek mulaqat se shuru hoti hai.</h1><p class="muted">Apna profile banao, log discover karo aur genuine connection dhoondo.</p></div>
-    <h2>Welcome to Saath</h2>
-    <p class="muted">Sign in karne ke liye Google account use karo.</p>
-    <button id="googleBtn">Continue with Google</button>
-    <p class="small muted">Continue karke tum hamari community guidelines aur privacy terms se sahmat hote ho. Saath 18+ users ke liye hai.</p>
-    <div id="loginMessage" class="status hidden"></div>
-  </section>
-
-  <section id="appScreen" class="hidden">
-    <div class="layout">
-      <aside class="sidebar" id="desktopNav"></aside>
-      <main class="main">
-        <div id="globalMessage" class="status hidden"></div>
-
-        <section id="view-discover" class="view">
-          <div class="discover-heading">
-            <button id="openFilters" class="filter-open">☷ Filters</button>
-            <span class="swipe-meter"><span class="meter-dot"></span><span id="swipeCount">Loading swipes…</span></span>
-          </div>
-          <div class="discover-stage">
-            <div id="discoverCard" class="person-card"><div class="empty">Discover profiles load honge…</div></div>
-          </div>
-        </section>
-
-        <section id="view-matches" class="view hidden">
-          <div class="panel" id="matchesPanel">
-            <h2>Matches <span style="color:#ed4d91">♥</span></h2>
-            <p class="muted">People who liked you back</p>
-            <div id="matchesList" class="list"><div class="empty">Loading matches…</div></div>
-          </div>
-          <div class="panel hidden" id="matchChatPanel">
-            <div class="chat-header">
-              <button class="chat-back" id="backMatches" type="button" aria-label="Back to matches">‹</button>
-              <div class="avatar chat-peer-avatar" id="chatPeerAvatar">♡</div>
-              <div class="chat-peer-copy"><strong id="chatPeerName">Your match</strong><span id="chatSubtitle" class="muted">Your connection</span></div>
-              <span class="chat-online-dot"></span>
-            </div>
-            <div id="chatMessages" class="chat-box"><div class="empty">Chat load ho rahi hai…</div></div>
-            <form id="chatForm" class="inline"><input id="chatInput" maxlength="2000" placeholder="Type a message…" autocomplete="off"><button id="sendBtn" type="submit" aria-label="Send message">➤</button></form>
-          </div>
-        </section>
-
-        <section id="view-me" class="view hidden">
-          <div class="panel"><h2>Your profile</h2><div id="profileSummary"></div><hr style="border-color:var(--line);margin:18px 0">
-            <h3>Edit profile</h3>
-            <div class="profile-photo-tools">
-              <div id="myPhotoPreview" class="profile-photo-preview"><span class="muted">Photo</span></div>
-              <div style="flex:1;min-width:180px"><div class="field"><label for="profilePhotoInput">Profile picture (JPG, PNG or WebP, max 500 KB)</label><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp"></div><div class="profile-photo-actions"><button type="button" id="uploadPhotoBtn">Upload photo</button><button type="button" id="removePhotoBtn" class="secondary">Remove photo</button></div><p class="muted small">Pehle basic profile save karo, phir photo upload karo. Photo Discover aur Matches mein bhi dikhegi.</p></div>
-            </div>
-            <form id="profileForm">
-              <div class="grid">
-                <div class="field"><label>Display name</label><input id="displayName" maxlength="60" required></div>
-                <div class="field"><label>Age (18+)</label><input id="age" type="number" min="18" max="100" required></div>
-                <div class="field"><label>Gender</label><select id="gender" required><option value="">Choose</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
-                <div class="field"><label>Looking for</label><select id="lookingFor" required><option value="">Choose</option><option>Woman</option><option>Man</option><option>Everyone</option><option>Non-binary</option><option>Other</option></select></div>
-                <div class="field"><label>State</label><input id="state" maxlength="80" required></div>
-                <div class="field"><label>City</label><input id="city" maxlength="80" required></div>
-              </div>
-              <div class="field"><label>About you</label><textarea id="bio" maxlength="500" placeholder="A little about yourself…"></textarea></div>
-              <button type="submit">Save profile</button>
-            </form>
-          </div>
-          <div class="panel"><h3>Account</h3><p class="muted">Delete profile tumhara public profile, likes, blocks, matches, chats aur swipe wallet delete karega. Google authentication identity Supabase Auth mein rahegi.</p><div class="actions"><button class="secondary" id="logoutBtn">Sign out</button><button class="danger" id="deleteProfileBtn">Delete profile data</button></div></div>
-        </section>
-
-        <section id="view-plans" class="view hidden">
-          <div class="panel"><h2>Swipe plans</h2><p class="muted">DEMO MODE — koi payment nahi li jayegi. Har demo plan ek account par ek baar claim ho sakta hai. Production payment integrate karne se pehle payment verification backend zaroor chahiye.</p>
-            <div class="grid">
-              <div class="plan"><span class="tag">1 day</span><h3>Starter boost</h3><div class="price">₹29</div><p class="muted">+10 demo swipes</p><button data-plan="starter" class="claimPlan">Try demo plan</button></div>
-              <div class="plan"><span class="tag">1 day</span><h3>Plus boost</h3><div class="price">₹49</div><p class="muted">+25 demo swipes</p><button data-plan="plus" class="claimPlan">Try demo plan</button></div>
-              <div class="plan"><span class="tag">3 days</span><h3>Power boost</h3><div class="price">₹99</div><p class="muted">+35 demo swipes</p><button data-plan="power" class="claimPlan">Try demo plan</button></div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
-    <nav class="mobile-nav" id="mobileNav"></nav>
-  </section>
-  <footer class="foot">Saath • Respect, consent and safety first. Never share financial passwords or OTPs.</footer>
-</div>
-<div id="filterBackdrop" class="filter-backdrop"></div>
-<aside id="filterDrawer" class="filter-drawer" aria-label="Discover filters" aria-hidden="true">
-  <div class="drawer-head"><h3>Refine your match</h3><button id="closeFilters" class="drawer-close" aria-label="Close filters">×</button></div>
-  <p class="muted small">By default, profiles of all genders and ages are shown. Set filters only when you want to narrow the list.</p>
-  <div class="drawer-note">✨ Filters only change who appears in Discover. Like and Pass still use your swipe balance.</div>
-  <div class="field"><label for="filterMinAge">Minimum age (optional)</label><select id="filterMinAge"><option value="" selected>Any age</option><option value="18">18</option><option value="21">21</option><option value="25">25</option><option value="30">30</option><option value="35">35</option><option value="40">40</option><option value="50">50</option></select></div>
-  <div class="field"><label for="filterMaxAge">Maximum age (optional)</label><select id="filterMaxAge"><option value="" selected>Any age</option><option value="30">30</option><option value="35">35</option><option value="40">40</option><option value="50">50</option><option value="70">70</option><option value="100">100</option></select></div>
-  <div class="field"><label for="filterGender">Discover gender filter (independent)</label><select id="filterGender"><option value="">Any gender</option><option>Woman</option><option>Man</option><option>Non-binary</option><option>Other</option></select></div>
-  <div class="field"><label for="filterState">State</label><input id="filterState" placeholder="Any state"></div>
-  <div class="field"><label for="filterCity">City</label><input id="filterCity" placeholder="Any city"></div>
-  <div class="drawer-actions"><button id="clearFilters" class="secondary">Clear all</button><button id="applyFilters">Show matches</button></div>
-</aside>
-
-<div id="modalRoot"></div>
-
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-const SUPABASE_URL = 'https://kaobteyfxgfxlzrmwsge.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IiPNP9mZ3s_8TZEhuLmvg_87ncVOcL';
-
-/* OAuth callback ko fixed canonical URL par rakha hai. location.href use karne se
-   query/hash ke saath malformed redirect ya callback loop ho sakta hai. */
-const APP_REDIRECT_URL = 'https://pranab14220.github.io/Sath/';
-const $ = id => document.getElementById(id);
-const configured = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY &&
-  !SUPABASE_URL.includes('YOUR_') && !SUPABASE_PUBLISHABLE_KEY.includes('YOUR_');
-
-let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], candidateIndex = 0;
-let activeMatch = null, activeChatChannel = null, matchesCache = [];
-let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
-
-const navItems = [['discover','♡','Discover'],['matches','♥','Matches'],['me','♙','Profile']];
-function showMessage(message,error=false,target='globalMessage'){
-  const el=$(target); if(!el)return;
-  el.textContent=message;el.classList.remove('hidden','error');if(error)el.classList.add('error');
-  if(target==='globalMessage')setTimeout(()=>el.classList.add('hidden'),7000);
-}
-function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function initials(s='S'){return s.trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'S';}
-function niceError(e){return e?.message||String(e||'Unknown error');}
-function navMarkup(){return navItems.map(([id,icon,label])=>`<button class="nav ${id==='discover'?'active':''}" data-view="${id}"><span>${icon}</span> ${label}</button>`).join('');}
-$('desktopNav').innerHTML=navMarkup();$('mobileNav').innerHTML=navMarkup();
-
-function showView(view){
-  document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
-  $('view-'+view)?.classList.remove('hidden');
-  if(view==='matches'){ $('matchesPanel')?.classList.remove('hidden'); $('matchChatPanel')?.classList.add('hidden'); }
-  document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
-  if(view==='discover')loadDiscover();
-  if(view==='matches')loadMatches();
-  if(view==='me')renderMyProfile();
-  if(view==='plans')refreshWallet();
-}
-document.addEventListener('click',e=>{const nav=e.target.closest('[data-view]');if(nav)showView(nav.dataset.view);});
-
-function setSignedInUI(on){
-  $('loginScreen').classList.toggle('hidden',on);
-  $('appScreen').classList.toggle('hidden',!on);
-}
-function clearUserState(){
-  currentUser=null;myProfile=null;candidateProfiles=[];candidateIndex=0;activeMatch=null;matchesCache=[];
-  if(activeChatChannel&&sb){sb.removeChannel(activeChatChannel).catch(()=>{});activeChatChannel=null;}
-  setSignedInUI(false);
-}
-async function handleSession(session){
-  const user=session?.user||null;
-  if(!user){authGeneration++;authHandlingUserId=null;authHandlingPromise=null;clearUserState();return;}
-  // Ignore duplicate INITIAL_SESSION / SIGNED_IN notifications for the same user.
-  if(authHandlingUserId===user.id&&authHandlingPromise){await authHandlingPromise;return;}
-  const generation=++authGeneration;
-  authHandlingUserId=user.id;
-  currentUser=user;setSignedInUI(true);
-  authHandlingPromise=(async()=>{
-    try{
-      showMessage('Account load ho raha hai…',false);
-      await ensureWallet();
-      const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
-      if(error)throw error;
-      if(generation!==authGeneration)return;
-      myProfile=data;
-      if(!myProfile){
-        showView('me');
-        showMessage('Welcome! Is Google account ke liye profile abhi nahi bani. Apna 18+ profile complete karke Save profile dabao.');
-      }else{
-          showView('discover');
-      }
-      await refreshWallet();
-    }catch(e){
-      if(generation===authGeneration){
-        showMessage('Account login hua, lekin profile/database load nahi hua: '+niceError(e),true);
-        // Keep the signed-in app visible so the actual database error can be read.
-        setSignedInUI(true);
-      }
-    }
-  })();
-  try{await authHandlingPromise;}finally{if(generation===authGeneration)authHandlingPromise=null;}
-}
-async function init(){
-  if(!configured){
-    $('loginMessage').textContent='Setup required: SUPABASE_URL aur publishable key check karo.';
-    $('loginMessage').classList.remove('hidden');$('googleBtn').disabled=true;return;
-  }
-  sb=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}
-  });
-
-  $('googleBtn').addEventListener('click',async()=>{
-    $('googleBtn').disabled=true;
-    $('loginMessage').classList.add('hidden');
-    try{
-      // Clean old OAuth callback parameters from the destination.
-      const redirectTo=APP_REDIRECT_URL;
-      const {error}=await sb.auth.signInWithOAuth({
-        provider:'google',
-        options:{redirectTo,queryParams:{access_type:'offline',prompt:'select_account'}}
-      });
-      if(error)throw error;
-    }catch(e){
-      showMessage('Google login start nahi hua: '+niceError(e),true,'loginMessage');
-      $('loginMessage').classList.remove('hidden');$('googleBtn').disabled=false;
-    }
-  });
-
-  // Auth events are processed asynchronously to avoid Supabase auth-lock deadlocks.
-  sb.auth.onAuthStateChange((event,session)=>{
-    if(event==='SIGNED_OUT'||!session){setTimeout(()=>handleSession(null),0);return;}
-    setTimeout(()=>handleSession(session),0);
-  });
-
-  // Supabase JS handles the OAuth PKCE callback and persists the session.
-  // Wait for it to finish before deciding whether the user is logged out.
-  try{
-    const {data,error}=await sb.auth.getSession();
-    if(error)throw error;
-    await handleSession(data?.session||null);
-    if(!data?.session){
-      const params=new URLSearchParams(location.search);
-      if(params.has('error')||params.has('error_description')){
-        const msg=params.get('error_description')||params.get('error')||'Google authentication failed.';
-        showMessage(decodeURIComponent(msg.replace(/\+/g,' ')),true,'loginMessage');
-        $('loginMessage').classList.remove('hidden');
-      }
-      $('googleBtn').disabled=false;
-    }
-  }catch(e){
-    showMessage('Session check error: '+niceError(e),true,'loginMessage');
-    $('loginMessage').classList.remove('hidden');$('googleBtn').disabled=false;
-  }
-}
-async function ensureWallet(){const {error}=await sb.rpc('ensure_my_wallet');if(error)throw error;}
-async function refreshWallet(){
-  if(!currentUser||!sb)return;
-  const {data,error}=await sb.rpc('get_my_swipe_status');
-  if(error){$('swipeCount').textContent='Swipe balance unavailable';return;}
-  const used=data?.free_used||0;
-  $('swipeCount').textContent=`Free today: ${Math.max(0,7-used)}/7`;
-}
-function avatarMarkup(profile, extraClass=''){
-  const name=profile?.display_name||'Saath user';
-  const photo=profile?.photo_url;
-  return `<div class="avatar ${extraClass}">${photo?`<img src="${escapeHtml(photo)}" alt="${escapeHtml(name)} profile photo" loading="lazy" referrerpolicy="no-referrer">`:escapeHtml(initials(name))}</div>`;
-}
-function renderPhotoPreview(){
-  const box=$('myPhotoPreview');if(!box)return;
-  const photo=myProfile?.photo_url;
-  box.innerHTML=photo?`<img src="${escapeHtml(photo)}" alt="Your profile photo">`:`<span class="muted">${escapeHtml(initials(myProfile?.display_name||currentUser?.user_metadata?.name||'Me'))}</span>`;
-  $('removePhotoBtn').disabled=!photo;
-}
-function renderMyProfile(){
-  if(!currentUser)return;
-  const p=myProfile||{};
-  $('displayName').value=p.display_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||'';
-  $('age').value=p.age||'';$('gender').value=p.gender||'';$('lookingFor').value=p.looking_for||'';
-  $('state').value=p.state||'';$('city').value=p.city||'';$('bio').value=p.bio||'';
-  $('profileSummary').innerHTML=p.id?`<div class="profile-card">${avatarMarkup(p)}<div class="person"><div class="small muted">YOUR SAATH PROFILE</div><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="muted">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div><p>${escapeHtml(p.bio||'No bio added yet.')}</p><span class="tag">${escapeHtml(p.gender||'Not specified')}</span><span class="tag">Looking for: ${escapeHtml(p.looking_for||'Not specified')}</span></div></div>`:'<p class="muted">Profile abhi complete nahi hai.</p>'; 
-  renderPhotoPreview();
-}
-$('profileForm').addEventListener('submit',async e=>{
-  e.preventDefault();if(!currentUser)return;
-  const age=Number($('age').value);
-  if(age<18||age>100){showMessage('Saath par account banane ke liye age 18–100 honi chahiye.',true);return;}
-  const profile={id:currentUser.id,display_name:$('displayName').value.trim(),age,gender:$('gender').value,looking_for:$('lookingFor').value,state:$('state').value.trim(),city:$('city').value.trim(),bio:$('bio').value.trim(),photo_url:myProfile?.photo_url||null,photo_path:myProfile?.photo_path||null,updated_at:new Date().toISOString()};
-  try{
-    const {data,error}=await sb.from('profiles').upsert(profile,{onConflict:'id'}).select().single();
-    if(error)throw error;myProfile=data;
-    renderMyProfile();showMessage('Profile saved successfully.');showView('discover');
-  }catch(e){showMessage('Profile save error: '+niceError(e),true);}
-});
-
-$('profilePhotoInput').addEventListener('change',()=>{
-  const file=$('profilePhotoInput').files?.[0];
-  if(!file)return;
-  if(file.size>500*1024){
-    showMessage('Photo 500 KB ya usse chhoti honi chahiye. Is photo ka size '+(file.size/1024).toFixed(1)+' KB hai. Chhoti photo select karo.',true);
-    $('profilePhotoInput').value='';
-  }
-});
-
-$('uploadPhotoBtn').addEventListener('click',async()=>{
-  if(!currentUser||!sb){showMessage('Pehle login karo.',true);return;}
-  if(!myProfile?.id){showMessage('Pehle apni basic profile Save profile button se save karo.',true);return;}
-  const file=$('profilePhotoInput').files?.[0];
-  if(!file){showMessage('Pehle Gallery se photo select karo.',true);return;}
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){showMessage('Sirf JPG, PNG ya WebP image upload karo.',true);return;}
-  if(file.size>500*1024){showMessage('Photo 500 KB ya usse chhoti honi chahiye. Is photo ka size '+(file.size/1024).toFixed(1)+' KB hai.',true);$('profilePhotoInput').value='';return;}
-  const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' })[file.type];
-  const path=`${currentUser.id}/${Date.now()}.${ext}`;
-  const btn=$('uploadPhotoBtn');btn.disabled=true;btn.textContent='Uploading…';
-  try{
-    const {error:upErr}=await sb.storage.from('profile-photos').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
-    if(upErr)throw upErr;
-    const {data:pub}=sb.storage.from('profile-photos').getPublicUrl(path);
-    const {data,error}=await sb.from('profiles').update({photo_url:pub.publicUrl,photo_path:path,updated_at:new Date().toISOString()}).eq('id',currentUser.id).select().single();
-    if(error){await sb.storage.from('profile-photos').remove([path]);throw error;}
-    const oldPath=myProfile?.photo_path;myProfile=data;renderMyProfile();
-    if(oldPath&&oldPath!==path)await sb.storage.from('profile-photos').remove([oldPath]);
-    $('profilePhotoInput').value='';showMessage('Profile photo upload ho gayi!');
-  }catch(e){showMessage('Photo upload error: '+niceError(e)+' — Supabase mein profile-photos bucket aur policies check karo.',true);}
-  finally{btn.disabled=false;btn.textContent='Upload photo';}
-});
-$('removePhotoBtn').addEventListener('click',async()=>{
-  if(!currentUser||!myProfile?.photo_url)return;
-  if(!confirm('Apni profile photo remove karni hai?'))return;
-  const btn=$('removePhotoBtn');btn.disabled=true;
-  try{
-    const oldPath=myProfile.photo_path;
-    const {data,error}=await sb.from('profiles').update({photo_url:null,photo_path:null,updated_at:new Date().toISOString()}).eq('id',currentUser.id).select().single();
-    if(error)throw error;
-    myProfile=data;if(oldPath)await sb.storage.from('profile-photos').remove([oldPath]);
-    renderMyProfile();showMessage('Profile photo remove ho gayi.');
-  }catch(e){showMessage('Photo remove error: '+niceError(e),true);}
-  finally{btn.disabled=false;}
-});
-
-function getFilters(){
-  let minAge=$('filterMinAge').value===''?null:Number($('filterMinAge').value);
-  let maxAge=$('filterMaxAge').value===''?null:Number($('filterMaxAge').value);
-  if(minAge!==null&&maxAge!==null&&minAge>maxAge){const temp=minAge;minAge=maxAge;maxAge=temp;$('filterMinAge').value=String(minAge);$('filterMaxAge').value=String(maxAge);}
-  return {minAge,maxAge,gender:$('filterGender').value,state:$('filterState').value.trim(),city:$('filterCity').value.trim()};
-}
-const filterDrawer=$('filterDrawer'),filterBackdrop=$('filterBackdrop');
-function setFiltersOpen(open){
-  filterDrawer.classList.toggle('open',open);filterBackdrop.classList.toggle('open',open);
-  filterDrawer.setAttribute('aria-hidden',String(!open));
-  document.body.style.overflow=open?'hidden':'';
-}
-$('openFilters').addEventListener('click',()=>setFiltersOpen(true));
-$('closeFilters').addEventListener('click',()=>setFiltersOpen(false));
-filterBackdrop.addEventListener('click',()=>setFiltersOpen(false));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')setFiltersOpen(false);});
-$('applyFilters').addEventListener('click',()=>{setFiltersOpen(false);loadDiscover(true);});
-$('clearFilters').addEventListener('click',()=>{
-  $('filterMinAge').value='';$('filterMaxAge').value='';$('filterGender').value='';
-  $('filterState').value='';$('filterCity').value='';setFiltersOpen(false);loadDiscover(true);
-});
-async function loadDiscover(reset=true){
-  if(!currentUser||!sb)return;
-  if(!myProfile){$('discoverCard').innerHTML='<div class="empty">Pehle My profile mein apni profile save karo.</div>';return;}
-  if(reset)$('discoverCard').innerHTML='<div class="empty">Profiles load ho rahe hain…</div>';
-  try{
-    const f=getFilters();
-    // Fetch profiles without age constraints, then filter in JavaScript.
-    // This also handles databases where age values were stored as text.
-    let q=sb.from('profiles')
-      .select('id,display_name,age,state,city,gender,looking_for,bio,photo_url,photo_path,updated_at')
-      .neq('id',currentUser.id)
-      .limit(500);
-    const {data,error}=await q;
-    if(error)throw error;
-    const [{data:blocks,error:be},{data:likes,error:le}]=await Promise.all([
-      sb.from('blocks').select('blocker_id,blocked_id').or(`blocker_id.eq.${currentUser.id},blocked_id.eq.${currentUser.id}`),
-      sb.from('likes').select('to_user_id').eq('from_user_id',currentUser.id)
-    ]);
-    if(be)throw be;if(le)throw le;
-    const blocked=new Set((blocks||[]).flatMap(b=>[b.blocker_id,b.blocked_id]));
-    const liked=new Set((likes||[]).map(l=>l.to_user_id));
-    const allOtherProfiles=(data||[]).filter(p=>p.id!==currentUser.id);
-    candidateProfiles=allOtherProfiles.filter(p=>{
-      const age=Number(p.age);
-      // Dating discovery is restricted to adults (18+); optional age filters apply only when selected.
-      if(!Number.isFinite(age)||age<18)return false;
-      if(f.minAge!==null&&age<f.minAge)return false;
-      if(f.maxAge!==null&&(!Number.isFinite(age)||age>f.maxAge))return false;
-      if(f.gender&&p.gender!==f.gender)return false;
-      if(f.state&&!String(p.state||'').toLowerCase().includes(f.state.toLowerCase()))return false;
-      if(f.city&&!String(p.city||'').toLowerCase().includes(f.city.toLowerCase()))return false;
-      if(blocked.has(p.id)||liked.has(p.id))return false;
-      // Discover shows every gender regardless of either user's 'Looking for' setting.
-      // Only the explicit Discover filters (age, gender, state, city) narrow the list.
-      return true;
-    });
-    candidateIndex=0;
-    renderCandidate();
-    if(!candidateProfiles.length){
-      let note='';
-      if(!allOtherProfiles.length){
-        note='Supabase se tumhare alawa koi profile return nahi hui. Doosre Google account mein My profile kholkar Save profile dabao. Agar profile pehle se saved hai, to profiles table ki SELECT RLS policy check karni hogi.';
-      }else{
-        note=`Database ne ${allOtherProfiles.length} doosri profile(s) di, lekin current filters, block ya pehle Like ki condition ke baad koi profile nahi bachi. Clear all dabao ya filters badlo.`;
-      }
-      const empty=$('discoverCard').querySelector('.empty');
-      if(empty){const p=document.createElement('p');p.textContent=note;empty.appendChild(p);}
-    }
-  }catch(e){
-    $('discoverCard').innerHTML=`<div class="empty"><h3>Profiles load nahi ho paaye</h3><p>${escapeHtml(niceError(e))}</p><p>Yeh age filter ke bajay database permission ya query issue bhi ho sakta hai.</p><button id="retryDiscover">Try again</button></div>`;
-    $('retryDiscover')?.addEventListener('click',()=>loadDiscover(true));
-  }
-}
-function renderCandidate(){
-  const box=$('discoverCard');
-  if(candidateIndex>=candidateProfiles.length){box.innerHTML='<div class="empty"><h3>Abhi aur profiles nahi hain</h3><p>Filters badal kar dobara try karo.</p><button id="reloadDiscover">Refresh profiles</button></div>';$('reloadDiscover')?.addEventListener('click',()=>loadDiscover(true));return;}
-  const p=candidateProfiles[candidateIndex];
-  box.innerHTML=`<div class="profile-photo-wrap">${avatarMarkup(p)}<div class="photo-caption"><div class="online-label"><span></span> Discover</div><h2>${escapeHtml(p.display_name)}, ${p.age}</h2><div class="photo-location">⌖ ${escapeHtml([p.city,p.state].filter(Boolean).join(', ')||'Location not added')}</div></div></div><div class="person-details"><div class="person-meta"><span class="tag">${escapeHtml(p.gender||'Not specified')}</span></div><div class="bio">${escapeHtml(p.bio||'No bio added yet.')}</div><div class="swipe-actions"><button id="passBtn" class="mini-action pass-action" type="button" aria-label="Pass" title="Pass">✕</button><button id="likeBtn" class="mini-action like-action" type="button" aria-label="Like" title="Like">♥</button><button id="blockBtn" class="mini-action block-action" type="button" aria-label="Block" title="Block">⊘</button></div></div>`;
-  $('passBtn').onclick=()=>doSwipe(p.id,'pass');$('likeBtn').onclick=()=>doSwipe(p.id,'like');$('blockBtn').onclick=()=>blockUser(p.id);
-}
-async function doSwipe(targetId,action){
-  const buttons=[$('passBtn'),$('likeBtn'),$('blockBtn')];buttons.forEach(b=>{if(b)b.disabled=true;});
-  try{const {data,error}=await sb.rpc('perform_swipe',{p_target_user_id:targetId,p_action:action});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Swipe failed');if(data.matched)showMessage('It’s a match! 💖 Ab Matches tab mein chat kar sakte ho.');await refreshWallet();candidateIndex++;renderCandidate();}
-  catch(e){showMessage(niceError(e),true);if(/swipe|credit|daily/i.test(niceError(e)))showView('plans');buttons.forEach(b=>{if(b)b.disabled=false;});}
-}
-async function blockUser(targetId){
-  if(!confirm('Is profile ko block karna hai? Aap dono ek dusre ko discover nahi kar paoge.'))return;
-  try{const {error}=await sb.rpc('block_user',{p_target_user_id:targetId});if(error)throw error;showMessage('Profile blocked.');candidateIndex++;renderCandidate();}
-  catch(e){showMessage(niceError(e),true);}
-}
-async function loadMatches(){
-  if(!currentUser)return;const box=$('matchesList');box.innerHTML='<div class="empty">Matches load ho rahe hain…</div>';
-  try{
-    const {data,error}=await sb.from('matches').select('id,user_a,user_b,created_at').or(`user_a.eq.${currentUser.id},user_b.eq.${currentUser.id}`).order('created_at',{ascending:false});if(error)throw error;
-    matchesCache=data||[];if(!matchesCache.length){box.innerHTML='<div class="empty">Abhi koi match nahi mila. Discover mein kisi ko pasand karo — shayad yahin se kahani shuru ho.</div>';return;}
-    const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
-    const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);if(pe)throw pe;
-    const map=new Map((people||[]).map(p=>[p.id,p]));
-    box.innerHTML=matchesCache.map(m=>{const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);return `<button type="button" class="list-item match-row" data-open-match="${m.id}">${p?.photo_url?`<span class="avatar"><img src="${escapeHtml(p.photo_url)}" alt="Profile photo" loading="lazy"></span>`:`<span class="avatar">${escapeHtml(initials(p?.display_name||'S'))}</span>`}<span class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><span class="match-location">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', ')||'')}</span></span><span class="match-arrow" aria-hidden="true">›</span></button>`;}).join('');
-    box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
-  }catch(e){box.innerHTML=`<div class="empty">Matches load error: ${escapeHtml(niceError(e))}</div>`;}
-}
-async function openChat(matchId){
-  activeMatch=matchesCache.find(m=>m.id===matchId)||null;if(!activeMatch){await loadMatches();activeMatch=matchesCache.find(m=>m.id===matchId)||null;}
-  if(!activeMatch){showMessage('Match not found.',true);return;}
-  $('matchesPanel').classList.add('hidden');$('matchChatPanel').classList.remove('hidden');
-  const otherId=activeMatch.user_a===currentUser.id?activeMatch.user_b:activeMatch.user_a;
-  const {data:p}=await sb.from('profiles').select('display_name,photo_url').eq('id',otherId).maybeSingle();
-  $('chatPeerName').textContent=p?.display_name||'Your match';$('chatSubtitle').textContent='Your connection';
-  $('chatPeerAvatar').innerHTML=p?.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p?.display_name||'S'));
-  await loadMessages();
-  if(activeChatChannel)await sb.removeChannel(activeChatChannel);
-  activeChatChannel=sb.channel('messages-'+matchId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`match_id=eq.${matchId}`},payload=>{if(payload.new.sender_id!==currentUser.id)appendMessage(payload.new);}).subscribe();
-}
-async function loadMessages(){
-  if(!activeMatch)return;
-  const {data,error}=await sb.from('messages').select('id,match_id,sender_id,body,created_at').eq('match_id',activeMatch.id).order('created_at',{ascending:true}).limit(300);
-  if(error){showMessage(niceError(error),true);return;}
-  $('chatMessages').innerHTML='';(data||[]).forEach(appendMessage);$('chatMessages').scrollTop=$('chatMessages').scrollHeight;
-}
-function appendMessage(m){
-  const box=$('chatMessages');if(box.querySelector(`[data-message-id="${CSS.escape(String(m.id))}"]`))return;
-  const div=document.createElement('div');div.className='bubble'+(m.sender_id===currentUser.id?' mine':'');div.dataset.messageId=m.id;div.textContent=m.body;box.appendChild(div);box.scrollTop=box.scrollHeight;
-}
-$('chatForm').addEventListener('submit',async e=>{
-  e.preventDefault();if(!activeMatch){showMessage('Pehle Matches se chat open karo.',true);return;}
-  const body=$('chatInput').value.trim();if(!body)return;$('sendBtn').disabled=true;
-  try{const {error}=await sb.from('messages').insert({match_id:activeMatch.id,sender_id:currentUser.id,body});if(error)throw error;$('chatInput').value='';await loadMessages();}
-  catch(e){showMessage(niceError(e),true);}finally{$('sendBtn').disabled=false;}
-});
-$('backMatches').onclick=()=>{ $('matchChatPanel').classList.add('hidden');$('matchesPanel').classList.remove('hidden'); };
-document.querySelectorAll('.claimPlan').forEach(btn=>btn.addEventListener('click',async()=>{
-  btn.disabled=true;try{const {data,error}=await sb.rpc('claim_demo_plan',{p_plan_code:btn.dataset.plan});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Plan could not be claimed');showMessage(data.message||'Demo credits added.');await refreshWallet();}
-  catch(e){showMessage(niceError(e),true);}finally{btn.disabled=false;}
-}));
-$('logoutBtn').onclick=async()=>{
-  if(!sb)return;
-  try{if(activeChatChannel)await sb.removeChannel(activeChatChannel);const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error;clearUserState();$('googleBtn').disabled=false;showMessage('Signed out successfully.',false,'loginMessage');$('loginMessage').classList.remove('hidden');}
-  catch(e){showMessage('Sign out error: '+niceError(e),true);}
+  <main class="app" id="app">
+    <header class="brand">
+      <div class="logo">Saa<span>th</span></div>
+      <div class="brand-actions">
+        <button class="icon-btn" id="themeBtn" type="button" title="Toggle theme" aria-label="Toggle theme">☀</button>
+        <button class="icon-btn hidden" id="logoutBtn" type="button" title="Logout">⎋</button>
+      </div>
+    </header>
+    <div id="configBanner" class="banner hidden">Firebase configuration check karein.</div>
+    <section id="screen"></section>
+  </main>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  query,
+  where,
+  limit,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyCyJm-IA8FwtVGLkavbv5HxHhwUAgVs5DU",
+  authDomain: "saath-app-84a2e.firebaseapp.com",
+  projectId: "saath-app-84a2e",
+  storageBucket: "saath-app-84a2e.firebasestorage.app",
+  messagingSenderId: "160313745704",
+  appId: "1:160313745704:web:ac80a3d570b3913620701d",
+  measurementId: "G-BLE9RVDPX1"
 };
-$('deleteProfileBtn').onclick=async()=>{
-  if(!confirm('Confirm: tumhara profile, likes, blocks, matches, messages aur swipe data delete hoga. Google login identity Supabase Auth mein rahegi. Continue?'))return;
-  try{const {data,error}=await sb.rpc('delete_my_profile_data');if(error)throw error;myProfile=null;activeMatch=null;matchesCache=[];if(activeChatChannel)await sb.removeChannel(activeChatChannel);await sb.auth.signOut({scope:'local'});clearUserState();$('googleBtn').disabled=false;showMessage('Profile data deleted.',false,'loginMessage');$('loginMessage').classList.remove('hidden');}
-  catch(e){showMessage(niceError(e),true);}
-};
-init();
-</script>
+const isConfigured = () => Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 
-<script>
-(function(){
-  const key='saath_theme_mode';
-  const apply=(mode)=>{
-    const dark=mode==='dark';
-    document.body.classList.toggle('dark-mode',dark);
-    const btn=document.getElementById('themeToggle');
-    if(btn){btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');btn.title=dark?'Switch to light mode':'Switch to dark mode';}
-    const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?'#171427':'#fff7fa';
+const screen = document.getElementById("screen");
+const logoutBtn = document.getElementById("logoutBtn");
+const configBanner = document.getElementById("configBanner");
+
+const state = {
+  user: null,
+  profile: null,
+  tab: "discover",
+  deck: [],
+  sent: new Set(),
+  blocked: new Set(),
+  chatUnsub: null
+};
+
+let auth = null;
+let db = null;
+let confirmation = null;
+
+if (!isConfigured()) configBanner.classList.remove("hidden");
+
+if (isConfigured()) {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  getRedirectResult(auth).catch((err) => {
+    console.error(err);
+  });
+  onAuthStateChanged(auth, async (user) => {
+    state.user = user;
+    logoutBtn.classList.toggle("hidden", !user);
+    if (!user) {
+      stopChat();
+      renderAuth();
+      return;
+    }
+    const snap = await getDoc(doc(db, "users", user.uid));
+    state.profile = snap.exists() ? snap.data() : null;
+    if (!state.profile) renderProfileForm();
+    else renderApp();
+  });
+} else {
+  renderAuth();
+}
+
+logoutBtn.addEventListener("click", () => auth && signOut(auth));
+const themeBtn = document.getElementById("themeBtn");
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  if (themeBtn) {
+    themeBtn.textContent = theme === "light" ? "☾" : "☀";
+    themeBtn.title = theme === "light" ? "Dark mode" : "Light mode";
+  }
+}
+applyTheme(localStorage.getItem("saath-theme") || "dark");
+themeBtn?.addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  localStorage.setItem("saath-theme", next);
+  applyTheme(next);
+});
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function pairId(a, b) {
+  return a < b ? `${a}_${b}` : `${b}_${a}`;
+}
+
+function initial(name) {
+  return escapeHtml((name || "?").trim().charAt(0).toUpperCase());
+}
+
+function stopChat() {
+  if (state.chatUnsub) {
+    state.chatUnsub();
+    state.chatUnsub = null;
+  }
+}
+
+function renderAuth(mode = "login") {
+  stopChat();
+  const title = mode === "login" ? "Wapas aao" : "Naya account";
+  screen.innerHTML = `
+    <div class="card">
+      <h1>Saath</h1>
+      <p class="muted">Google se login. 18+ . Email profile pe nahi dikhega. Phone login baad mein add hoga.</p>
+      <button class="btn" id="googleBtn" type="button">Google se continue</button>
+      <p class="error" id="formError"></p>
+    </div>`;
+  document.getElementById("googleBtn").onclick = googleLogin;
+}
+
+function setupRecaptcha() {
+  if (window.saathRecaptcha) {
+    window.saathRecaptcha.clear();
+  }
+  window.saathRecaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "normal" });
+}
+
+async function googleLogin() {
+  const error = document.getElementById("formError");
+  if (!isConfigured()) {
+    error.textContent = "Pehle js/config.js mein Firebase config daalo.";
+    return;
+  }
+  try {
+    await signInWithRedirect(auth, new GoogleAuthProvider());
+  } catch (err) {
+    error.textContent = friendlyAuthError(err);
+  }
+}
+
+async function sendOtp(event) {
+  event.preventDefault();
+  const error = document.getElementById("formError");
+  if (!isConfigured()) {
+    error.textContent = "Pehle js/config.js mein Firebase config daalo.";
+    return;
+  }
+  const phone = String(new FormData(event.target).get("phone")).replace(/\D/g, "");
+  try {
+    confirmation = await signInWithPhoneNumber(auth, `+91${phone}`, window.saathRecaptcha);
+    document.getElementById("otpForm").classList.remove("hidden");
+    error.textContent = "OTP bhej diya.";
+  } catch (err) {
+    error.textContent = friendlyAuthError(err);
+    setupRecaptcha();
+  }
+}
+
+async function verifyOtp(event) {
+  event.preventDefault();
+  const error = document.getElementById("formError");
+  try {
+    await confirmation.confirm(String(new FormData(event.target).get("code")).trim());
+  } catch (err) {
+    error.textContent = friendlyAuthError(err);
+  }
+}
+
+function friendlyAuthError(err) {
+  if (err.code === "auth/invalid-credential") return "Email ya password galat hai.";
+  if (err.code === "auth/billing-not-enabled" || err.code === "auth/operation-not-allowed") {
+    return "Phone SMS Spark pe nahi chalta. Console mein Phone on karne ke liye Blaze chahiye. Google abhi chalega.";
+  }
+  if (err.code === "auth/invalid-phone-number") return "Number 10 digit ka hona chahiye.";
+  if (err.code === "auth/invalid-verification-code") return "OTP galat hai.";
+  return err.message;
+}
+
+function renderProfileForm() {
+  const p = state.profile || {};
+  const editing = Boolean(state.profile);
+  const formMarkup = `
+    <div class="card">
+      <h1>${p.displayName ? "Profile edit" : "Apni profile"}</h1>
+      <p class="muted">Sirf 18+ . Naam, age aur city dusre users ko dikhegi. Email nahi.</p>
+      <form id="profileForm">
+        <label>Naam</label>
+        <input name="displayName" required minlength="2" maxlength="40" value="${escapeHtml(p.displayName || "")}" />
+        <div class="row">
+          <div>
+            <label>Age</label>
+            <input name="age" type="number" min="18" max="80" required value="${p.age || 21}" />
+          </div>
+          <div>
+            <label>City</label>
+            <input name="city" maxlength="40" required value="${escapeHtml(p.city || "")}" />
+          </div>
+        </div>
+        <label>Main hoon</label>
+        <select name="gender">
+          ${["woman", "man", "other"].map((g) => `<option ${p.gender === g ? "selected" : ""}>${g}</option>`).join("")}
+        </select>
+        <label>Dekh raha/rahi hoon</label>
+        <select name="lookingFor">
+          ${["women", "men", "everyone"].map((g) => `<option ${p.lookingFor === g ? "selected" : ""}>${g}</option>`).join("")}
+        </select>
+        <label>Bio</label>
+        <textarea name="bio" maxlength="300" required>${escapeHtml(p.bio || "")}</textarea>
+        <div class="row form-actions">
+          ${editing ? '<button class="btn ghost" id="cancelEdit" type="button">Cancel</button>' : ''}
+          <button class="btn" type="submit">Save</button>
+        </div>
+        <p class="error" id="formError"></p>
+      </form>
+    </div>`;
+  if (editing) {
+    const old = document.getElementById("profileModal");
+    if (old) old.remove();
+    const modal = document.createElement("div");
+    modal.id = "profileModal";
+    modal.className = "modal-backdrop";
+    modal.innerHTML = `<div class="modal-card"><div class="modal-heading"><strong>Edit profile</strong><button class="icon-btn" id="closeEdit" type="button" aria-label="Close">×</button></div>${formMarkup}</div>`;
+    document.getElementById("app").appendChild(modal);
+    modal.querySelector("#closeEdit").onclick = () => modal.remove();
+    modal.querySelector("#cancelEdit").onclick = () => modal.remove();
+  } else {
+    screen.innerHTML = formMarkup;
+  }
+  const profileForm = document.getElementById("profileForm");
+  profileForm.onsubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const age = Number(data.get("age"));
+    if (age < 18 || age > 80) {
+      profileForm.querySelector("#formError").textContent = "Age 18 se 80 ke beech honi chahiye.";
+      return;
+    }
+    const profile = {
+      uid: state.user.uid,
+      displayName: String(data.get("displayName")).trim(),
+      age,
+      city: String(data.get("city")).trim(),
+      gender: data.get("gender"),
+      lookingFor: data.get("lookingFor"),
+      bio: String(data.get("bio")).trim(),
+      updatedAt: serverTimestamp()
+    };
+    await setDoc(doc(db, "users", state.user.uid), profile, { merge: true });
+    state.profile = profile;
+    if (editing) {
+      document.getElementById("profileModal")?.remove();
+      renderApp();
+    } else {
+      renderApp();
+    }
   };
-  let saved='light';try{saved=localStorage.getItem(key)||'light';}catch(e){}
-  apply(saved);
-  document.addEventListener('DOMContentLoaded',()=>{
-    const btn=document.getElementById('themeToggle');if(!btn)return;
-    btn.addEventListener('click',()=>{
-      const next=document.body.classList.contains('dark-mode')?'light':'dark';
-      apply(next);try{localStorage.setItem(key,next);}catch(e){}
-    });
-  });
-})();
-</script>
+}
 
+async function loadDeck() {
+  const sentSnap = await getDocs(query(collection(db, "likes"), where("from", "==", state.user.uid), limit(50)));
+  state.sent = new Set(sentSnap.docs.map((d) => d.data().to));
+  const blockSnap = await getDocs(query(collection(db, "blocks"), where("from", "==", state.user.uid), limit(50)));
+  state.blocked = new Set(blockSnap.docs.map((d) => d.data().to));
+  const people = await getDocs(query(collection(db, "users"), limit(30)));
+  state.deck = people.docs
+    .map((d) => d.data())
+    .filter((p) => p.uid !== state.user.uid && !state.sent.has(p.uid) && !state.blocked.has(p.uid));
+}
+
+async function renderApp() {
+  stopChat();
+  logoutBtn.classList.remove("hidden");
+  if (state.tab === "discover") await loadDeck();
+  screen.innerHTML = `
+    <nav class="tabs">
+      <button class="tab ${state.tab === "discover" ? "active" : ""}" data-tab="discover">Discover</button>
+      <button class="tab ${state.tab === "matches" ? "active" : ""}" data-tab="matches">Matches</button>
+      <button class="tab ${state.tab === "me" ? "active" : ""}" data-tab="me">Me</button>
+    </nav>
+    <div id="panel"></div>`;
+  screen.querySelectorAll(".tab").forEach((btn) => {
+    btn.onclick = () => {
+      state.tab = btn.dataset.tab;
+      renderApp();
+    };
+  });
+  if (state.tab === "discover") renderDiscover();
+  if (state.tab === "matches") renderMatches();
+  if (state.tab === "me") renderMe();
+}
+
+function renderDiscover() {
+  const panel = document.getElementById("panel");
+  const person = state.deck[0];
+  if (!person) {
+    panel.innerHTML = `<div class="card empty"><h2>Abhi koi naya profile nahi</h2><p>Doosra account bana ke try karo, ya baad mein wapas aao. Free plan pe ek baar mein 30 profiles tak load hote hain.</p></div>`;
+    return;
+  }
+  panel.innerHTML = `
+    <article class="person">
+      <div class="avatar">${initial(person.displayName)}</div>
+      <div class="meta">
+        <h2>${escapeHtml(person.displayName)}, ${person.age}</h2>
+        <p class="muted">${escapeHtml(person.city)} · ${escapeHtml(person.gender)}</p>
+        <p>${escapeHtml(person.bio)}</p>
+        <div class="chips"><span class="chip">looking for ${escapeHtml(person.lookingFor)}</span></div>
+      </div>
+    </article>
+    <div class="actions">
+      <button class="btn pass" id="passBtn" type="button">Pass</button>
+      <button class="btn" id="likeBtn" type="button">Like</button>
+    </div>
+    <button class="btn ghost" id="blockBtn" type="button">Block / report</button>
+    <p class="error" id="formError"></p>`;
+  document.getElementById("passBtn").onclick = () => {
+    state.deck.shift();
+    renderDiscover();
+  };
+  document.getElementById("likeBtn").onclick = () => likePerson(person);
+  document.getElementById("blockBtn").onclick = () => blockPerson(person);
+}
+
+async function likePerson(person) {
+  const error = document.getElementById("formError");
+  try {
+    await setDoc(doc(db, "likes", `${state.user.uid}_${person.uid}`), {
+      from: state.user.uid,
+      to: person.uid,
+      createdAt: serverTimestamp()
+    });
+    const back = await getDoc(doc(db, "likes", `${person.uid}_${state.user.uid}`));
+    if (back.exists()) {
+      await setDoc(doc(db, "matches", pairId(state.user.uid, person.uid)), {
+        members: [state.user.uid, person.uid].sort(),
+        names: {
+          [state.user.uid]: state.profile.displayName,
+          [person.uid]: person.displayName
+        },
+        createdAt: serverTimestamp()
+      });
+      error.textContent = "Match ho gaya. Matches tab kholo.";
+    }
+    state.deck.shift();
+    setTimeout(renderDiscover, 500);
+  } catch (err) {
+    error.textContent = err.message;
+  }
+}
+
+async function blockPerson(person) {
+  const reason = window.prompt("Report reason (optional):", "uncomfortable") || "blocked";
+  await setDoc(doc(db, "blocks", `${state.user.uid}_${person.uid}`), {
+    from: state.user.uid,
+    to: person.uid,
+    createdAt: serverTimestamp()
+  });
+  await addDoc(collection(db, "reports"), {
+    from: state.user.uid,
+    target: person.uid,
+    reason: reason.slice(0, 200),
+    createdAt: serverTimestamp()
+  });
+  state.deck.shift();
+  renderDiscover();
+}
+
+async function renderMatches() {
+  const panel = document.getElementById("panel");
+  const snap = await getDocs(query(collection(db, "matches"), where("members", "array-contains", state.user.uid), limit(30)));
+  if (snap.empty) {
+    panel.innerHTML = `<div class="card empty"><h2>Abhi koi match nahi</h2><p>Jab dono taraf like hoga, yahan chat khulegi.</p></div>`;
+    return;
+  }
+  panel.innerHTML = `<div class="list matches-list">${snap.docs.map((d) => {
+    const data = d.data();
+    const other = data.members.find((id) => id !== state.user.uid);
+    const name = data.names?.[other] || "Match";
+    return `<button class="item" data-id="${d.id}" data-name="${escapeHtml(name)}"><div class="dot">${initial(name)}</div><div class="grow"><strong>${escapeHtml(name)}</strong><span>Chat kholo</span></div></button>`;
+  }).join("")}</div>`;
+  panel.querySelectorAll(".item").forEach((btn) => {
+    btn.onclick = () => openChat(btn.dataset.id, btn.dataset.name);
+  });
+}
+
+function openChat(matchId, name) {
+  stopChat();
+  const panel = document.getElementById("panel");
+  panel.innerHTML = `
+    <div class="topbar">
+      <button class="icon-btn" id="backBtn" type="button">←</button>
+      <strong>${escapeHtml(name)}</strong>
+    </div>
+    <div class="chat-log" id="log"></div>
+    <form id="chatForm" class="row chat-form">
+      <input name="text" maxlength="500" placeholder="Message..." required />
+      <button class="btn chat-send" type="submit">Send</button>
+    </form>
+    <p class="error" id="formError"></p>`;
+  document.getElementById("backBtn").onclick = () => renderApp();
+  const q = query(collection(db, "matches", matchId, "messages"), orderBy("createdAt", "asc"), limit(50));
+  state.chatUnsub = onSnapshot(q, (snap) => {
+    document.getElementById("log").innerHTML = snap.docs.map((d) => {
+      const msg = d.data();
+      return `<div class="bubble ${msg.from === state.user.uid ? "mine" : ""}">${escapeHtml(msg.text)}</div>`;
+    }).join("") || `<p class="muted">Pehla message bhejo.</p>`;
+    const log = document.getElementById("log");
+    log.scrollTop = log.scrollHeight;
+  }, (err) => {
+    document.getElementById("formError").textContent = err.message;
+  });
+  document.getElementById("chatForm").onsubmit = async (event) => {
+    event.preventDefault();
+    const input = event.target.text;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    try {
+      await addDoc(collection(db, "matches", matchId, "messages"), {
+        from: state.user.uid,
+        text: text.slice(0, 500),
+        createdAt: serverTimestamp()
+      });
+    } catch (err) {
+      document.getElementById("formError").textContent = err.message;
+    }
+  };
+}
+
+function renderMe() {
+  const p = state.profile;
+  document.getElementById("panel").innerHTML = `
+    <div class="card">
+      <div class="profile-heading"><div class="dot" style="width:64px;height:64px;font-size:1.4rem">${initial(p.displayName)}</div><button class="icon-btn edit-pencil" id="editBtn" type="button" aria-label="Edit profile" title="Edit profile">✎</button></div>
+      <h2>${escapeHtml(p.displayName)}, ${p.age}</h2>
+      <p class="muted">${escapeHtml(p.city)} · ${escapeHtml(p.gender)} · looking for ${escapeHtml(p.lookingFor)}</p>
+      <p>${escapeHtml(p.bio)}</p>
+      <p class="tiny">Ye personal demo hai, public dating product nahi. Kisi ko phone number, address ya payment mat bhejna.</p>
+    </div>`;
+  document.getElementById("editBtn").onclick = () => renderProfileForm();
+}
+
+  </script>
 </body>
 </html>
