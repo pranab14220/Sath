@@ -231,6 +231,179 @@ body.dark-mode .plan{background:#282238;border-color:#51415f}
 body.dark-mode .empty{color:#c0b4cd}
 body.dark-mode .foot{color:#aa9bb7}
 
+
+/* Saath exact-reference refresh: airy pink/lilac surfaces, compact theme switch,
+   three-tab navigation, and match rows that open their own conversation. */
+:root{
+  --ref-ink:#17184f;--ref-muted:#74749b;--ref-pink:#f04491;
+  --ref-lilac:#eee7ff;--ref-border:#eee5f4;
+}
+body{
+  color:var(--ref-ink);
+  background:
+    radial-gradient(ellipse at 5% 0%,#ffe5ef 0,transparent 42%),
+    radial-gradient(ellipse at 95% 8%,#e8dcff 0,transparent 43%),
+    linear-gradient(145deg,#fff9fb,#fff7fc 55%,#f8f4ff);
+  background-attachment:fixed;
+}
+.wrap{max-width:980px}
+.top{padding:10px 2px 17px}
+.brand{font-size:29px;color:#17184f;background:none;-webkit-text-fill-color:#17184f}
+.brand span{color:#ef4a96;-webkit-text-fill-color:#ef4a96}
+.top .muted{color:#777594}
+.top-tools{margin-left:auto;gap:0}
+.theme-toggle{
+  width:58px!important;height:30px!important;padding:0!important;
+  border:1px solid #e8ddec!important;background:#fff!important;
+  box-shadow:0 3px 12px #7e5a8c18!important;overflow:hidden;
+}
+.theme-toggle .sun-icon,.theme-toggle .moon-icon{
+  width:27px!important;line-height:28px!important;font-size:14px!important;
+}
+.theme-knob{left:2px!important;top:2px!important;width:24px!important;height:24px!important}
+body.dark-mode .theme-toggle{background:#34304f!important;border-color:#51456c!important}
+body.dark-mode .theme-knob{transform:translateX(28px)!important}
+body.dark-mode .brand{color:#fff!important;-webkit-text-fill-color:#fff!important}
+.layout{grid-template-columns:190px minmax(0,1fr);gap:18px}
+.sidebar,.panel,.card{
+  background:rgba(255,255,255,.91);border:1px solid #eee3f1;
+  box-shadow:0 10px 30px #9e78b016;backdrop-filter:blur(18px)
+}
+.panel{border-radius:24px;padding:22px}
+.nav{color:#77769a;border-radius:15px}
+.nav.active{background:linear-gradient(120deg,#ffe4f0,#eee5ff);color:#e44391;border-color:#f3d5e7}
+button{box-shadow:0 5px 13px #e75b981b}
+.discover-heading{margin-bottom:16px}
+.filter-open{background:linear-gradient(120deg,#fb4d91,#bd55db);border-radius:13px;padding:10px 15px}
+.swipe-meter{background:#fff;border:1px solid #eee4f2;color:#5e5a80;border-radius:14px}
+.discover-stage{max-width:430px}
+.person-card{border:1px solid #f0e5f0;border-radius:25px;background:#fff;box-shadow:0 12px 35px #9c70aa1b}
+.profile-photo-wrap{height:clamp(360px,57vh,560px)}
+.photo-caption{padding:78px 18px 18px}
+.person-details{padding:14px 17px 17px}
+.person-details .tag{font-size:12px;padding:6px 11px}
+.person-details .bio{font-size:14px;color:#77748f;margin:10px 0 15px}
+.person-details .swipe-actions{gap:18px!important}
+.person-details .swipe-actions button.mini-action{
+  width:48px!important;height:48px!important;min-width:48px!important;
+  min-height:48px!important;max-width:48px!important;max-height:48px!important;
+  flex:0 0 48px!important;border-radius:50%!important;font-size:20px!important
+}
+.person-details .pass-action{background:#eee9ff!important;color:#514d91!important;border:0!important}
+.person-details .like-action{background:linear-gradient(135deg,#ff4d91,#e72e88)!important}
+.person-details .block-action{background:#e8e2ff!important;color:#8052d7!important}
+#view-matches>.panel,#matchChatPanel,#view-me>.panel{
+  background:rgba(255,255,255,.92);border:1px solid #eee3f1;border-radius:25px;
+  box-shadow:0 12px 34px #9e78b018
+}
+#view-matches h2,#view-chat h2,#view-me h2{color:#17184f;letter-spacing:-.5px}
+#view-matches h2{font-size:27px;margin:0 0 5px}
+#view-matches>.panel>p{color:#77769a;font-size:14px;margin:0}
+#matchesList{gap:11px;margin-top:20px}
+#matchesList .match-row{
+  appearance:none;-webkit-appearance:none;width:100%;min-height:82px;
+  display:flex;align-items:center;gap:13px;text-align:left;
+  padding:11px 14px;border-radius:21px;border:1px solid #f0e8f3;
+  background:linear-gradient(110deg,#fff 0%,#fffafd 100%);
+  color:#17184f;box-shadow:0 5px 17px #a76f9b0b;
+  cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s
+}
+#matchesList .match-row:active{transform:scale(.985)}
+#matchesList .match-row:hover{border-color:#f3b9d5;box-shadow:0 8px 20px #d77ba41a}
+#matchesList .match-row .avatar{
+  width:58px!important;height:58px!important;min-width:58px!important;
+  border:2px solid #f8dce9;background:linear-gradient(135deg,#f6a6c8,#bd9bea);
+  font-size:18px!important
+}
+#matchesList .match-row .avatar img{width:100%;height:100%;object-fit:cover}
+#matchesList .match-row .grow{display:flex;flex-direction:column;gap:5px;min-width:0}
+#matchesList .match-row .grow strong{font-size:16px;color:#242252;font-weight:750}
+#matchesList .match-location{font-size:13px;color:#8583a3}
+#matchesList .match-arrow{margin-left:auto;font-size:29px;line-height:1;color:#8a76b5;font-weight:300}
+.chat-header{display:flex;align-items:center;gap:11px;padding:0 0 15px;border-bottom:1px solid #f0e7f2}
+.chat-back{width:37px;height:37px;min-width:37px;padding:0;border-radius:50%;background:#f0eaff;color:#6b59a0;font-size:26px;line-height:1;box-shadow:none}
+.chat-peer-avatar{width:43px;height:43px;min-width:43px;font-size:14px;border:2px solid #f6dbe9}
+.chat-peer-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-peer-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.chat-peer-copy strong{font-size:16px;color:#252252}
+.chat-peer-copy span{font-size:11px}
+.chat-online-dot{margin-left:auto;width:9px;height:9px;border-radius:50%;background:#37c997;box-shadow:0 0 0 4px #e1f8ef}
+#matchChatPanel .chat-box{height:min(55vh,520px);min-height:320px;background:linear-gradient(180deg,#fffafd,#fff5fa);border:0;padding:16px 4px}
+#matchChatPanel .bubble{background:#f0eaff;color:#39345f;border-radius:18px 18px 18px 5px;padding:11px 14px}
+#matchChatPanel .bubble.mine{background:linear-gradient(135deg,#ff70ac,#d94fbb);color:white;border-radius:18px 18px 5px 18px}
+#chatForm{align-items:center;padding:6px;border:1px solid #eee3f1;border-radius:999px;background:#fff;gap:7px}
+#chatForm input{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:999px;padding:12px 14px}
+#chatForm button{width:43px;height:43px;min-width:43px;padding:0;border-radius:50%;background:linear-gradient(135deg,#ff4d91,#d34ed0);font-size:19px}
+#profileSummary .profile-card{background:linear-gradient(145deg,#fff,#fff6fb 65%,#f5efff)}
+.mobile-nav{
+  display:flex;position:fixed;left:50%;transform:translateX(-50%);
+  bottom:max(9px,env(safe-area-inset-bottom));width:min(460px,calc(100% - 28px));
+  margin:0;z-index:20;padding:8px 10px;border-radius:25px;
+  background:#ffffffed;border:1px solid #eee3f1;backdrop-filter:blur(20px);
+  box-shadow:0 10px 30px #9e78b02a;gap:6px
+}
+.mobile-nav .nav{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;min-height:58px;padding:7px 3px;margin:0;border:0;
+  background:transparent;color:#8381a1;font-size:11px;box-shadow:none
+}
+.mobile-nav .nav span{font-size:21px;line-height:1}
+.mobile-nav .nav.active{background:linear-gradient(135deg,#ffe4ef,#eee6ff);color:#e34491;border-radius:17px}
+.wrap{padding-bottom:94px}
+body.dark-mode{
+  color:#f8f1fb;
+  background:radial-gradient(ellipse at 5% 0%,#3b294b 0,transparent 42%),radial-gradient(ellipse at 95% 8%,#292748 0,transparent 43%),linear-gradient(145deg,#171421,#1d192b 55%,#171a2b);
+}
+body.dark-mode .sidebar,body.dark-mode .panel,body.dark-mode .card,
+body.dark-mode #view-matches>.panel,body.dark-mode #matchChatPanel,body.dark-mode #view-me>.panel{
+  background:rgba(39,32,55,.96);border-color:#51415f;color:#f8f1fb
+}
+body.dark-mode .muted,body.dark-mode .top .muted{color:#b9adc9}
+body.dark-mode #view-matches h2,body.dark-mode #view-me h2,body.dark-mode .chat-peer-copy strong{color:#ffe7f3}
+body.dark-mode #matchesList .match-row{background:linear-gradient(110deg,#30283f,#28243a);border-color:#51415f;color:#f8f1fb}
+body.dark-mode #matchesList .match-row .grow strong{color:#ffeaf5}
+body.dark-mode #matchesList .match-location{color:#b9adc9}
+body.dark-mode #matchesList .match-arrow{color:#d7a7d3}
+body.dark-mode .chat-header{border-color:#51415f}
+body.dark-mode #matchChatPanel .chat-box{background:linear-gradient(180deg,#211d32,#282137)}
+body.dark-mode #matchChatPanel .bubble{background:#39304a;color:#f2e9f5}
+body.dark-mode #matchChatPanel .bubble.mine{background:linear-gradient(135deg,#853d69,#604b91);color:#fff}
+body.dark-mode #chatForm{background:#211d32;border-color:#51415f}
+body.dark-mode #chatForm input{color:#fff}
+body.dark-mode .chat-back{background:#40344e;color:#f4e7f5}
+body.dark-mode .mobile-nav{background:#211d32f2;border-color:#51415f}
+body.dark-mode .mobile-nav .nav{color:#c0b4cd}
+body.dark-mode .mobile-nav .nav.active{background:linear-gradient(135deg,#633651,#49386c);color:#ff9fc7}
+@media(max-width:740px){
+  .wrap{padding:8px 12px 100px}
+  .top{padding:8px 2px 14px}
+  .brand{font-size:27px}
+  .top-tools{gap:0}
+  .theme-toggle{width:55px!important;height:29px!important}
+  .theme-toggle .sun-icon,.theme-toggle .moon-icon{width:25px!important;line-height:27px!important;font-size:13px!important}
+  .theme-knob{width:23px!important;height:23px!important}
+  .discover-stage{max-width:100%}
+  .profile-photo-wrap{height:clamp(350px,53vh,500px)}
+  #view-matches>.panel,#matchChatPanel,#view-me>.panel{padding:18px 14px}
+  #matchesList .match-row{min-height:77px;padding:9px 11px;gap:11px}
+  #matchesList .match-row .avatar{width:54px!important;height:54px!important;min-width:54px!important}
+  #matchesList .match-row .grow strong{font-size:15px}
+  #matchesList .match-location{font-size:12px}
+  #matchChatPanel .chat-box{height:calc(100dvh - 290px);min-height:280px}
+  .sidebar{display:none}
+}
+
+
+#loginScreen{max-width:460px;margin:26px auto;padding:22px;border-radius:28px;background:rgba(255,255,255,.93);border:1px solid #eee2f0;box-shadow:0 16px 42px #a77ba51a}
+#loginScreen .hero{border:0;border-radius:22px;padding:26px 20px;background:linear-gradient(145deg,#ffe5ef,#f0e5ff);color:#242252;text-align:center}
+#loginScreen .hero h1{font-size:25px;line-height:1.2}
+#loginScreen>h2{text-align:center;color:#252252;margin:20px 0 6px}
+#loginScreen>p{text-align:center;color:#77769a}
+#loginScreen #googleBtn{width:100%;margin:12px 0;border-radius:999px;padding:14px;background:linear-gradient(110deg,#ff4e91,#b24ce0)}
+body.dark-mode #loginScreen{background:#292239;border-color:#51415f}
+body.dark-mode #loginScreen .hero{background:linear-gradient(145deg,#402342,#282447);color:#fff}
+body.dark-mode #loginScreen>h2{color:#ffe7f3}
+
 </style>
 </head>
 <body>
@@ -241,7 +414,6 @@ body.dark-mode .foot{color:#aa9bb7}
       <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
         <span class="sun-icon" aria-hidden="true">☀</span><span class="moon-icon" aria-hidden="true">☾</span><span class="theme-knob"></span>
       </button>
-      <div class="pill" id="authBadge">Not signed in</div>
     </div>
   </header>
 
@@ -270,12 +442,21 @@ body.dark-mode .foot{color:#aa9bb7}
           </div>
         </section>
 
-        <section id="view-matches" class="view hidden"><div class="panel"><h2>Made for each other <span style="color:#ed4d91">♥</span></h2><p class="muted">Jin logon ke saath mutual connection bana hai.</p><div id="matchesList" class="list"><div class="empty">Loading matches…</div></div></div></section>
-
-        <section id="view-chat" class="view hidden">
-          <div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><div><h2 style="margin:0">Chat</h2><p id="chatSubtitle" class="muted">Match select karo</p></div><button class="secondary" id="backMatches">Matches</button></div>
-          <div id="chatMessages" class="chat-box"><div class="empty">Kisi match ko open karke chat shuru karo.</div></div>
-          <form id="chatForm" class="inline"><input id="chatInput" maxlength="2000" placeholder="Message likho…" autocomplete="off"><button id="sendBtn" type="submit">Send</button></form>
+        <section id="view-matches" class="view hidden">
+          <div class="panel" id="matchesPanel">
+            <h2>Matches <span style="color:#ed4d91">♥</span></h2>
+            <p class="muted">People who liked you back</p>
+            <div id="matchesList" class="list"><div class="empty">Loading matches…</div></div>
+          </div>
+          <div class="panel hidden" id="matchChatPanel">
+            <div class="chat-header">
+              <button class="chat-back" id="backMatches" type="button" aria-label="Back to matches">‹</button>
+              <div class="avatar chat-peer-avatar" id="chatPeerAvatar">♡</div>
+              <div class="chat-peer-copy"><strong id="chatPeerName">Your match</strong><span id="chatSubtitle" class="muted">Your connection</span></div>
+              <span class="chat-online-dot"></span>
+            </div>
+            <div id="chatMessages" class="chat-box"><div class="empty">Chat load ho rahi hai…</div></div>
+            <form id="chatForm" class="inline"><input id="chatInput" maxlength="2000" placeholder="Type a message…" autocomplete="off"><button id="sendBtn" type="submit" aria-label="Send message">➤</button></form>
           </div>
         </section>
 
@@ -349,7 +530,7 @@ let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], can
 let activeMatch = null, activeChatChannel = null, matchesCache = [];
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
 
-const navItems = [['discover','⌕','Discover'],['matches','♡','Matches'],['chat','✉','Messages'],['me','☺','My profile']];
+const navItems = [['discover','♡','Discover'],['matches','♥','Matches'],['me','♙','Profile']];
 function showMessage(message,error=false,target='globalMessage'){
   const el=$(target); if(!el)return;
   el.textContent=message;el.classList.remove('hidden','error');if(error)el.classList.add('error');
@@ -364,6 +545,7 @@ $('desktopNav').innerHTML=navMarkup();$('mobileNav').innerHTML=navMarkup();
 function showView(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
   $('view-'+view)?.classList.remove('hidden');
+  if(view==='matches'){ $('matchesPanel')?.classList.remove('hidden'); $('matchChatPanel')?.classList.add('hidden'); }
   document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   if(view==='discover')loadDiscover();
   if(view==='matches')loadMatches();
@@ -375,7 +557,6 @@ document.addEventListener('click',e=>{const nav=e.target.closest('[data-view]');
 function setSignedInUI(on){
   $('loginScreen').classList.toggle('hidden',on);
   $('appScreen').classList.toggle('hidden',!on);
-  $('authBadge').textContent=on?(currentUser?.email||'Signed in'):'Not signed in';
 }
 function clearUserState(){
   currentUser=null;myProfile=null;candidateProfiles=[];candidateIndex=0;activeMatch=null;matchesCache=[];
@@ -392,7 +573,6 @@ async function handleSession(session){
   currentUser=user;setSignedInUI(true);
   authHandlingPromise=(async()=>{
     try{
-      $('authBadge').textContent=user.email||'Signed in';
       showMessage('Account load ho raha hai…',false);
       await ensureWallet();
       const {data,error}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
@@ -652,17 +832,19 @@ async function loadMatches(){
     const otherIds=[...new Set(matchesCache.map(m=>m.user_a===currentUser.id?m.user_b:m.user_a))];
     const {data:people,error:pe}=await sb.from('profiles').select('id,display_name,age,city,state,photo_url').in('id',otherIds);if(pe)throw pe;
     const map=new Map((people||[]).map(p=>[p.id,p]));
-    box.innerHTML=matchesCache.map(m=>{const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);return `<div class="list-item">${p?.photo_url?`<div class="avatar" style="width:48px;height:48px;font-size:18px"><img src="${escapeHtml(p.photo_url)}" alt="Profile photo" loading="lazy"></div>`:`<div class="avatar" style="width:48px;height:48px;font-size:18px">${escapeHtml(initials(p?.display_name||'S'))}</div>`}<div class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><p class="muted small">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', '))}</p></div><button data-open-match="${m.id}">Chat</button><button class="secondary" data-block-match="${id}">Block</button></div>`;}).join('');
+    box.innerHTML=matchesCache.map(m=>{const id=m.user_a===currentUser.id?m.user_b:m.user_a,p=map.get(id);return `<button type="button" class="list-item match-row" data-open-match="${m.id}">${p?.photo_url?`<span class="avatar"><img src="${escapeHtml(p.photo_url)}" alt="Profile photo" loading="lazy"></span>`:`<span class="avatar">${escapeHtml(initials(p?.display_name||'S'))}</span>`}<span class="grow"><strong>${escapeHtml(p?.display_name||'Saath user')}${p?.age?`, ${p.age}`:''}</strong><span class="match-location">${escapeHtml([p?.city,p?.state].filter(Boolean).join(', ')||'')}</span></span><span class="match-arrow" aria-hidden="true">›</span></button>`;}).join('');
     box.querySelectorAll('[data-open-match]').forEach(b=>b.onclick=()=>openChat(b.dataset.openMatch));
-    box.querySelectorAll('[data-block-match]').forEach(b=>b.onclick=async()=>{if(confirm('Block this user?'))try{const {error}=await sb.rpc('block_user',{p_target_user_id:b.dataset.blockMatch});if(error)throw error;showMessage('User blocked.');await loadMatches();}catch(e){showMessage(niceError(e),true);}});
   }catch(e){box.innerHTML=`<div class="empty">Matches load error: ${escapeHtml(niceError(e))}</div>`;}
 }
 async function openChat(matchId){
   activeMatch=matchesCache.find(m=>m.id===matchId)||null;if(!activeMatch){await loadMatches();activeMatch=matchesCache.find(m=>m.id===matchId)||null;}
-  if(!activeMatch){showMessage('Match not found.',true);return;}showView('chat');
+  if(!activeMatch){showMessage('Match not found.',true);return;}
+  $('matchesPanel').classList.add('hidden');$('matchChatPanel').classList.remove('hidden');
   const otherId=activeMatch.user_a===currentUser.id?activeMatch.user_b:activeMatch.user_a;
-  const {data:p}=await sb.from('profiles').select('display_name').eq('id',otherId).maybeSingle();
-  $('chatSubtitle').textContent=`Chat with ${p?.display_name||'your match'}`;await loadMessages();
+  const {data:p}=await sb.from('profiles').select('display_name,photo_url').eq('id',otherId).maybeSingle();
+  $('chatPeerName').textContent=p?.display_name||'Your match';$('chatSubtitle').textContent='Your connection';
+  $('chatPeerAvatar').innerHTML=p?.photo_url?`<img src="${escapeHtml(p.photo_url)}" alt="">`:escapeHtml(initials(p?.display_name||'S'));
+  await loadMessages();
   if(activeChatChannel)await sb.removeChannel(activeChatChannel);
   activeChatChannel=sb.channel('messages-'+matchId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`match_id=eq.${matchId}`},payload=>{if(payload.new.sender_id!==currentUser.id)appendMessage(payload.new);}).subscribe();
 }
@@ -682,7 +864,7 @@ $('chatForm').addEventListener('submit',async e=>{
   try{const {error}=await sb.from('messages').insert({match_id:activeMatch.id,sender_id:currentUser.id,body});if(error)throw error;$('chatInput').value='';await loadMessages();}
   catch(e){showMessage(niceError(e),true);}finally{$('sendBtn').disabled=false;}
 });
-$('backMatches').onclick=()=>showView('matches');
+$('backMatches').onclick=()=>{ $('matchChatPanel').classList.add('hidden');$('matchesPanel').classList.remove('hidden'); };
 document.querySelectorAll('.claimPlan').forEach(btn=>btn.addEventListener('click',async()=>{
   btn.disabled=true;try{const {data,error}=await sb.rpc('claim_demo_plan',{p_plan_code:btn.dataset.plan});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Plan could not be claimed');showMessage(data.message||'Demo credits added.');await refreshWallet();}
   catch(e){showMessage(niceError(e),true);}finally{btn.disabled=false;}
