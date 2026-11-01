@@ -220,6 +220,17 @@ html.dark-mode .icon-btn,body.dark-mode .icon-btn{color:#f2eaf8}
 .pop{position:absolute;top:58px;right:12px;z-index:6;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px}
 .pop button{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;font-weight:800;color:var(--danger)}
 .chat-box{flex:1;overflow:auto;padding:8px 14px 12px;display:flex;flex-direction:column;gap:8px}
+/* Dating-style chat bubbles */
+.message{display:flex;width:100%;max-width:100%;margin:2px 0;flex-direction:column;gap:4px}
+.message.sent{align-items:flex-end}
+.message.received{align-items:flex-start}
+.message-bubble{max-width:min(78%,340px);padding:11px 15px;border-radius:20px;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font-size:14px;line-height:1.45;font-weight:600;box-shadow:0 3px 10px rgba(70,45,80,.06)}
+.message.sent .message-bubble{background:#f9dce9;color:#713d56;border:1px solid #f3c9dc;border-bottom-right-radius:6px}
+.message.received .message-bubble{background:#e9e4f8;color:#51466c;border:1px solid #ddd4f1;border-bottom-left-radius:6px}
+.message-time{font-size:10px;font-weight:700;color:var(--muted);padding:0 5px}
+.message.sent .message-time{text-align:right}
+html.dark-mode .message.sent .message-bubble,body.dark-mode .message.sent .message-bubble{background:#563448;color:#ffe8f2;border-color:#70445c}
+html.dark-mode .message.received .message-bubble,body.dark-mode .message.received .message-bubble{background:#37304d;color:#eee8ff;border-color:#4a4164}
 .bubble{max-width:78%;padding:10px 12px 6px;background:#f3eef6;color:var(--ink);border-radius:18px 18px 18px 6px;align-self:flex-start}
 html.dark-mode .bubble,body.dark-mode .bubble{background:#2e2740}
 .bubble.mine{align-self:flex-end;background:#ff4d8d;color:#fff;border-radius:18px 18px 6px 18px}
