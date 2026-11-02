@@ -1,0 +1,9 @@
+{
+  "appId": "com.saath.app",
+  "appName": "Saath",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
+}
