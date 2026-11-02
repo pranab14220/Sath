@@ -43,14 +43,18 @@ jobs:
           from pathlib import Path
           p = Path('android/app/src/main/AndroidManifest.xml')
           s = p.read_text()
-          marker = '<activity'
-          start = s.find(marker)
-          if start < 0:
-              raise SystemExit('Main activity not found in AndroidManifest.xml')
-          end = s.find('>', start)
-          activity = s[start:end]
-          if 'android.intent.action.VIEW' not in s:
-              s = s[:end] + '''\n            <intent-filter android:autoVerify="false">\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="com.saath.app" android:host="login-callback" />\n            </intent-filter>''' + s[end:]
+          closing = '</activity>'
+          deep_link = """    <intent-filter android:autoVerify="false">
+                  <action android:name="android.intent.action.VIEW" />
+                  <category android:name="android.intent.category.DEFAULT" />
+                  <category android:name="android.intent.category.BROWSABLE" />
+                  <data android:scheme="com.saath.app" android:host="login-callback" />
+              </intent-filter>
+          """
+          if 'android:host="login-callback"' not in s:
+              if closing not in s:
+                  raise SystemExit('Main activity closing tag not found')
+              s = s.replace(closing, deep_link + closing, 1)
           p.write_text(s)
           PY
 
