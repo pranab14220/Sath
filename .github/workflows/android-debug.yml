@@ -36,6 +36,24 @@ jobs:
         working-directory: mobile
         run: npx cap add android
 
+      - name: Add Android deep-link callback for Google sign-in
+        working-directory: mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          marker = '<activity'
+          start = s.find(marker)
+          if start < 0:
+              raise SystemExit('Main activity not found in AndroidManifest.xml')
+          end = s.find('>', start)
+          activity = s[start:end]
+          if 'android.intent.action.VIEW' not in s:
+              s = s[:end] + '''\n            <intent-filter android:autoVerify="false">\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="com.saath.app" android:host="login-callback" />\n            </intent-filter>''' + s[end:]
+          p.write_text(s)
+          PY
+
       - name: Sync web app into Android project
         working-directory: mobile
         run: npx cap sync android
