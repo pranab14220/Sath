@@ -1,0 +1,4 @@
+# The message insert webhook is authenticated with PUSH_WEBHOOK_SECRET.
+# Supabase Dashboard function deployment should disable JWT verification for this function.
+[functions.push-message]
+verify_jwt = false
