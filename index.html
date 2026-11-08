@@ -633,7 +633,7 @@ let activeChatUserId = null, activeChatProfile = null;
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
 async function savePushToken(token,platform){
   if(!currentUser||!token)return;
-  const {error}=await sb.from('push_tokens').upsert({user_id:currentUser.id,token,platform,updated_at:new Date().toISOString()},{onConflict:'token'});
+  const {error}=await sb.rpc('register_push_token',{p_token:token,p_platform:platform});
   if(error)throw error;
 }
 async function enablePushNotifications(){
