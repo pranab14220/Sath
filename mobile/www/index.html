@@ -646,7 +646,8 @@ async function enablePushNotifications(){
     const permission=await PushNotifications.checkPermissions();
     const result=permission.receive==='granted'?permission:await PushNotifications.requestPermissions();
     if(result.receive!=='granted')throw new Error('Notification permission was not granted.');
-    await PushNotifications.createChannel({id:'saath_messages',name:'Saath Messages',description:'New chat messages',importance:5,sound:'default'});\n    await PushNotifications.addListener('registration',async ({value})=>{
+    await PushNotifications.createChannel({id:'saath_messages',name:'Saath Messages',description:'New chat messages',importance:5,sound:'default'});
+    await PushNotifications.addListener('registration',async ({value})=>{
       try{await savePushToken(value,'android');if(button)button.textContent='Notifications enabled';showMessage('Notifications enabled on this device.');}
       catch(e){showMessage('Could not save notification token: '+niceError(e),true);}
     });
