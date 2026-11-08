@@ -514,7 +514,7 @@ html.dark-mode .btn-soft,body.dark-mode .btn-soft{background:#3a2434;color:#ff8a
         <section id="view-me" class="view hidden">
           <div id="profileView" class="profile-view">
             <button type="button" id="gearBtn" class="icon-btn gear-float" aria-label="Account"><svg class="ico" viewBox="0 0 24 24"><use href="#i-gear"></use></svg></button>
-            <div id="profileSummary"></div>
+            <div id="profileSummary"></div>\n            <button type="button" id="enablePushBtn" class="btn-soft" style="width:100%;margin-top:14px">Enable notifications</button>
           </div>
           <form id="profileForm" class="edit-view hidden">
             <h2>Edit profile</h2>
@@ -633,6 +633,30 @@ let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], can
 let activeMatch = null, activeChatChannel = null, matchesCache = [], officialChatMode = false;
 let activeChatUserId = null, activeChatProfile = null;
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
+async function savePushToken(token,platform){
+  if(!currentUser||!token)return;
+  const {error}=await sb.from('push_tokens').upsert({user_id:currentUser.id,token,platform,updated_at:new Date().toISOString()},{onConflict:'token'});
+  if(error)throw error;
+}
+async function enablePushNotifications(){
+  if(!currentUser){showMessage('Sign in first to enable notifications.',true);return;}
+  const button=$('enablePushBtn'); if(button){button.disabled=true;button.textContent='Enabling…';}
+  try{
+    const {PushNotifications}=await import('https://esm.sh/@capacitor/push-notifications@7?bundle');
+    const permission=await PushNotifications.checkPermissions();
+    const result=permission.receive==='granted'?permission:await PushNotifications.requestPermissions();
+    if(result.receive!=='granted')throw new Error('Notification permission was not granted.');
+    await PushNotifications.addListener('registration',async ({value})=>{
+      try{await savePushToken(value,'android');if(button)button.textContent='Notifications enabled';showMessage('Notifications enabled on this device.');}
+      catch(e){showMessage('Could not save notification token: '+niceError(e),true);}
+    });
+    await PushNotifications.addListener('registrationError',e=>showMessage('Push registration failed: '+niceError(e),true));
+    await PushNotifications.register();
+    if(button)button.textContent='Waiting for device token…';
+    showMessage('Push notifications are enabled.');
+  }catch(error){showMessage('Could not enable notifications: '+niceError(error),true);if(button){button.disabled=false;button.textContent='Enable notifications';}}
+}
+
 
 const navItems = [['discover','heart','Discover'],['matches','heart','Matches'],['me','user','Profile']];
 function ico(id){return `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#${id}"></use></svg>`;}
@@ -1230,7 +1254,7 @@ async function loadChatMessages(){
   }catch(err){box.innerHTML=`<div class="empty-state">Could not load messages: ${escapeHtml(niceError(err))}</div>`;showMessage(niceError(err),true);}
 }
 $('backMatches').addEventListener('click',()=>{activeChatUserId=null;activeChatProfile=null;activeMatch=null;$('chatMenuPop').classList.add('hidden');showView('matches');});
-$('chatForm').addEventListener('submit',async e=>{
+$('enablePushBtn').addEventListener('click',enablePushNotifications);\n\n$('chatForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!currentUser||!activeMatch){showMessage('Open a match before sending a message.',true);return;}
   const input=$('chatInput'),send=$('sendBtn'),body=input.value.trim();
