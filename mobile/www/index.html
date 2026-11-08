@@ -622,6 +622,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import { App } from 'https://esm.sh/@capacitor/app@7?bundle';
 import { Browser } from 'https://esm.sh/@capacitor/browser@7?bundle';
 import { Capacitor } from 'https://esm.sh/@capacitor/core@7?bundle';
+import { LocalNotifications } from 'https://esm.sh/@capacitor/local-notifications@7?bundle';
 
 const SUPABASE_URL = 'https://kaobteyfxgfxlzrmwsge.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IiPNP9mZ3s_8TZEhuLmvg_87ncVOcL';
@@ -672,6 +673,18 @@ async function syncPushTokenForCurrentUser(askPermission=false){
         const currentButton=$('enablePushBtn');
         if(currentButton){currentButton.disabled=false;currentButton.textContent='Enable notifications';}
         showMessage('Push registration failed: '+niceError(e),true);
+      });
+      await PushNotifications.addListener('pushNotificationReceived',async notification=>{
+        try{
+          await LocalNotifications.schedule({notifications:[{
+            title:'Saath',
+            body:'Someone messaged you.',
+            id:Math.floor(Date.now()%2147483647),
+            channelId:'saath_messages',
+            sound:'default',
+            schedule:{at:new Date(Date.now()+250)}
+          }]});
+        }catch(e){console.warn('Foreground notification display failed',e);}
       });
       pushListenersReady=true;
     }
