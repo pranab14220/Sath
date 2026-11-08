@@ -514,7 +514,8 @@ html.dark-mode .btn-soft,body.dark-mode .btn-soft{background:#3a2434;color:#ff8a
         <section id="view-me" class="view hidden">
           <div id="profileView" class="profile-view">
             <button type="button" id="gearBtn" class="icon-btn gear-float" aria-label="Account"><svg class="ico" viewBox="0 0 24 24"><use href="#i-gear"></use></svg></button>
-            <div id="profileSummary"></div>\n            <button type="button" id="enablePushBtn" class="btn-soft" style="width:100%;margin-top:14px">Enable notifications</button>
+            <div id="profileSummary"></div>
+            <button type="button" id="enablePushBtn" class="btn-soft" style="width:100%;margin-top:14px">Enable notifications</button>
           </div>
           <form id="profileForm" class="edit-view hidden">
             <h2>Edit profile</h2>
@@ -1227,7 +1228,9 @@ async function loadChatMessages(){
   }catch(err){box.innerHTML=`<div class="empty-state">Could not load messages: ${escapeHtml(niceError(err))}</div>`;showMessage(niceError(err),true);}
 }
 $('backMatches').addEventListener('click',()=>{activeChatUserId=null;activeChatProfile=null;activeMatch=null;$('chatMenuPop').classList.add('hidden');showView('matches');});
-$('enablePushBtn').addEventListener('click',enablePushNotifications);\n\n$('chatForm').addEventListener('submit',async e=>{
+$('enablePushBtn').addEventListener('click',enablePushNotifications);
+
+$('chatForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!currentUser||!activeMatch){showMessage('Open a match before sending a message.',true);return;}
   const input=$('chatInput'),send=$('sendBtn'),body=input.value.trim();
