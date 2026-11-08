@@ -12,16 +12,6 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
-messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title || "Saath";
-  const options = {
-    body: "Someone messaged you.",
-    icon: "/Sath/favicon.svg",
-    data: { url: "https://pranab14220.github.io/Sath/" },
-    tag: payload.data?.message_id ? "saath-message-" + payload.data.message_id : "saath-message"
-  };
-  self.registration.showNotification(title, options);
-});
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
