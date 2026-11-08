@@ -61,6 +61,19 @@ jobs:
           app.write_text(a)
           PY
 
+      - name: Add Android notification permission
+        working-directory: mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          permission = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\\n'
+          if 'android.permission.POST_NOTIFICATIONS' not in s:
+              s = s.replace('<application', permission + '    <application', 1)
+          p.write_text(s)
+          PY
+
       - name: Add Android deep-link callback for Google sign-in
         working-directory: mobile
         run: |
