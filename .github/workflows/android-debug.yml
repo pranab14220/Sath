@@ -53,11 +53,11 @@ jobs:
           app = Path('android/app/build.gradle')
           rs = root.read_text()
           if 'com.google.gms:google-services' not in rs:
-              rs = rs.replace("dependencies {", "dependencies {\\n        classpath 'com.google.gms:google-services:4.4.2'")
+              rs = rs.replace("dependencies {", "dependencies {\n        classpath 'com.google.gms:google-services:4.4.2'")
           root.write_text(rs)
           a = app.read_text()
           if "com.google.gms.google-services" not in a:
-              a += "\\napply plugin: 'com.google.gms.google-services'\\n"
+              a += "\napply plugin: 'com.google.gms.google-services'\n"
           app.write_text(a)
           PY
 
