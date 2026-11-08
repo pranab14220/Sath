@@ -634,29 +634,57 @@ let sb = null, currentUser = null, myProfile = null, candidateProfiles = [], can
 let activeMatch = null, activeChatChannel = null, matchesCache = [], officialChatMode = false;
 let activeChatUserId = null, activeChatProfile = null;
 let authHandlingUserId = null, authHandlingPromise = null, authGeneration = 0;
+let pushModulePromise=null, pushListenersReady=false;
 async function savePushToken(token,platform){
   if(!currentUser||!token)return;
   const {error}=await sb.from('push_tokens').upsert({user_id:currentUser.id,token,platform,updated_at:new Date().toISOString()},{onConflict:'token'});
   if(error)throw error;
 }
+async function syncPushTokenForCurrentUser(askPermission=false){
+  if(!currentUser)return;
+  const button=$('enablePushBtn');
+  if(button){button.disabled=true;button.textContent='Checking notifications…';}
+  try{
+    pushModulePromise ||= import('https://esm.sh/@capacitor/push-notifications@7?bundle');
+    const {PushNotifications}=await pushModulePromise;
+    const permission=await PushNotifications.checkPermissions();
+    const result=permission.receive==='granted'?permission:(askPermission?await PushNotifications.requestPermissions():permission);
+    if(result.receive!=='granted'){
+      if(button){button.disabled=false;button.textContent='Enable notifications';}
+      if(askPermission)showMessage('Notification permission was not granted.',true);
+      return;
+    }
+    await PushNotifications.createChannel({id:'saath_messages',name:'Saath Messages',description:'New chat messages',importance:5,sound:'default'});
+    if(!pushListenersReady){
+      await PushNotifications.addListener('registration',async ({value})=>{
+        try{
+          await savePushToken(value,'android');
+          const currentButton=$('enablePushBtn');
+          if(currentButton){currentButton.disabled=false;currentButton.textContent='Notifications enabled';}
+          showMessage('Notifications enabled for this account.');
+        }catch(e){
+          const currentButton=$('enablePushBtn');
+          if(currentButton){currentButton.disabled=false;currentButton.textContent='Enable notifications';}
+          showMessage('Could not save notification token: '+niceError(e),true);
+        }
+      });
+      await PushNotifications.addListener('registrationError',e=>{
+        const currentButton=$('enablePushBtn');
+        if(currentButton){currentButton.disabled=false;currentButton.textContent='Enable notifications';}
+        showMessage('Push registration failed: '+niceError(e),true);
+      });
+      pushListenersReady=true;
+    }
+    if(button)button.textContent='Waiting for device token…';
+    await PushNotifications.register();
+  }catch(error){
+    showMessage('Could not enable notifications: '+niceError(error),true);
+    if(button){button.disabled=false;button.textContent='Enable notifications';}
+  }
+}
 async function enablePushNotifications(){
   if(!currentUser){showMessage('Sign in first to enable notifications.',true);return;}
-  const button=$('enablePushBtn'); if(button){button.disabled=true;button.textContent='Enabling…';}
-  try{
-    const {PushNotifications}=await import('https://esm.sh/@capacitor/push-notifications@7?bundle');
-    const permission=await PushNotifications.checkPermissions();
-    const result=permission.receive==='granted'?permission:await PushNotifications.requestPermissions();
-    if(result.receive!=='granted')throw new Error('Notification permission was not granted.');
-    await PushNotifications.createChannel({id:'saath_messages',name:'Saath Messages',description:'New chat messages',importance:5,sound:'default'});
-    await PushNotifications.addListener('registration',async ({value})=>{
-      try{await savePushToken(value,'android');if(button)button.textContent='Notifications enabled';showMessage('Notifications enabled on this device.');}
-      catch(e){showMessage('Could not save notification token: '+niceError(e),true);}
-    });
-    await PushNotifications.addListener('registrationError',e=>showMessage('Push registration failed: '+niceError(e),true));
-    await PushNotifications.register();
-    if(button)button.textContent='Waiting for device token…';
-    showMessage('Push notifications are enabled.');
-  }catch(error){showMessage('Could not enable notifications: '+niceError(error),true);if(button){button.disabled=false;button.textContent='Enable notifications';}}
+  await syncPushTokenForCurrentUser(true);
 }
 
 
@@ -746,6 +774,7 @@ function setSignedInUI(on){
 }
 function clearUserState(){
   currentUser=null;myProfile=null;candidateProfiles=[];candidateIndex=0;activeMatch=null;matchesCache=[];
+  const pushButton=$('enablePushBtn');if(pushButton){pushButton.disabled=false;pushButton.textContent='Enable notifications';}
   if(activeChatChannel&&sb){sb.removeChannel(activeChatChannel).catch(()=>{});activeChatChannel=null;}
   setSignedInUI(false);
 }
@@ -756,6 +785,7 @@ async function handleSession(session){
   const generation=++authGeneration;
   authHandlingUserId=user.id;
   currentUser=user;setSignedInUI(true);
+  if(window.Capacitor?.isNativePlatform?.())void syncPushTokenForCurrentUser(false);
   authHandlingPromise=(async()=>{
     try{
       $('authBadge').textContent=user.email||'Signed in';
